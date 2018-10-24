@@ -58,3 +58,15 @@ double vec_distance(Vector A, Vector B)
 {
     return sqrt((A.x - B.x)*(A.x - B.x) + (A.y - B.y)*(A.y - B.y) + (A.z - B.z)*(A.z - B.z));
 }
+
+
+Vector Sphere::ray_intersect(Ray ray)
+{
+    // TODO: implement
+}
+
+
+Vector Camera::get_vec_on_pixel(int x, int y)
+{
+    // TODO: implement
+}

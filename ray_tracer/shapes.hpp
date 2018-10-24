@@ -54,7 +54,15 @@ public:
 
 };
 
-class Rect {
+
+class Shape {
+
+public:
+    Vector ray_intersect(Ray ray);
+
+};
+
+class Rect : public Shape {
 
 public:
     Rect() {}
@@ -70,15 +78,14 @@ public:
 
 };
 
-class Sphere {
+class Sphere : public Shape {
 
 public:
     Sphere() {}
-    Sphere(Vector center, double radius) 
-    {
-        this->center = center;
-        this->radius = radius;
-    }
+    Sphere(Vector center, double radius) : 
+                center(center), radius(radius) {}
+
+    Vector ray_intersect(Ray ray);
 
     Vector center;
     double radius;
@@ -90,8 +97,10 @@ class Camera : public Rect, Vector {
 
 public:
     Camera() {}
-    Camera(Vector cam_position, Vector cam_direction, double FOV_deg) : 
-                position(cam_position), direction(cam_direction), FOV(deg_to_rad(FOV_deg))
+    Camera(Vector cam_position, Vector cam_direction, double FOV_deg, int scr_width, int scr_height) : 
+                position(cam_position), direction(cam_direction), 
+                FOV(deg_to_rad(FOV_deg)), 
+                screen_width(scr_width), screen_height(scr_height), screen_ratio(scr_width / scr_height)
     {
         // We can just spin the camera on 2D axis right now
         direction.z = 0;
@@ -127,11 +136,17 @@ public:
         view = { rect_side_1_up, rect_side_2_up, rect_side_1_down, rect_side_2_down };
     }
 
+    // TODO: documentation
+    Vector get_vec_on_pixel(int x, int y);
+
     Vector position;
     Vector direction;
 
     double FOV;
-    const double screen_ratio = 16.0 / 9.0;
+
+    int screen_width;
+    int screen_height;
+    double screen_ratio;
 
     Rect view;
 
