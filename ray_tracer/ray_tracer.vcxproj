@@ -133,9 +133,13 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_trace.cpp" />
+    <ClCompile Include="math_extension.cpp" />
+    <ClCompile Include="shapes.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main_trace.hpp" />
+    <ClInclude Include="math_extension.hpp" />
+    <ClInclude Include="shapes.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
