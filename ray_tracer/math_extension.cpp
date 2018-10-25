@@ -3,10 +3,10 @@
 
 double deg_to_rad(double deg)
 {
-    return (deg * 2 * M_PI) / (360);
+    return (deg * M_PI) / (180.0);
 }
 
 double rad_to_deg(double rad) 
 {
-    return (rad * 360) / (2 * M_PI);
+    return (rad * 180.0) / (M_PI);
 }
