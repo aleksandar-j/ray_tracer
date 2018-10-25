@@ -17,16 +17,19 @@ void draw_pixels(int32_t* pixels, int w, int h,
     for (size_t y = start_y; y < end_y; y++) {
         for (size_t x = start_x; x < end_x; x++) {
             int32_t& current_pixel = pixels[y*w + x];
-            current_pixel = Color(BLACK);
 
             // Draw here
             Ray camera_ray = cam.get_ray_on_pixel(x, y);
 
-            std::priority_queue<std::pair<double, Color>> intersections;
+            double best_dist = -1;
             for (auto& x : world) {
-                intersections.push(x->ray_intersect(camera_ray));
+                std::pair<double, Color> result = x->ray_intersect(camera_ray);
+
+                if (result.first < best_dist || best_dist == -1) {
+                    current_pixel = result.second;
+                    best_dist = result.first;
+                }
             }
-            current_pixel = intersections.top().second;
         }
     }
 }
