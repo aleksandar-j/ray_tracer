@@ -5,6 +5,7 @@
 #include <cinttypes>
 #include <utility>
 #include <limits>
+#include <random>
 
 class Vector {
 
@@ -70,14 +71,20 @@ public:
 class Color : public Vector {
 
 public:
-    uint8_t red;
-    uint8_t green;
-    uint8_t blue;
+    uint32_t red;
+    uint32_t green;
+    uint32_t blue;
 
     Color() {}
-    Color(const uint8_t red, const uint8_t green, const uint8_t blue) :
+    Color(const uint32_t red, const uint32_t green, const uint32_t blue) :
                 red(red), green(green), blue(blue)
     {
+    }
+    Color(const uint32_t argb) 
+    {
+        this->red   = (argb & 0x00FF0000) >> 16;
+        this->green = (argb & 0x0000FF00) >> 8;
+        this->blue  = (argb & 0x000000FF) >> 0;
     }
 
     operator uint32_t() const;
@@ -180,6 +187,7 @@ public:
 
     // TODO: documentation
     Ray get_ray_on_pixel(int x, int y);
+    Ray get_ray_on_pixel_rand(int x, int y);
 
 private:
     void initialize_view()

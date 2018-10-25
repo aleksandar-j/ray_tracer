@@ -2,4 +2,4 @@
 
 #include <cinttypes>
 
-void trace(int32_t* pixels, int w, int h);
+void trace(uint32_t* pixels, int w, int h);

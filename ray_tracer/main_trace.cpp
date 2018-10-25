@@ -10,34 +10,54 @@
 Camera cam;
 std::vector<Shape*> world;
 
-void draw_pixels(int32_t* pixels, int w, int h,
+uint32_t shoot_ray(const Ray& camera_ray) 
+{
+    uint32_t final_color;
+
+    double best_dist = -1;
+    for (auto& x : world) {
+        std::pair<double, Color> ray_result = x->ray_intersect(camera_ray);
+
+        if (ray_result.first < best_dist || best_dist == -1) {
+            final_color = ray_result.second;
+            best_dist = ray_result.first;
+        }
+    }
+
+    return final_color;
+}
+
+void draw_pixels(uint32_t* pixels, int w, int h,
                 size_t start_x, size_t start_y, 
                 size_t end_x, size_t end_y)
 {
     for (size_t y = start_y; y < end_y; y++) {
         for (size_t x = start_x; x < end_x; x++) {
-            int32_t& current_pixel = pixels[y*w + x];
+            uint32_t& current_pixel = pixels[y*w + x];
 
-            // Draw here
-            Ray camera_ray = cam.get_ray_on_pixel(x, y);
+            Ray camera_ray;
+            uint32_t aa = 10;
+            uint32_t red = 0, green = 0, blue = 0;
 
-            double best_dist = -1;
-            for (auto& x : world) {
-                std::pair<double, Color> result = x->ray_intersect(camera_ray);
+            for (size_t i = 0; i < aa; i++) {
+                camera_ray = cam.get_ray_on_pixel_rand(x, y);
 
-                if (result.first < best_dist || best_dist == -1) {
-                    current_pixel = result.second;
-                    best_dist = result.first;
-                }
+                uint32_t argb = shoot_ray(camera_ray);
+                red += (argb & 0x00FF0000) >> 16;
+                green += (argb & 0x0000FF00) >> 8;
+                blue += (argb & 0x000000FF) >> 0;
             }
+
+            current_pixel = ((red / aa) << 16) | ((green / aa) << 8) | (blue / aa);
         }
     }
 }
 
-void trace(int32_t* pixels, int w, int h)
+void trace(uint32_t* pixels, int w, int h)
 {
     cam = { {0, 0, 1}, {1, 1, 0}, 90.0, w, h };
     
+    world.push_back(new Sphere{ {10000, 10000, 50}, 5000, { 12, 32, 200 } });
     world.push_back(new Sphere{ {1, 1, -5000}, 5000, { 12, 200, 23 } });
     world.push_back(new Sphere{ {3, 3, 1}, 1 });
 

@@ -24,7 +24,7 @@ int WinMain(int argc, char* argv[])
 
     // Main tracing function
     for (size_t i = 0; i < 1; i++) {
-        trace((int32_t*)our_surface->pixels, SCREEN_WIDTH, SCREEN_HEIGHT);
+        trace((uint32_t*)our_surface->pixels, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
 
     SDL_BlitSurface(our_surface, NULL, window_surface, NULL);
