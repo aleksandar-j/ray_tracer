@@ -50,4 +50,6 @@ void trace(int32_t* pixels, int w, int h)
     draw_2.join();
     draw_3.join();
     draw_4.join();
+
+    world.clear();
 }

@@ -23,12 +23,14 @@ int WinMain(int argc, char* argv[])
     SDL_Surface* our_surface = SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0);
 
     // Main tracing function
-    trace((int32_t*)our_surface->pixels, SCREEN_WIDTH, SCREEN_HEIGHT);
+    for (size_t i = 0; i < 1; i++) {
+        trace((int32_t*)our_surface->pixels, SCREEN_WIDTH, SCREEN_HEIGHT);
+    }
 
     SDL_BlitSurface(our_surface, NULL, window_surface, NULL);
     SDL_UpdateWindowSurface(window);
 
-    /*SDL_Event eve;
+    SDL_Event eve;
     while (true) {
         if (SDL_PollEvent(&eve)) {
             if (eve.type == SDL_KEYDOWN) {
@@ -37,7 +39,7 @@ int WinMain(int argc, char* argv[])
                 SDL_Delay(100);
             }
         }
-    }*/
+    }
 
     SDL_DestroyWindow(window);
     SDL_Quit();

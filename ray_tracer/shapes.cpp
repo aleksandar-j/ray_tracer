@@ -137,9 +137,9 @@ std::pair<double, Color> Sphere::ray_intersect(const Ray& ray) const
 
     if (dist_cam_to_intersec_1 > 0 || dist_cam_to_intersec_2 > 0) {
         if (dist_cam_to_intersec_1 > 0 && dist_cam_to_intersec_1 < dist_cam_to_intersec_2) {
-            return { std::numeric_limits<double>::max() - dist_cam_to_intersec_1, this->color };
+            return { dist_cam_to_intersec_1, this->color };
         } else {
-            return { std::numeric_limits<double>::max() - dist_cam_to_intersec_2, this->color };
+            return { dist_cam_to_intersec_2, this->color };
         }
     } else {
         return { std::numeric_limits<double>::max(), BLACK };
