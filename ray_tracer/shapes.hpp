@@ -24,21 +24,21 @@ public:
     {
     }
 
-    bool operator==(const Vector B) const;
-    bool operator!=(const Vector B) const;
+    bool operator==(const Vector& B) const;
+    bool operator!=(const Vector& B) const;
 
-    Vector operator+(const Vector B) const;
+    Vector operator+(const Vector& B) const;
     Vector operator+(const double B) const;
-    Vector operator-(const Vector B) const;
+    Vector operator-(const Vector& B) const;
     Vector operator-(const double B) const;
-    Vector operator*(const Vector B) const;
+    Vector operator*(const Vector& B) const;
     Vector operator*(const double B) const;
-    Vector operator/(const Vector B) const;
+    Vector operator/(const Vector& B) const;
     Vector operator/(const double B) const;
 
-    void operator+=(const Vector B);
+    void operator+=(const Vector& B);
     void operator+=(const double B);
-    void operator-=(const Vector B);
+    void operator-=(const Vector& B);
     void operator*=(const double B);
 
     double magnitude() const;
@@ -48,8 +48,8 @@ public:
 
 };
 
-double vec_dot_product(const Vector A, const Vector B);
-double vec_distance(const Vector A, const Vector B);
+double vec_dot_product(const Vector& A, const Vector& B);
+double vec_distance(const Vector& A, const Vector& B);
 
 class Ray : public Vector {
 
@@ -58,7 +58,7 @@ public:
     Vector direction;
 
     Ray() {}
-    Ray(Vector origin, Vector direction) : 
+    Ray(const Vector& origin, const Vector& direction) :
              origin(origin), direction(direction)
     {
         this->direction.make_unit_vector();
@@ -75,7 +75,7 @@ public:
     uint8_t blue;
 
     Color() {}
-    Color(uint8_t red, uint8_t green, uint8_t blue) :
+    Color(const uint8_t red, const uint8_t green, const uint8_t blue) :
                 red(red), green(green), blue(blue)
     {
     }
@@ -90,7 +90,7 @@ public:
 class Shape {
 
 public:
-    virtual std::pair<double, Color> ray_intersect(const Ray ray) const = NULL;
+    virtual std::pair<double, Color> ray_intersect(const Ray& ray) const = NULL;
 
 };
 
@@ -98,7 +98,7 @@ class Rect : public Shape {
 
 public:
     Rect() {}
-    Rect(Vector A, Vector B, Vector C, Vector D) 
+    Rect(const Vector& A, const Vector& B, const Vector& C, const Vector& D)
     {
         points[0] = A;
         points[1] = B;
@@ -106,7 +106,7 @@ public:
         points[3] = D;
     }
 
-    virtual std::pair<double, Color> ray_intersect(const Ray ray) const;
+    virtual std::pair<double, Color> ray_intersect(const Ray& ray) const;
 
     Vector points[4];
 
@@ -116,17 +116,17 @@ class Sphere : public Shape {
 
 public:
     Sphere() {}
-    Sphere(Vector center, double radius) : 
+    Sphere(const Vector& center, const double radius) :
                 center(center), radius(radius) 
     {
         color = WHITE;
     }
-    Sphere(Vector center, double radius, Color color) :
+    Sphere(const Vector& center, const double radius, const Color& color) :
         center(center), radius(radius), color(color)
     {
     }
 
-    virtual std::pair<double, Color> ray_intersect(const Ray ray) const;
+    virtual std::pair<double, Color> ray_intersect(const Ray& ray) const;
 
     Vector center;
     double radius;
@@ -163,7 +163,9 @@ public:
     Ray camrect_height_ray;
 
     Camera() {}
-    Camera(Vector cam_position, Vector cam_direction, double FOV_deg, int scr_width, int scr_height) : 
+    Camera(const Vector& cam_position, const Vector& cam_direction, 
+            const double FOV_deg, 
+            const int scr_width, const int scr_height) :
                 position(cam_position), direction(cam_direction), 
                 FOV(deg_to_rad(FOV_deg)), 
                 screen_width(scr_width), screen_height(scr_height), screen_ratio(scr_width / scr_height)

@@ -1,17 +1,17 @@
 
 #include "shapes.hpp"
 
-bool Vector::operator==(const Vector B) const
+bool Vector::operator==(const Vector& B) const
 {
     return (this->x == B.x && this->y == B.y && this->z == B.z);
 }
 
-bool Vector::operator!=(const Vector B) const
+bool Vector::operator!=(const Vector& B) const
 {
     return (!(*this == B));
 }
 
-Vector Vector::operator+(const Vector B) const
+Vector Vector::operator+(const Vector& B) const
 {
     return { this->x + B.x, this->y + B.y, this->z + B.z };
 }
@@ -21,7 +21,7 @@ Vector Vector::operator+(const double B) const
     return { this->x + B, this->y + B, this->z + B };
 }
 
-Vector Vector::operator-(const Vector B) const
+Vector Vector::operator-(const Vector& B) const
 {
     return { this->x - B.x, this->y - B.y, this->z - B.z };
 }
@@ -31,7 +31,7 @@ Vector Vector::operator-(const double B) const
     return { this->x - B, this->y - B, this->z - B };
 }
 
-Vector Vector::operator*(const Vector B) const
+Vector Vector::operator*(const Vector& B) const
 {
     return { this->x * B.x, this->y * B.y, this->z * B.z };
 }
@@ -41,7 +41,7 @@ Vector Vector::operator*(const double B) const
     return { this->x * B, this->y * B, this->z * B };
 }
 
-Vector Vector::operator/(const Vector B) const
+Vector Vector::operator/(const Vector& B) const
 {
     return { this->x / B.x, this->y / B.y, this->z / B.z };
 }
@@ -51,7 +51,7 @@ Vector Vector::operator/(const double B) const
     return { this->x / B, this->y / B, this->z / B };
 }
 
-void Vector::operator+=(const Vector B)
+void Vector::operator+=(const Vector& B)
 {
     *this = *this + B;
 }
@@ -61,7 +61,7 @@ void Vector::operator+=(const double B)
     *this = *this + B;
 }
 
-void Vector::operator-=(const Vector B)
+void Vector::operator-=(const Vector& B)
 {
     *this = *this - B;
 }
@@ -92,12 +92,12 @@ void Vector::make_unit_vector()
 }
 
 
-double vec_dot_product(const Vector A, const Vector B)
+double vec_dot_product(const Vector& A, const Vector& B)
 {
     return A.x*B.x + A.y*B.y + A.z*B.z;
 }
 
-double vec_distance(const Vector A, const Vector B)
+double vec_distance(const Vector& A, const Vector& B)
 {
     return sqrt((A.x - B.x)*(A.x - B.x) + (A.y - B.y)*(A.y - B.y) + (A.z - B.z)*(A.z - B.z));
 }
@@ -113,12 +113,12 @@ Color::operator uint32_t() const
 }
 
 
-std::pair<double, Color> Rect::ray_intersect(const Ray ray) const
+std::pair<double, Color> Rect::ray_intersect(const Ray& ray) const
 {
     return { std::numeric_limits<double>::max(), BLACK };
 }
 
-std::pair<double, Color> Sphere::ray_intersect(const Ray ray) const
+std::pair<double, Color> Sphere::ray_intersect(const Ray& ray) const
 {
     Vector cam_to_center{ this->center - ray.origin };
     double dist_cam_to_center = cam_to_center.magnitude();
