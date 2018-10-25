@@ -20,7 +20,7 @@ void draw_pixels(int32_t* pixels, int w, int h,
             current_pixel = Color(BLACK);
 
             // Draw here
-            Ray camera_ray = { cam.position, (cam.get_vec_on_pixel(x, y) - cam.position) };
+            Ray camera_ray = cam.get_ray_on_pixel(x, y);
 
             std::priority_queue<std::pair<double, Color>> intersections;
             for (auto& x : world) {

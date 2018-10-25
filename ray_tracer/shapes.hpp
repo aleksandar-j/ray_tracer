@@ -179,7 +179,7 @@ public:
     }
 
     // TODO: documentation
-    Vector get_vec_on_pixel(int x, int y);
+    Ray get_ray_on_pixel(int x, int y);
 
 private:
     void initialize_view()

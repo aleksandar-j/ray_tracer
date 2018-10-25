@@ -147,12 +147,14 @@ std::pair<double, Color> Sphere::ray_intersect(const Ray& ray) const
 }
 
 
-Vector Camera::get_vec_on_pixel(int x, int y)
+Ray Camera::get_ray_on_pixel(int x, int y)
 {
-    Vector result = camrect_xy_start_point;
+    Vector point_on_viewport = camrect_xy_start_point;
 
-    result += camrect_width_ray.direction * (camrect_width_per_pixel * x) + (camrect_width_per_pixel / 2);
-    result += camrect_height_ray.direction * (camrect_height_per_pixel * y) + (camrect_height_per_pixel / 2);
+    point_on_viewport += camrect_width_ray.direction * (camrect_width_per_pixel * x) + 
+                                                                    (camrect_width_per_pixel / 2);
+    point_on_viewport += camrect_height_ray.direction * (camrect_height_per_pixel * y) + 
+                                                                    (camrect_height_per_pixel / 2);
 
-    return result;
+    return Ray{ this->position, point_on_viewport - this->position };
 }
