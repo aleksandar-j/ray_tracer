@@ -103,12 +103,22 @@ double vec_distance(const Vector A, const Vector B)
 }
 
 
-bool Rect::ray_intersect(const Ray ray) const
+Color::operator uint32_t() const
 {
-    return false;
+    uint32_t new_red = this->red << 16;
+    uint32_t new_green = this->green << 8;
+    uint32_t new_blue = this->blue;
+
+    return new_red | new_green | new_blue;
 }
 
-bool Sphere::ray_intersect(const Ray ray) const
+
+std::pair<double, Color> Rect::ray_intersect(const Ray ray) const
+{
+    return { std::numeric_limits<double>::max(), BLACK };
+}
+
+std::pair<double, Color> Sphere::ray_intersect(const Ray ray) const
 {
     Vector cam_to_center{ this->center - ray.origin };
     double dist_cam_to_center = cam_to_center.magnitude();
@@ -117,9 +127,22 @@ bool Sphere::ray_intersect(const Ray ray) const
     double dist_ray_from_center = 
         sqrt(dist_cam_to_center*dist_cam_to_center - dist_cam_from_center_normal*dist_cam_from_center_normal);
     if (dist_ray_from_center > this->radius) {
-        return false;
+        return { std::numeric_limits<double>::max(), BLACK };
+    }
+
+    double dist_from_intersections = 2 * sqrt(this->radius*this->radius - dist_ray_from_center*dist_ray_from_center);
+
+    double dist_cam_to_intersec_1 = dist_cam_from_center_normal - dist_from_intersections / 2;
+    double dist_cam_to_intersec_2 = dist_cam_from_center_normal + dist_from_intersections / 2;
+
+    if (dist_cam_to_intersec_1 > 0 || dist_cam_to_intersec_2 > 0) {
+        if (dist_cam_to_intersec_1 > 0 && dist_cam_to_intersec_1 < dist_cam_to_intersec_2) {
+            return { std::numeric_limits<double>::max() - dist_cam_to_intersec_1, this->color };
+        } else {
+            return { std::numeric_limits<double>::max() - dist_cam_to_intersec_2, this->color };
+        }
     } else {
-        return true;
+        return { std::numeric_limits<double>::max(), BLACK };
     }
 }
 
@@ -127,6 +150,7 @@ bool Sphere::ray_intersect(const Ray ray) const
 Vector Camera::get_vec_on_pixel(int x, int y)
 {
     Vector result = camrect_xy_start_point;
+
     result += camrect_width_ray.direction * (camrect_width_per_pixel * x) + (camrect_width_per_pixel / 2);
     result += camrect_height_ray.direction * (camrect_height_per_pixel * y) + (camrect_height_per_pixel / 2);
 

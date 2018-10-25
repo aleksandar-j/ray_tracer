@@ -2,6 +2,10 @@
 
 #include "math_extension.hpp"
 
+#include <cinttypes>
+#include <utility>
+#include <limits>
+
 class Vector {
 
 public:
@@ -63,10 +67,30 @@ public:
 };
 
 
+class Color : public Vector {
+
+public:
+    uint8_t red;
+    uint8_t green;
+    uint8_t blue;
+
+    Color() {}
+    Color(uint8_t red, uint8_t green, uint8_t blue) :
+                red(red), green(green), blue(blue)
+    {
+    }
+
+    operator uint32_t() const;
+
+};
+#define BLACK { 0x0, 0x0, 0x0 }
+#define WHITE { 0xFF, 0xFF, 0xFF }
+
+
 class Shape {
 
 public:
-    virtual bool ray_intersect(const Ray ray) const = NULL;
+    virtual std::pair<double, Color> ray_intersect(const Ray ray) const = NULL;
 
 };
 
@@ -82,7 +106,7 @@ public:
         points[3] = D;
     }
 
-    virtual bool ray_intersect(const Ray ray) const;
+    virtual std::pair<double, Color> ray_intersect(const Ray ray) const;
 
     Vector points[4];
 
@@ -93,12 +117,21 @@ class Sphere : public Shape {
 public:
     Sphere() {}
     Sphere(Vector center, double radius) : 
-                center(center), radius(radius) {}
+                center(center), radius(radius) 
+    {
+        color = WHITE;
+    }
+    Sphere(Vector center, double radius, Color color) :
+        center(center), radius(radius), color(color)
+    {
+    }
 
-    virtual bool ray_intersect(const Ray ray) const;
+    virtual std::pair<double, Color> ray_intersect(const Ray ray) const;
 
     Vector center;
     double radius;
+
+    Color color;
 
 };
 
