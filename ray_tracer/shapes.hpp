@@ -13,6 +13,8 @@ public:
     double x;
     double y;
     double z;
+    
+    double mag = 0;
 
     Vector() {}
     Vector(double x, double y) :
@@ -42,9 +44,9 @@ public:
     void operator-=(const Vector& B);
     void operator*=(const double B);
 
-    double magnitude() const;
+    double magnitude();
     
-    Vector get_unit_vector() const;
+    Vector get_unit_vector();
     void make_unit_vector();
 
     void rotate_x_deg(const double deg);

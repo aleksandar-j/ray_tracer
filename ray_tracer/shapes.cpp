@@ -71,12 +71,15 @@ void Vector::operator*=(const double B)
     *this = *this * B;
 }
 
-double Vector::magnitude() const
+double Vector::magnitude()
 {
-    return sqrt(this->x*this->x + this->y*this->y + this->z*this->z);
+    if (this->mag == 0) {
+        this->mag = sqrt(this->x*this->x + this->y*this->y + this->z*this->z);
+    }
+    return this->mag;
 }
 
-Vector Vector::get_unit_vector() const
+Vector Vector::get_unit_vector()
 {
     double mag = this->magnitude();
     return { this->x / mag, this->y / mag, this->z / mag };
