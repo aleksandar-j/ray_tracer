@@ -166,7 +166,8 @@ public:
             const int scr_width, const int scr_height) :
                 position(cam_position), direction(cam_direction), 
                 FOV(deg_to_rad(FOV_deg)), 
-                screen_width(scr_width), screen_height(scr_height), screen_ratio(scr_width / scr_height)
+                screen_width(scr_width), screen_height(scr_height), 
+                screen_ratio((double)scr_width / (double)scr_height)
     {
         // We can just spin the camera on 2D axis right now
         direction.z = 0;
