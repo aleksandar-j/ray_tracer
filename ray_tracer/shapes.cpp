@@ -142,12 +142,7 @@ Color::operator uint32_t() const
 }
 
 
-std::pair<double, Color> Rect::ray_intersect(const Ray& ray) const
-{
-    return { std::numeric_limits<double>::max(), BLACK };
-}
-
-std::pair<double, Color> Sphere::ray_intersect(const Ray& ray) const
+Vector Sphere::ray_intersect(const Ray& ray) const
 {
     Vector cam_to_center{ this->center - ray.origin };
     double dist_cam_to_center = cam_to_center.magnitude();
@@ -156,7 +151,7 @@ std::pair<double, Color> Sphere::ray_intersect(const Ray& ray) const
     double dist_ray_from_center = 
         sqrt(dist_cam_to_center*dist_cam_to_center - dist_cam_from_center_normal*dist_cam_from_center_normal);
     if (dist_ray_from_center > this->radius) {
-        return { std::numeric_limits<double>::max(), BLACK };
+        return ray.origin;
     }
 
     double dist_from_intersections = 2 * sqrt(this->radius*this->radius - dist_ray_from_center*dist_ray_from_center);
@@ -166,13 +161,19 @@ std::pair<double, Color> Sphere::ray_intersect(const Ray& ray) const
 
     if (dist_cam_to_intersec_1 > 0 || dist_cam_to_intersec_2 > 0) {
         if (dist_cam_to_intersec_1 > 0 && dist_cam_to_intersec_1 < dist_cam_to_intersec_2) {
-            return { dist_cam_to_intersec_1, this->color };
+            return ray.direction * dist_cam_to_intersec_1;
         } else {
-            return { dist_cam_to_intersec_2, this->color };
+            return ray.direction * dist_cam_to_intersec_2;
         }
     } else {
-        return { std::numeric_limits<double>::max(), BLACK };
+        return ray.origin;
     }
+}
+
+Color Sphere::color_at_vec(const Vector & point) const
+{
+    // TODO: texture mapping
+    return this->color;
 }
 
 

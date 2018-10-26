@@ -10,17 +10,22 @@
 Camera cam;
 std::vector<Shape*> world;
 
-uint32_t shoot_ray(const Ray& camera_ray) 
+#define AA 5
+
+uint32_t shoot_ray(const Ray& camera_ray, int depth) 
 {
-    uint32_t final_color;
+    uint32_t final_color = 0;
 
     double best_dist = -1;
     for (auto& x : world) {
-        std::pair<double, Color> ray_result = x->ray_intersect(camera_ray);
+        Vector intersec_point = x->ray_intersect(camera_ray);
 
-        if (ray_result.first < best_dist || best_dist == -1) {
-            final_color = ray_result.second;
-            best_dist = ray_result.first;
+        double current_dist = vec_distance(camera_ray.origin, intersec_point);
+        if (current_dist > 0) {
+            if (current_dist < best_dist || best_dist == -1) {
+                final_color = x->color_at_vec(intersec_point);
+                best_dist = current_dist;
+            }
         }
     }
 
@@ -36,16 +41,15 @@ void draw_pixels(uint32_t* pixels, int w, int h,
             uint32_t& current_pixel = pixels[y*w + x];
 
             Ray camera_ray;
-            uint32_t aa = 100;
             Color final_color = { 0, 0, 0 };
 
-            for (size_t i = 0; i < aa; i++) {
+            for (size_t i = 0; i < AA; i++) {
                 camera_ray = cam.get_ray_on_pixel_rand(x, y);
 
-                final_color += shoot_ray(camera_ray);
+                final_color += shoot_ray(camera_ray, 0);
             }
 
-            current_pixel = final_color / (double)aa;
+            current_pixel = final_color / (double)AA;
         }
     }
 }

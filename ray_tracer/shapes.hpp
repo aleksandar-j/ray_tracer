@@ -104,25 +104,8 @@ public:
 class Shape {
 
 public:
-    virtual std::pair<double, Color> ray_intersect(const Ray& ray) const = NULL;
-
-};
-
-class Rect : public Shape {
-
-public:
-    Rect() {}
-    Rect(const Vector& A, const Vector& B, const Vector& C, const Vector& D)
-    {
-        points[0] = A;
-        points[1] = B;
-        points[2] = C;
-        points[3] = D;
-    }
-
-    virtual std::pair<double, Color> ray_intersect(const Ray& ray) const;
-
-    Vector points[4];
+    virtual Vector ray_intersect(const Ray& ray) const = NULL;
+    virtual Color color_at_vec(const Vector& point) const = NULL;
 
 };
 
@@ -140,7 +123,8 @@ public:
     {
     }
 
-    virtual std::pair<double, Color> ray_intersect(const Ray& ray) const;
+    virtual Vector ray_intersect(const Ray& ray) const;
+    virtual Color color_at_vec(const Vector& point) const;
 
     Vector center;
     double radius;
@@ -150,7 +134,7 @@ public:
 };
 
 
-class Camera : public Rect, Vector {
+class Camera : public Vector {
 
 public:
     Vector position;
