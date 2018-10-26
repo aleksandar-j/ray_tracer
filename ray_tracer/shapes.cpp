@@ -103,6 +103,30 @@ double vec_distance(const Vector& A, const Vector& B)
 }
 
 
+Color Color::operator+(const Color& B) const
+{
+    return { this->red + B.red, this->green + B.green, this->blue + B.blue };
+}
+
+Color Color::operator-(const Color& B) const
+{
+    return { this->red - B.red, this->green - B.green, this->blue - B.blue };
+}
+
+void Color::operator+=(const Color& B)
+{
+    this->red += B.red;
+    this->green += B.green;
+    this->blue += B.blue;
+}
+
+void Color::operator-=(const Color& B)
+{
+    this->red -= B.red;
+    this->green -= B.green;
+    this->blue -= B.blue;
+}
+
 Color::operator uint32_t() const
 {
     uint32_t new_red = this->red << 16;

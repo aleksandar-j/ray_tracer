@@ -87,6 +87,12 @@ public:
         this->blue  = (argb & 0x000000FF) >> 0;
     }
 
+    Color operator+(const Color& B) const;
+    Color operator-(const Color& B) const;
+
+    void operator+=(const Color& B);
+    void operator-=(const Color& B);
+
     operator uint32_t() const;
 
 };
