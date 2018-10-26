@@ -10,7 +10,7 @@
 Camera cam;
 std::vector<Shape*> world;
 
-#define AA 10
+#define AA 20
 #define NUM_THREADS 4
 
 uint32_t shoot_ray(const Ray& ray, int depth) 
@@ -65,7 +65,6 @@ void draw_pixels(uint32_t* pixels, int w, int h,
 
             for (size_t i = 0; i < AA; i++) {
                 camera_ray = cam.get_ray_on_pixel_rand(x, y);
-
                 final_color += shoot_ray(camera_ray, 0);
             }
 
