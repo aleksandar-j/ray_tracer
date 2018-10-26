@@ -11,7 +11,6 @@ Camera cam;
 std::vector<Shape*> world;
 
 #define AA 20
-#define NUM_THREADS 4
 
 uint32_t shoot_ray(const Ray& ray, int depth) 
 {
@@ -79,21 +78,22 @@ void trace(uint32_t* pixels, int w, int h)
     
     world.push_back(new Sphere{ {10000, 10000, 50}, 20000, { 12, 32, 200 } });
     world.push_back(new Sphere{ {1, 1, -5000}, 5000, { 12, 200, 23 } });
+
     world.push_back(new Sphere{ {3, 3, 1}, 1 });
-    world.push_back(new Sphere{ {4, 2, 0.7}, 0.9 });
+    world.push_back(new Sphere{ {4, 2, 2.5}, 0.3 });
+    world.push_back(new Sphere{ {10, 2, 1.5}, 3 });
+    world.push_back(new Sphere{ {2, 4, 2}, 1.2 });
+    world.push_back(new Sphere{ {4, 10, 0.7}, 0.3 });
 
-    std::vector<std::thread*> threads;
+    std::thread draw_1(draw_pixels, pixels, w, h, 0, 0, w / 2, h / 2);
+    std::thread draw_2(draw_pixels, pixels, w, h, w / 2, 0, w, h / 2);
+    std::thread draw_3(draw_pixels, pixels, w, h, 0, h / 2, w / 2, h);
+    std::thread draw_4(draw_pixels, pixels, w, h, w / 2, h / 2, w, h);
 
-    for (size_t i = 0; i < NUM_THREADS; i++) {
-        std::thread* draw = new std::thread(draw_pixels, pixels, w, h, 0, (h / NUM_THREADS) * i, w, (h / NUM_THREADS) * (i + 1));
-        threads.push_back(draw);
-    }
-
-    for (size_t i = 0; i < NUM_THREADS; i++) {
-        threads[i]->join();
-    }
+    draw_1.join();
+    draw_2.join();
+    draw_3.join();
+    draw_4.join();
     
-    // TODO: Not sure if this deletes pointers
-    threads.clear();
     world.clear();
 }

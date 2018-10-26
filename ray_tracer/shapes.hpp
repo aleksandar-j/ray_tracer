@@ -44,9 +44,9 @@ public:
     void operator-=(const Vector& B);
     void operator*=(const double B);
 
-    double magnitude();
+    double magnitude() const;
     
-    Vector get_unit_vector();
+    Vector get_unit_vector() const;
     void make_unit_vector();
 
     void rotate_x_deg(const double deg);
