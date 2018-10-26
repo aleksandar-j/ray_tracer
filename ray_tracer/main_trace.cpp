@@ -36,19 +36,16 @@ void draw_pixels(uint32_t* pixels, int w, int h,
             uint32_t& current_pixel = pixels[y*w + x];
 
             Ray camera_ray;
-            uint32_t aa = 10;
-            uint32_t red = 0, green = 0, blue = 0;
+            uint32_t aa = 100;
+            Color final_color = { 0, 0, 0 };
 
             for (size_t i = 0; i < aa; i++) {
                 camera_ray = cam.get_ray_on_pixel_rand(x, y);
 
-                uint32_t argb = shoot_ray(camera_ray);
-                red += (argb & 0x00FF0000) >> 16;
-                green += (argb & 0x0000FF00) >> 8;
-                blue += (argb & 0x000000FF) >> 0;
+                final_color += shoot_ray(camera_ray);
             }
 
-            current_pixel = ((red / aa) << 16) | ((green / aa) << 8) | (blue / aa);
+            current_pixel = final_color / (double)aa;
         }
     }
 }
@@ -57,7 +54,7 @@ void trace(uint32_t* pixels, int w, int h)
 {
     cam = { {0, 0, 1}, {1, 1, 0}, 90.0, w, h };
     
-    world.push_back(new Sphere{ {10000, 10000, 50}, 5000, { 12, 32, 200 } });
+    world.push_back(new Sphere{ {10000, 10000, 50}, 20000, { 12, 32, 200 } });
     world.push_back(new Sphere{ {1, 1, -5000}, 5000, { 12, 200, 23 } });
     world.push_back(new Sphere{ {3, 3, 1}, 1 });
 

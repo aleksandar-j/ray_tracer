@@ -113,6 +113,11 @@ Color Color::operator-(const Color& B) const
     return { this->red - B.red, this->green - B.green, this->blue - B.blue };
 }
 
+Color Color::operator/(const double B) const
+{
+    return { (uint32_t)(this->red / B), (uint32_t)(this->green / B), (uint32_t)(this->blue / B) };
+}
+
 void Color::operator+=(const Color& B)
 {
     this->red += B.red;

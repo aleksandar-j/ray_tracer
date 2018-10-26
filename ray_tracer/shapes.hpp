@@ -89,6 +89,7 @@ public:
 
     Color operator+(const Color& B) const;
     Color operator-(const Color& B) const;
+    Color operator/(const double B) const;
 
     void operator+=(const Color& B);
     void operator-=(const Color& B);
