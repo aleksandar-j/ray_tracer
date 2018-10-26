@@ -10,23 +10,44 @@
 Camera cam;
 std::vector<Shape*> world;
 
-#define AA 5
+#define AA 50
 
-uint32_t shoot_ray(const Ray& camera_ray, int depth) 
+uint32_t shoot_ray(const Ray& ray, int depth) 
 {
     uint32_t final_color = 0;
+    Shape* final_shape = NULL;
+    Vector final_intersect;
 
     double best_dist = -1;
     for (auto& x : world) {
-        Vector intersec_point = x->ray_intersect(camera_ray);
+        Vector intersec_point = x->ray_intersect(ray);
 
-        double current_dist = vec_distance(camera_ray.origin, intersec_point);
+        double current_dist = vec_distance(ray.origin, intersec_point);
         if (current_dist > 0) {
             if (current_dist < best_dist || best_dist == -1) {
-                final_color = x->color_at_vec(intersec_point);
                 best_dist = current_dist;
+
+                final_color = x->color_at_vec(intersec_point);
+                final_shape = x;
+                final_intersect = intersec_point;
             }
         }
+    }
+
+    if (depth > 5) {
+        return final_color;
+    }
+
+    if (final_shape) {
+        Ray normal = final_shape->get_normal_ray_at_vec(final_intersect);
+        normal.direction.rotate_x_deg((double)(rand() % 90 - 45));
+        normal.direction.rotate_y_deg((double)(rand() % 90 - 45));
+        normal.direction.rotate_z_deg((double)(rand() % 90 - 45));
+        /*final_color = Color{ (int)(abs(normal.direction.x)*254.0), 
+                             (int)(abs(normal.direction.y)*254.0), 
+                             (int)(abs(normal.direction.z)*254.0) };*/
+        uint32_t normal_color = shoot_ray(normal, depth + 1);
+        final_color -= 0.2*Color{ (int)normal_color };
     }
 
     return final_color;
@@ -58,7 +79,7 @@ void trace(uint32_t* pixels, int w, int h)
 {
     cam = { {0, 0, 1}, {1, 1, 0}, 90.0, w, h };
     
-    world.push_back(new Sphere{ {10000, 10000, 50}, 20000, { 12, 32, 200 } });
+    //world.push_back(new Sphere{ {10000, 10000, 50}, 20000, { 12, 32, 200 } });
     world.push_back(new Sphere{ {1, 1, -5000}, 5000, { 12, 200, 23 } });
     world.push_back(new Sphere{ {3, 3, 1}, 1 });
 

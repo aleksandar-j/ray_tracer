@@ -84,11 +84,38 @@ Vector Vector::get_unit_vector() const
 
 void Vector::make_unit_vector()
 {
-    double magnitude = this->magnitude();
+    double mag = this->magnitude();
 
-    this->x /= magnitude;
-    this->y /= magnitude;
-    this->z /= magnitude;
+    this->x /= mag;
+    this->y /= mag;
+    this->z /= mag;
+}
+
+void Vector::rotate_x_deg(const double deg)
+{
+    double mag = this->magnitude();
+
+    this->x /= mag;
+    this->x = cos(acos(this->x) + deg_to_rad(deg));
+    this->x *= mag;
+}
+
+void Vector::rotate_y_deg(const double deg)
+{
+    double mag = this->magnitude();
+
+    this->y /= mag;
+    this->y = cos(acos(this->y) + deg_to_rad(deg));
+    this->y *= mag;
+}
+
+void Vector::rotate_z_deg(const double deg)
+{
+    double mag = this->magnitude();
+
+    this->z /= mag;
+    this->z = cos(acos(this->z) + deg_to_rad(deg));
+    this->z *= mag;
 }
 
 
@@ -113,9 +140,14 @@ Color Color::operator-(const Color& B) const
     return { this->red - B.red, this->green - B.green, this->blue - B.blue };
 }
 
+Color Color::operator*(const double B) const
+{
+    return { (int)(this->red * B), (int)(this->green * B), (int)(this->blue * B) };
+}
+
 Color Color::operator/(const double B) const
 {
-    return { (uint32_t)(this->red / B), (uint32_t)(this->green / B), (uint32_t)(this->blue / B) };
+    return { (int)(this->red / B), (int)(this->green / B), (int)(this->blue / B) };
 }
 
 void Color::operator+=(const Color& B)
@@ -132,13 +164,31 @@ void Color::operator-=(const Color& B)
     this->blue -= B.blue;
 }
 
-Color::operator uint32_t() const
+Color::operator int() const
 {
-    uint32_t new_red = this->red << 16;
-    uint32_t new_green = this->green << 8;
-    uint32_t new_blue = this->blue;
+    int new_red = this->red << 16;
+    int new_green = this->green << 8;
+    int new_blue = this->blue;
 
     return new_red | new_green | new_blue;
+}
+
+void Color::abs_col()
+{
+    this->red = abs(this->red);
+    this->green = abs(this->green);
+    this->blue = abs(this->blue);
+}
+
+Color color_diff(const Color& A, const Color& B)
+{
+    Color new_color;
+
+    new_color.red = abs(A.red - B.red);
+    new_color.green = abs(A.green - B.green);
+    new_color.blue = abs(A.blue - B.blue);
+
+    return new_color;
 }
 
 
@@ -161,19 +211,24 @@ Vector Sphere::ray_intersect(const Ray& ray) const
 
     if (dist_cam_to_intersec_1 > 0 || dist_cam_to_intersec_2 > 0) {
         if (dist_cam_to_intersec_1 > 0 && dist_cam_to_intersec_1 < dist_cam_to_intersec_2) {
-            return ray.direction * dist_cam_to_intersec_1;
+            return ray.origin + (ray.direction * dist_cam_to_intersec_1);
         } else {
-            return ray.direction * dist_cam_to_intersec_2;
+            return ray.origin + (ray.direction * dist_cam_to_intersec_2);
         }
     } else {
         return ray.origin;
     }
 }
 
-Color Sphere::color_at_vec(const Vector & point) const
+Color Sphere::color_at_vec(const Vector& point) const
 {
     // TODO: texture mapping
     return this->color;
+}
+
+Ray Sphere::get_normal_ray_at_vec(const Vector& point) const
+{
+    return { point, { point - this->center } };
 }
 
 

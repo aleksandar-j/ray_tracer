@@ -47,6 +47,10 @@ public:
     Vector get_unit_vector() const;
     void make_unit_vector();
 
+    void rotate_x_deg(const double deg);
+    void rotate_y_deg(const double deg);
+    void rotate_z_deg(const double deg);
+
 };
 
 double vec_dot_product(const Vector& A, const Vector& B);
@@ -71,16 +75,16 @@ public:
 class Color : public Vector {
 
 public:
-    uint32_t red;
-    uint32_t green;
-    uint32_t blue;
+    int red;
+    int green;
+    int blue;
 
     Color() {}
-    Color(const uint32_t red, const uint32_t green, const uint32_t blue) :
+    Color(const int red, const int green, const int blue) :
                 red(red), green(green), blue(blue)
     {
     }
-    Color(const uint32_t argb) 
+    Color(const int argb) 
     {
         this->red   = (argb & 0x00FF0000) >> 16;
         this->green = (argb & 0x0000FF00) >> 8;
@@ -89,16 +93,21 @@ public:
 
     Color operator+(const Color& B) const;
     Color operator-(const Color& B) const;
+    Color operator*(const double B) const;
     Color operator/(const double B) const;
 
     void operator+=(const Color& B);
     void operator-=(const Color& B);
 
-    operator uint32_t() const;
+    operator int() const;
+
+    void abs_col();
 
 };
 #define BLACK { 0x0, 0x0, 0x0 }
 #define WHITE { 0xFF, 0xFF, 0xFF }
+
+Color color_diff(const Color& A, const Color& B);
 
 
 class Shape {
@@ -106,6 +115,7 @@ class Shape {
 public:
     virtual Vector ray_intersect(const Ray& ray) const = NULL;
     virtual Color color_at_vec(const Vector& point) const = NULL;
+    virtual Ray get_normal_ray_at_vec(const Vector& point) const = NULL;
 
 };
 
@@ -125,6 +135,7 @@ public:
 
     virtual Vector ray_intersect(const Ray& ray) const;
     virtual Color color_at_vec(const Vector& point) const;
+    virtual Ray get_normal_ray_at_vec(const Vector& point) const;
 
     Vector center;
     double radius;
