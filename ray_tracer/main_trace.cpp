@@ -10,8 +10,8 @@
 Camera cam;
 std::vector<Shape*> world;
 
-#define AA 50
-#define NUM_THREADS 10
+#define AA 10
+#define NUM_THREADS 4
 
 uint32_t shoot_ray(const Ray& ray, int depth) 
 {
@@ -60,8 +60,6 @@ void draw_pixels(uint32_t* pixels, int w, int h,
 {
     for (size_t y = start_y; y < end_y; y++) {
         for (size_t x = start_x; x < end_x; x++) {
-            uint32_t& current_pixel = pixels[y*w + x];
-
             Ray camera_ray;
             Color final_color = { 0, 0, 0 };
 
@@ -71,7 +69,7 @@ void draw_pixels(uint32_t* pixels, int w, int h,
                 final_color += shoot_ray(camera_ray, 0);
             }
 
-            current_pixel = final_color / (double)AA;
+            pixels[y*w + x] = final_color / (double)AA;
         }
     }
 }
@@ -93,7 +91,7 @@ void trace(uint32_t* pixels, int w, int h)
     }
 
     for (size_t i = 0; i < NUM_THREADS; i++) {
-        (threads[i])->join();
+        threads[i]->join();
     }
     
     // TODO: Not sure if this deletes pointers

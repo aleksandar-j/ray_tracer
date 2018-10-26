@@ -30,7 +30,7 @@ int WinMain(int argc, char* argv[])
     SDL_BlitSurface(our_surface, NULL, window_surface, NULL);
     SDL_UpdateWindowSurface(window);
 
-    SDL_Event eve;
+    /*SDL_Event eve;
     while (true) {
         if (SDL_PollEvent(&eve)) {
             if (eve.type == SDL_KEYDOWN) {
@@ -39,7 +39,7 @@ int WinMain(int argc, char* argv[])
                 SDL_Delay(100);
             }
         }
-    }
+    }*/
 
     SDL_DestroyWindow(window);
     SDL_Quit();
