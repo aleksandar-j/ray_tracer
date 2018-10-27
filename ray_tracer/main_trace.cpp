@@ -10,7 +10,7 @@
 Camera cam;
 std::vector<Shape*> world;
 
-#define AA 20
+#define AA 10
 
 uint32_t shoot_ray(const Ray& ray, int depth) 
 {
@@ -43,11 +43,26 @@ uint32_t shoot_ray(const Ray& ray, int depth)
         normal.direction.rotate_x_deg((double)(rand() % 90 - 45));
         normal.direction.rotate_y_deg((double)(rand() % 90 - 45));
         normal.direction.rotate_z_deg((double)(rand() % 90 - 45));
-        /*final_color = Color{ (int)(abs(normal.direction.x)*254.0), 
-                             (int)(abs(normal.direction.y)*254.0), 
+        /*final_color = Color{ (int)(abs(normal.direction.x)*254.0),
+                             (int)(abs(normal.direction.y)*254.0),
                              (int)(abs(normal.direction.z)*254.0) };*/
         uint32_t normal_color = shoot_ray(normal, depth + 1);
-        final_color -= 0.2*Color{ (int)normal_color };
+        if (rand() % 2) {
+            final_color -= 0.2*Color{ (int)normal_color };
+        } else {
+            final_color += 0.2*Color{ (int)normal_color };
+        }
+    }
+
+    if (depth == 0) {
+        if (final_shape) {
+            Color diff = color_diff(final_shape->color_at_vec(final_intersect), final_color);
+            int avg = (diff.red + diff.green + diff.blue) / 3.0;
+            if (avg != 0) {
+                diff.red %= avg; diff.green %= avg; diff.blue %= avg;
+            }
+            final_color = final_shape->color_at_vec(final_intersect) - diff;
+        }
     }
 
     return final_color;
@@ -74,7 +89,7 @@ void draw_pixels(uint32_t* pixels, int w, int h,
 
 void trace(uint32_t* pixels, int w, int h)
 {
-    cam = { {0, 0, 1}, {1, 1, 0}, 90.0, w, h };
+    cam = { {0, 0, 1}, {1, 1, 0}, 80.0, w, h };
     
     world.push_back(new Sphere{ {10000, 10000, 50}, 20000, { 12, 32, 200 } });
     world.push_back(new Sphere{ {1, 1, -5000}, 5000, { 12, 200, 23 } });
@@ -82,8 +97,8 @@ void trace(uint32_t* pixels, int w, int h)
     world.push_back(new Sphere{ {3, 3, 1}, 1 });
     world.push_back(new Sphere{ {4, 2, 2.5}, 0.3 });
     world.push_back(new Sphere{ {10, 2, 1.5}, 3 });
-    world.push_back(new Sphere{ {2, 4, 2}, 1.2 });
-    world.push_back(new Sphere{ {4, 10, 0.7}, 0.3 });
+    world.push_back(new Sphere{ {2, 4, 2}, 0.5 });
+    world.push_back(new Sphere{ {0.5, 1.1, 0.7}, 0.3 });
 
     std::thread draw_1(draw_pixels, pixels, w, h, 0, 0, w / 2, h / 2);
     std::thread draw_2(draw_pixels, pixels, w, h, w / 2, 0, w, h / 2);

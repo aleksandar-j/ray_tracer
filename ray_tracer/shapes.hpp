@@ -146,6 +146,29 @@ public:
 
 };
 
+class Cube : public Shape {
+
+public:
+    Cube() {}
+    Cube(const Vector& center, const Vector& width, const Vector& height) :
+                center(center), width(width), height(height)
+    {
+    }
+    Cube(const Vector& center, const Vector& width, const Vector& height, const Color& color) :
+        center(center), width(width), height(height), color(color)
+    {
+    }
+
+    virtual Vector ray_intersect(const Ray& ray) const;
+
+    Vector center;
+    Vector height;
+    Vector width;
+
+    Color color;
+
+};
+
 
 class Camera : public Vector {
 
