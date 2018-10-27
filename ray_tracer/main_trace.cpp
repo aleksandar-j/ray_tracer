@@ -10,7 +10,7 @@
 Camera cam;
 std::vector<Shape*> world;
 
-#define AA 10
+#define AA 1
 
 uint32_t shoot_ray(const Ray& ray, int depth) 
 {

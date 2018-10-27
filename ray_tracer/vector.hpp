@@ -1,23 +1,24 @@
 #pragma once
 
 #include "math_extension.hpp"
+#include <vector>
 
 class Vector {
 
 public:
+
     double x;
     double y;
     double z;
-
-    Vector() {}
-    Vector(double x, double y) :
-        x(x), y(y)
+    
+    Vector()
     {
-        this->z = 0;
     }
-    Vector(double x, double y, double z) :
-        x(x), y(y), z(z)
+    Vector(double x, double y, double z)
     {
+        this->x = x;
+        this->y = y;
+        this->z = z;
     }
 
     void operator+=(const Vector& B);
@@ -51,7 +52,7 @@ Vector get_unit_vector(const Vector& A);
 double vec_dot_product(const Vector& A, const Vector& B);
 double vec_distance(const Vector& A, const Vector& B);
 
-class Ray : public Vector {
+class Ray {
 
 public:
     Vector origin;
@@ -66,8 +67,7 @@ public:
 
 };
 
-
-class Color : public Vector {
+class Color {
 
 public:
     int red;
@@ -85,11 +85,12 @@ public:
         this->green = (argb & 0x0000FF00) >> 8;
         this->blue = (argb & 0x000000FF) >> 0;
     }
-
-    Color operator+(const Color& B) const;
-    Color operator-(const Color& B) const;
-    Color operator*(const double B) const;
-    Color operator/(const double B) const;
+    Color(const Vector& vec)
+    {
+        this->red = vec.x;
+        this->green = vec.y;
+        this->blue = vec.z;
+    }
 
     void operator+=(const Color& B);
     void operator-=(const Color& B);
@@ -101,5 +102,10 @@ public:
 };
 #define BLACK { 0x0, 0x0, 0x0 }
 #define WHITE { 0xFF, 0xFF, 0xFF }
+
+Color operator+(const Color& A, const Color& B);
+Color operator-(const Color& A, const Color& B);
+Color operator*(const Color& A, const double B);
+Color operator/(const Color& A, const double B);
 
 Color color_diff(const Color& A, const Color& B);
