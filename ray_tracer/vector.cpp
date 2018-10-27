@@ -1,71 +1,60 @@
 
 #include "vector.hpp"
 
-bool Vector::operator==(const Vector& B) const
+bool operator==(const Vector& A, const Vector& B)
 {
-    return (this->x == B.x && this->y == B.y && this->z == B.z);
+    return A.x == B.x && A.y == B.y && A.z == B.z;
+}
+bool operator!=(const Vector& A, const Vector& B)
+{
+    return !(A == B);
 }
 
-bool Vector::operator!=(const Vector& B) const
+Vector operator+(const Vector& A, const Vector& B)
 {
-    return (!(*this == B));
+    return { A.x + B.x, A.y + B.y, A.z + B.z };
 }
-
-Vector Vector::operator+(const Vector& B) const
+Vector operator+(const Vector& A, const double B)
 {
-    return { this->x + B.x, this->y + B.y, this->z + B.z };
+    return { A.x + B, A.y + B, A.z + B };
 }
-
-Vector Vector::operator+(const double B) const
+Vector operator-(const Vector& A, const Vector& B)
 {
-    return { this->x + B, this->y + B, this->z + B };
+    return { A.x - B.x, A.y - B.y, A.z - B.z };
 }
-
-Vector Vector::operator-(const Vector& B) const
+Vector operator-(const Vector& A, const double B)
 {
-    return { this->x - B.x, this->y - B.y, this->z - B.z };
+    return { A.x - B, A.y - B, A.z - B };
 }
-
-Vector Vector::operator-(const double B) const
+Vector operator*(const Vector& A, const Vector& B)
 {
-    return { this->x - B, this->y - B, this->z - B };
+    return { A.x * B.x, A.y * B.y, A.z * B.z };
 }
-
-Vector Vector::operator*(const Vector& B) const
+Vector operator*(const Vector& A, const double B)
 {
-    return { this->x * B.x, this->y * B.y, this->z * B.z };
+    return { A.x * B, A.y * B, A.z * B };
 }
-
-Vector Vector::operator*(const double B) const
+Vector operator/(const Vector& A, const Vector& B)
 {
-    return { this->x * B, this->y * B, this->z * B };
+    return { A.x / B.x, A.y / B.y, A.z / B.z };
 }
-
-Vector Vector::operator/(const Vector& B) const
+Vector operator/(const Vector& A, const double B)
 {
-    return { this->x / B.x, this->y / B.y, this->z / B.z };
-}
-
-Vector Vector::operator/(const double B) const
-{
-    return { this->x / B, this->y / B, this->z / B };
+    return { A.x / B, A.y / B, A.z / B };
 }
 
 void Vector::operator+=(const Vector& B)
 {
     *this = *this + B;
 }
-
 void Vector::operator+=(const double B)
 {
     *this = *this + B;
 }
-
 void Vector::operator-=(const Vector& B)
 {
     *this = *this - B;
 }
-
 void Vector::operator*=(const double B)
 {
     *this = *this * B;
@@ -74,12 +63,6 @@ void Vector::operator*=(const double B)
 double Vector::magnitude() const
 {
     return sqrt(this->x*this->x + this->y*this->y + this->z*this->z);
-}
-
-Vector Vector::get_unit_vector() const
-{
-    double mag = this->magnitude();
-    return { this->x / mag, this->y / mag, this->z / mag };
 }
 
 void Vector::make_unit_vector()
@@ -99,7 +82,6 @@ void Vector::rotate_x_deg(const double deg)
     this->x = cos(acos(this->x) + deg_to_rad(deg));
     this->x *= mag;
 }
-
 void Vector::rotate_y_deg(const double deg)
 {
     double mag = this->magnitude();
@@ -108,7 +90,6 @@ void Vector::rotate_y_deg(const double deg)
     this->y = cos(acos(this->y) + deg_to_rad(deg));
     this->y *= mag;
 }
-
 void Vector::rotate_z_deg(const double deg)
 {
     double mag = this->magnitude();
@@ -118,6 +99,11 @@ void Vector::rotate_z_deg(const double deg)
     this->z *= mag;
 }
 
+Vector get_unit_vector(const Vector& A)
+{
+    double mag = A.magnitude();
+    return { A.x / mag, A.y / mag, A.z / mag };
+}
 
 double vec_dot_product(const Vector& A, const Vector& B)
 {

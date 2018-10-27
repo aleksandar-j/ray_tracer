@@ -9,8 +9,6 @@ public:
     double y;
     double z;
 
-    double mag = 0;
-
     Vector() {}
     Vector(double x, double y) :
         x(x), y(y)
@@ -22,18 +20,6 @@ public:
     {
     }
 
-    bool operator==(const Vector& B) const;
-    bool operator!=(const Vector& B) const;
-
-    Vector operator+(const Vector& B) const;
-    Vector operator+(const double B) const;
-    Vector operator-(const Vector& B) const;
-    Vector operator-(const double B) const;
-    Vector operator*(const Vector& B) const;
-    Vector operator*(const double B) const;
-    Vector operator/(const Vector& B) const;
-    Vector operator/(const double B) const;
-
     void operator+=(const Vector& B);
     void operator+=(const double B);
     void operator-=(const Vector& B);
@@ -41,7 +27,6 @@ public:
 
     double magnitude() const;
 
-    Vector get_unit_vector() const;
     void make_unit_vector();
 
     void rotate_x_deg(const double deg);
@@ -50,6 +35,19 @@ public:
 
 };
 
+bool operator==(const Vector& A, const Vector& B);
+bool operator!=(const Vector& A, const Vector& B);
+
+Vector operator+(const Vector& A, const Vector& B);
+Vector operator+(const Vector& A, const double B);
+Vector operator-(const Vector& A, const Vector& B);
+Vector operator-(const Vector& A, const double B);
+Vector operator*(const Vector& A, const Vector& B);
+Vector operator*(const Vector& A, const double B);
+Vector operator/(const Vector& A, const Vector& B);
+Vector operator/(const Vector& A, const double B);
+
+Vector get_unit_vector(const Vector& A);
 double vec_dot_product(const Vector& A, const Vector& B);
 double vec_distance(const Vector& A, const Vector& B);
 
