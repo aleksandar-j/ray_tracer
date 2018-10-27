@@ -1,11 +1,11 @@
 
 #include "main_trace.hpp"
 #include <vector>
-#include <queue>
 #include <ctime>
 #include <thread>
 
 #include "shapes.hpp"
+#include "camera.hpp"
 
 Camera cam;
 std::vector<Shape*> world;

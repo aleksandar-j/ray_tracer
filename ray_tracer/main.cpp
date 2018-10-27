@@ -3,7 +3,7 @@
 
 #include "main_trace.hpp"
 #include <random>
-#include <time.h>
+#include <ctime>
 
 const int SCREEN_WIDTH = 1366;
 const int SCREEN_HEIGHT = 768;

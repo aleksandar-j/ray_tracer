@@ -137,15 +137,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="camera.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_trace.cpp" />
     <ClCompile Include="math_extension.cpp" />
     <ClCompile Include="shapes.cpp" />
+    <ClCompile Include="vector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="camera.hpp" />
     <ClInclude Include="main_trace.hpp" />
     <ClInclude Include="math_extension.hpp" />
     <ClInclude Include="shapes.hpp" />
+    <ClInclude Include="vector.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
