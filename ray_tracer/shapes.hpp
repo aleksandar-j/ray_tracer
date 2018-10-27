@@ -26,9 +26,9 @@ public:
     {
     }
 
-    virtual Vector ray_intersect(const Ray& ray) const;
-    virtual Color color_at_vec(const Vector& point) const;
-    virtual Ray get_normal_ray_at_vec(const Vector& point) const;
+    Vector ray_intersect(const Ray& ray) const override;
+    Color color_at_vec(const Vector& point) const override;
+    Ray get_normal_ray_at_vec(const Vector& point) const override;
 
     Vector center;
     double radius;
@@ -50,7 +50,7 @@ public:
     {
     }
 
-    virtual Vector ray_intersect(const Ray& ray) const;
+    Vector ray_intersect(const Ray& ray) const override;
 
     Vector center;
     Vector height;
