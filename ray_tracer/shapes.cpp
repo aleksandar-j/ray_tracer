@@ -12,13 +12,13 @@ Vector Sphere::ray_intersect(const Ray& ray) const
     double dist_cam_to_center = cam_to_center.magnitude();
     double dist_cam_from_center_normal = vec_dot_product(cam_to_center, ray.direction);
 
-    double dist_ray_from_center = 
-        sqrt(dist_cam_to_center*dist_cam_to_center - dist_cam_from_center_normal*dist_cam_from_center_normal);
-    if (dist_ray_from_center > this->radius) {
+    double dist_ray_from_center_sqrd = 
+        dist_cam_to_center*dist_cam_to_center - dist_cam_from_center_normal*dist_cam_from_center_normal;
+    if (dist_ray_from_center_sqrd > (this->radius*this->radius)) {
         return ray.origin;
     }
 
-    double dist_from_intersections = 2 * sqrt(this->radius*this->radius - dist_ray_from_center*dist_ray_from_center);
+    double dist_from_intersections = 2 * sqrt(this->radius*this->radius - dist_ray_from_center_sqrd);
 
     double dist_cam_to_intersec_1 = dist_cam_from_center_normal - dist_from_intersections / 2;
     double dist_cam_to_intersec_2 = dist_cam_from_center_normal + dist_from_intersections / 2;

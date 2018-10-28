@@ -87,9 +87,9 @@ public:
     }
     Color(const Vector& vec)
     {
-        this->red = vec.x;
-        this->green = vec.y;
-        this->blue = vec.z;
+        this->red = (int)vec.x;
+        this->green = (int)vec.y;
+        this->blue = (int)vec.z;
     }
 
     void operator+=(const Color& B);
