@@ -3,7 +3,7 @@
 #include "vector.hpp"
 #include "shapes.hpp"
 
-//#include <limits>
+#include <limits>
 
 class Light {
 

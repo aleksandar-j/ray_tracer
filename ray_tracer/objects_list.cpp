@@ -32,9 +32,7 @@ Color color_at_point(const ObjectList& world, const Intersect& intersect)
 double light_level_at_point(const ObjectList& world, const Intersect& intersect)
 {
     double result = 0.0;
-
-    // TODO: we only compute largest light level, not real one 
-    //       (a .3 and a .5 light doesn't give .5 light)...
+    
     for (auto& light : world.light_list) {
         double light_level = light->light_level_at_point(world.object_list, intersect);
         result += (1.0 - result) * light_level;
