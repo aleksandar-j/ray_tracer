@@ -22,6 +22,8 @@ void draw_pixels(uint32_t* pixels, int w, int h,
             Color final_color = { 0, 0, 0 };
 
             bool run_aa = false;
+
+            // Tracing all diagonal AA pixels, if all are equal, we don't do more
             Color prev_color;
             for (size_t i = 0; i < AA; i++) {
                 camera_ray = cam.get_ray_on_pixel(x*AA + i, y*AA + i);
@@ -39,6 +41,7 @@ void draw_pixels(uint32_t* pixels, int w, int h,
                 final_color += new_color;
             }
 
+            // If there are some different pixels, we run the full aa routines
             if (run_aa) {
                 for (size_t y_new = 0; y_new < AA; y_new++) {
                     for (size_t x_new = 0; x_new < AA; x_new++) {
