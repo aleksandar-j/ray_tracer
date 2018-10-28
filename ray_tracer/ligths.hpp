@@ -29,6 +29,12 @@ public:
     {
         this->intensity = intensity;
     }
+    PointLight(const Vector& center, const double intensity, const double intensity_dropoff_linear) :
+        center(center)
+    {
+        this->intensity = intensity;
+        this->intensity_dropoff_linear = intensity_dropoff_linear;
+    }
 
     virtual double light_level_at_point(const std::vector<Shape*>& objects, const Intersect& intersect) const;
 

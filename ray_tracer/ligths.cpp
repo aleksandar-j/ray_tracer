@@ -32,12 +32,20 @@ double PointLight::light_level_at_point(const std::vector<Shape*>& objects, cons
     if (result != 0.0) {
         // We do hit the point
 
+        // The greater the angle between the light and surface, the lower the light level
         Ray objectnormal_ray = intersect.shape_hit->get_normal_ray_at_vec(intersect.point);
         Vector objectlight_direction = { this->center - intersect.point };
 
         double angle = vec_anglebetween_rad(objectnormal_ray.direction, objectlight_direction);
 
         result *= abs(cos(angle));
+
+        // The greater the distance between the light and surface, the lower the light level
+        double objectlight_distance = objectlight_direction.magnitude();
+        result *= (this->intensity_dropoff_linear - objectlight_distance) / this->intensity_dropoff_linear;
+        if (result < 0.0) {
+            result = 0.0;
+        }
     }
 
     return result;

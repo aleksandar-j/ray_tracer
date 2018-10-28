@@ -11,7 +11,7 @@
 Camera cam;
 ObjectList shapes;
 
-#define AA 5
+#define AA 2
 
 void draw_pixels(uint32_t* pixels, int w, int h,
                 size_t start_x, size_t start_y, 
@@ -79,12 +79,11 @@ void trace(uint32_t* pixels, int w, int h)
     shapes.object_list.push_back(new Sphere{ {2, 4, 2}, 0.5, {150, 23, 0} });
     shapes.object_list.push_back(new Sphere{ {0.5, 1.1, 0.7}, 0.3 });
 
-    shapes.light_list.push_back(new AmbientLight{ 0.3 });
-    shapes.light_list.push_back(new PointLight{ {3, 3, 5}, 1.0 });
-    shapes.light_list.push_back(new PointLight{ {5, 3, 2}, 1.0 });
-    //shapes.object_list.push_back(new Sphere{ {3, 3, 5}, 0.1, {255, 255, 0} });
-    //shapes.object_list.push_back(new Sphere{ {5, 3, 2}, 0.1, {255, 255, 0} });
-
+    shapes.light_list.push_back(new AmbientLight{ 0.1 });
+    shapes.light_list.push_back(new PointLight{ {3, 3, 5}, 1.0, 16.0 });
+    shapes.light_list.push_back(new PointLight{ {5, 3, 2}, 1.0, 4.0 });
+    shapes.light_list.push_back(new PointLight{ {2, 2, 0.7}, 0.2, 2.0 });
+    
     std::thread draw_1(draw_pixels, pixels, w, h, 0, 0, w / 2, h / 2);
     std::thread draw_2(draw_pixels, pixels, w, h, w / 2, 0, w, h / 2);
     std::thread draw_3(draw_pixels, pixels, w, h, 0, h / 2, w / 2, h);
