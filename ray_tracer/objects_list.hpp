@@ -6,16 +6,7 @@
 #include "shapes.hpp"
 #include "ligths.hpp"
 
-class ObjectList {
-
-public:
-    ObjectList()
-    {
-    }
-    ObjectList(std::vector<Shape*>& object_list, std::vector<Light*> light_list) :
-        object_list(object_list), light_list(light_list)
-    {
-    }
+struct ObjectList {
 
     std::vector<Shape*> object_list;
     std::vector<Light*> light_list;
