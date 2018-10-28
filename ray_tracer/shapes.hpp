@@ -2,13 +2,33 @@
 
 #include "math_extension.hpp"
 #include "vector.hpp"
+#include "intersect.hpp"
 
 class Shape {
 
 public:
-    virtual Vector ray_intersect(const Ray& ray) const = NULL;
+    virtual Intersect ray_intersect(const Ray& ray) const = NULL;
     virtual Color color_at_vec(const Vector& point) const = NULL;
     virtual Ray get_normal_ray_at_vec(const Vector& point) const = NULL;
+
+};
+
+class ShapeList : public Shape {
+
+public:
+    ShapeList() 
+    {
+    }
+    ShapeList(std::vector<Shape*>& list) :
+        list(list)
+    {
+    }
+
+    virtual Intersect ray_intersect(const Ray& ray) const override;
+    virtual Color color_at_vec(const Vector& point) const = NULL;
+    virtual Ray get_normal_ray_at_vec(const Vector& point) const override;
+
+    std::vector<Shape*> list;
 
 };
 
@@ -26,7 +46,7 @@ public:
     {
     }
 
-    virtual Vector ray_intersect(const Ray& ray) const override;
+    virtual Intersect ray_intersect(const Ray& ray) const override;
     virtual Color color_at_vec(const Vector& point) const override;
     virtual Ray get_normal_ray_at_vec(const Vector& point) const override;
 
@@ -50,7 +70,7 @@ public:
     {
     }
 
-    virtual Vector ray_intersect(const Ray& ray) const override;
+    virtual Intersect ray_intersect(const Ray& ray) const override;
 
     Vector center;
     Vector height;

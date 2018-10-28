@@ -147,6 +147,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.hpp" />
+    <ClInclude Include="intersect.hpp" />
     <ClInclude Include="main_trace.hpp" />
     <ClInclude Include="math_extension.hpp" />
     <ClInclude Include="shapes.hpp" />
