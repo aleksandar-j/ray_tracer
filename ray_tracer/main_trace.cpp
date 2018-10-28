@@ -4,12 +4,12 @@
 #include <ctime>
 #include <thread>
 
-#include "shapes.hpp"
 #include "camera.hpp"
 #include "intersect.hpp"
+#include "objects_list.hpp"
 
 Camera cam;
-ShapeList shapes;
+ObjectList shapes;
 
 #define AA 20
 
@@ -25,8 +25,8 @@ void draw_pixels(uint32_t* pixels, int w, int h,
             for (size_t i = 0; i < AA; i++) {
                 camera_ray = cam.get_ray_on_pixel_rand(x, y);
                 
-                Intersect intersect = shapes.ray_intersect(camera_ray);
-                Color color = intersect.shape_hit->color_at_vec(intersect.point);
+                Intersect intersect = object_ray_intersect(shapes, camera_ray);
+                Color color = color_at_point(shapes, intersect.point, *intersect.shape_hit);
                 final_color += color;
             }
 
@@ -39,14 +39,18 @@ void trace(uint32_t* pixels, int w, int h)
 {
     cam = { {0, 0, 1}, {1, 1, 0}, 90.0, w, h };
 
-    shapes.list.push_back(new Sphere{ {10000, 10000, 50}, 20000, { 135, 160, 255 } });
-    shapes.list.push_back(new Sphere{ {1, 1, -5000}, 5000, { 12, 200, 23 } });
+    shapes.object_list.push_back(new Sphere{ {10000, 10000, 50}, 20000, { 135, 160, 255 } });
+    shapes.object_list.push_back(new Sphere{ {1, 1, -5000}, 5000, { 12, 200, 23 } });
 
-    shapes.list.push_back(new Sphere{ {3, 3, 1}, 1, {23, 48, 69} });
-    shapes.list.push_back(new Sphere{ {4, 2, 2.5}, 0.3 });
-    shapes.list.push_back(new Sphere{ {10, 2, 1.5}, 3 });
-    shapes.list.push_back(new Sphere{ {2, 4, 2}, 0.5, {150, 23, 0} });
-    shapes.list.push_back(new Sphere{ {0.5, 1.1, 0.7}, 0.3 });
+    shapes.object_list.push_back(new Sphere{ {3, 3, 1}, 1, {23, 48, 69} });
+    shapes.object_list.push_back(new Sphere{ {3.2, 1.6, 0.6}, 0.05, {23, 48, 69} });
+    shapes.object_list.push_back(new Sphere{ {4, 2, 2.5}, 0.3 });
+    shapes.object_list.push_back(new Sphere{ {10, 2, 1.5}, 3 });
+    shapes.object_list.push_back(new Sphere{ {2, 4, 2}, 0.5, {150, 23, 0} });
+    shapes.object_list.push_back(new Sphere{ {0.5, 1.1, 0.7}, 0.3 });
+
+    //shapes.light_list.push_back(new AmbientLight{ 1.0 });
+    shapes.light_list.push_back(new PointLight{ {3, 3, 5}, 1.0 });
 
     std::thread draw_1(draw_pixels, pixels, w, h, 0, 0, w / 2, h / 2);
     std::thread draw_2(draw_pixels, pixels, w, h, w / 2, 0, w, h / 2);
@@ -58,5 +62,5 @@ void trace(uint32_t* pixels, int w, int h)
     draw_3.join();
     draw_4.join();
     
-    shapes.list.clear();
+    shapes.object_list.clear();
 }

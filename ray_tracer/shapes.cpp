@@ -1,36 +1,6 @@
 
 #include "shapes.hpp"
 
-Intersect ShapeList::ray_intersect(const Ray& ray) const
-{
-    Intersect final_intersect;
-
-    double best_dist = -1;
-    for (auto& x : this->list) {
-        Intersect intersect_data = x->ray_intersect(ray);
-        double dist_to_intersect = intersect_data.ray_to_point_dist;
-
-        if (dist_to_intersect > 0) {
-            if (dist_to_intersect < best_dist || best_dist == -1) {
-                best_dist = dist_to_intersect;
-                final_intersect = intersect_data;
-            }
-        }
-    }
-
-    return final_intersect;
-}
-
-Color ShapeList::color_at_vec(const Vector & point) const
-{
-    return Color();
-}
-
-Ray ShapeList::get_normal_ray_at_vec(const Vector & point) const
-{
-    return Ray();
-}
-
 Intersect Cube::ray_intersect(const Ray & ray) const
 {
     return Intersect();
@@ -74,7 +44,7 @@ Intersect Sphere::ray_intersect(const Ray& ray) const
     }
 }
 
-Color Sphere::color_at_vec(const Vector& point) const
+Color Sphere::color_at_point(const Vector& point, const Shape& object) const
 {
     // TODO: texture mapping
     return this->color;

@@ -130,6 +130,13 @@ void Color::operator-=(const Color& B)
     this->blue -= B.blue;
 }
 
+void Color::operator*=(const double B)
+{
+    this->red *= B;
+    this->green *= B;
+    this->blue *= B;
+}
+
 Color::operator int() const
 {
     int new_red = this->red << 16;

@@ -94,6 +94,7 @@ public:
 
     void operator+=(const Color& B);
     void operator-=(const Color& B);
+    void operator*=(const double B);
 
     operator int() const;
 
