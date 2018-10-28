@@ -110,6 +110,27 @@ Vector get_unit_vector(const Vector& A)
     return { A.x / mag, A.y / mag, A.z / mag };
 }
 
+Vector vec_rotate_x_deg(const Vector& A, const double deg)
+{
+    Vector result = A;
+    result.rotate_x_deg(deg);
+    return result;
+}
+
+Vector vec_rotate_y_deg(const Vector & A, const double deg)
+{
+    Vector result = A;
+    result.rotate_y_deg(deg);
+    return result;
+}
+
+Vector vec_rotate_z_deg(const Vector & A, const double deg)
+{
+    Vector result = A;
+    result.rotate_z_deg(deg);
+    return result;
+}
+
 double vec_dot_product(const Vector& A, const Vector& B)
 {
     return A.x*B.x + A.y*B.y + A.z*B.z;

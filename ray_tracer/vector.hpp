@@ -51,6 +51,11 @@ Vector operator/(const Vector& A, const Vector& B);
 Vector operator/(const Vector& A, const double B);
 
 Vector get_unit_vector(const Vector& A);
+
+Vector vec_rotate_x_deg(const Vector&A, const double deg);
+Vector vec_rotate_y_deg(const Vector&A, const double deg);
+Vector vec_rotate_z_deg(const Vector&A, const double deg);
+
 double vec_dot_product(const Vector& A, const Vector& B);
 double vec_anglebetween_rad(const Vector& A, const Vector& B);
 double vec_distance(const Vector& A, const Vector& B);
