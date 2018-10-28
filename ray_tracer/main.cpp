@@ -10,7 +10,7 @@ const int SCREEN_HEIGHT = 768;
 
 int WinMain(int argc, char* argv[])
 {
-    srand(time(NULL));
+    srand(time(nullptr));
 
     SDL_Init(SDL_INIT_VIDEO);
 
@@ -27,7 +27,7 @@ int WinMain(int argc, char* argv[])
         trace((uint32_t*)our_surface->pixels, SCREEN_WIDTH, SCREEN_HEIGHT);
     }
 
-    SDL_BlitSurface(our_surface, NULL, window_surface, NULL);
+    SDL_BlitSurface(our_surface, nullptr, window_surface, nullptr);
     SDL_UpdateWindowSurface(window);
 
     SDL_Event eve;

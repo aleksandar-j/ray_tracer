@@ -7,9 +7,9 @@
 class Shape {
 
 public:
-    virtual Intersect ray_intersect(const Ray& ray) const = NULL;
-    virtual Color color_at_point(const Vector& point, const Shape& object) const = NULL;
-    virtual Ray get_normal_ray_at_vec(const Vector& point) const = NULL;
+    virtual Intersect ray_intersect(const Ray& ray) const = 0;
+    virtual Color color_at_point(const Vector& point, const Shape& object) const = 0;
+    virtual Ray get_normal_ray_at_vec(const Vector& point) const = 0;
 
 };
 

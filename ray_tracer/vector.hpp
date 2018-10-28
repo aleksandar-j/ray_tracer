@@ -109,8 +109,11 @@ public:
     void abs_col();
 
 };
-#define BLACK { 0x0, 0x0, 0x0 }
+#define BLACK { 0x00, 0x00, 0x00 }
 #define WHITE { 0xFF, 0xFF, 0xFF }
+#define RED { 0xFF, 0x00, 0x00 }
+#define GREEN { 0x00, 0xFF, 0x00 }
+#define BLUE { 0x00, 0x00, 0xFF }
 
 Color operator+(const Color& A, const Color& B);
 Color operator-(const Color& A, const Color& B);

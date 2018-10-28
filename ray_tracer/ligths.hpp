@@ -8,7 +8,7 @@
 class Light {
 
 public:
-    virtual double light_level_at_point(const std::vector<Shape*>& objects, const Intersect& intersect) const = NULL;
+    virtual double light_level_at_point(const std::vector<Shape*>& objects, const Intersect& intersect) const = 0;
 
     // Value by which the color will be multiplied, 0-pitch black, 1-default colors, >1-brighter than normal
     double intensity = 1.0;

@@ -10,7 +10,7 @@ double PointLight::light_level_at_point(const std::vector<Shape*>& objects, cons
         Ray lightobject_ray{ {this->center}, {intersect.point - this->center} };
         Intersect intersect_data = object->ray_intersect(lightobject_ray);
         
-        if (intersect_data.shape_hit == NULL) {
+        if (intersect_data.shape_hit == nullptr) {
             // Nothing is hit, continue
             continue;
         }

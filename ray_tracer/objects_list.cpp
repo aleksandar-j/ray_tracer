@@ -24,6 +24,10 @@ Intersect object_ray_intersect(const ObjectList& world, const Ray& ray)
 
 Color color_at_point(const ObjectList& world, const Intersect& intersect)
 {
+    if (intersect.shape_hit == nullptr) {
+        return BLACK;
+    }
+
     Color object_color = intersect.shape_hit->color_at_point(intersect.point, *intersect.shape_hit);
     object_color *= light_level_at_point(world, intersect);
     return object_color;
