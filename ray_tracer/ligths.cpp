@@ -37,7 +37,7 @@ double PointLight::light_level_at_point(const std::vector<Shape*>& objects, cons
 
         double angle = vec_anglebetween_rad(objectnormal_ray.direction, objectlight_direction);
 
-        result *= cos(angle);
+        result *= abs(cos(angle));
     }
 
     return result;

@@ -11,7 +11,7 @@
 Camera cam;
 ObjectList shapes;
 
-#define AA 10
+#define AA 5
 
 void draw_pixels(uint32_t* pixels, int w, int h,
                 size_t start_x, size_t start_y, 
@@ -28,16 +28,16 @@ void draw_pixels(uint32_t* pixels, int w, int h,
                 camera_ray = cam.get_ray_on_pixel(x*AA + i, y*AA + i);
 
                 Intersect intersect = object_ray_intersect(shapes, camera_ray);
-                Color test_color = color_at_point(shapes, intersect);
+                Color new_color = color_at_point(shapes, intersect);
 
                 if (i > 0) {
-                    if (test_color != prev_color) {
+                    if (new_color != prev_color) {
                         run_aa = true;
                     }
                 }
 
-                prev_color = test_color;
-                final_color += test_color;
+                prev_color = new_color;
+                final_color += new_color;
             }
 
             if (run_aa) {
