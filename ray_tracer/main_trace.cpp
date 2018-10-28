@@ -5,7 +5,6 @@
 #include <thread>
 
 #include "camera.hpp"
-#include "intersect.hpp"
 #include "objects_list.hpp"
 
 Camera cam;
