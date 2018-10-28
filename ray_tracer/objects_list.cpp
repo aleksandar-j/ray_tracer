@@ -22,21 +22,21 @@ Intersect object_ray_intersect(const ObjectList& world, const Ray& ray)
     return final_intersect;
 }
 
-Color color_at_point(const ObjectList& world, const Vector& point, const Shape& object)
+Color color_at_point(const ObjectList& world, const Intersect& intersect)
 {
-    Color object_color = object.color_at_point(point, object);
-    object_color *= light_level_at_point(world, point);
+    Color object_color = intersect.shape_hit->color_at_point(intersect.point, *intersect.shape_hit);
+    object_color *= light_level_at_point(world, intersect);
     return object_color;
 }
 
-double light_level_at_point(const ObjectList& world, const Vector& point)
+double light_level_at_point(const ObjectList& world, const Intersect& intersect)
 {
     double result = 0.0;
 
     // TODO: we only compute largest light level, not real one 
     //       (a .3 and a .5 light doesn't give .5 light)...
     for (auto& light : world.light_list) {
-        double light_level = light->light_level_at_point(world.object_list, point);
+        double light_level = light->light_level_at_point(world.object_list, intersect);
         result += (1.0 - result) * light_level;
     }
 

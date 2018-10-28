@@ -23,6 +23,6 @@ public:
 };
 
 Intersect object_ray_intersect(const ObjectList& world, const Ray& ray);
-Color color_at_point(const ObjectList& world, const Vector& point, const Shape& object);
+Color color_at_point(const ObjectList& world, const Intersect& intersect);
 
-double light_level_at_point(const ObjectList& world, const Vector& point);
+double light_level_at_point(const ObjectList& world, const Intersect& intersect);

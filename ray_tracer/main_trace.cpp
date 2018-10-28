@@ -26,7 +26,7 @@ void draw_pixels(uint32_t* pixels, int w, int h,
                 camera_ray = cam.get_ray_on_pixel_rand(x, y);
                 
                 Intersect intersect = object_ray_intersect(shapes, camera_ray);
-                Color color = color_at_point(shapes, intersect.point, *intersect.shape_hit);
+                Color color = color_at_point(shapes, intersect);
                 final_color += color;
             }
 
@@ -49,11 +49,11 @@ void trace(uint32_t* pixels, int w, int h)
     shapes.object_list.push_back(new Sphere{ {2, 4, 2}, 0.5, {150, 23, 0} });
     shapes.object_list.push_back(new Sphere{ {0.5, 1.1, 0.7}, 0.3 });
 
-    shapes.light_list.push_back(new AmbientLight{ 0.2 });
+    shapes.light_list.push_back(new AmbientLight{ 0.3 });
     shapes.light_list.push_back(new PointLight{ {3, 3, 5}, 1.0 });
     shapes.light_list.push_back(new PointLight{ {5, 3, 2}, 1.0 });
-    shapes.object_list.push_back(new Sphere{ {3, 3, 5}, 0.5, {255, 255, 0} });
-    shapes.object_list.push_back(new Sphere{ {5, 3, 2}, 0.5, {255, 255, 0} });
+    //shapes.object_list.push_back(new Sphere{ {3, 3, 5}, 0.1, {255, 255, 0} });
+    //shapes.object_list.push_back(new Sphere{ {5, 3, 2}, 0.1, {255, 255, 0} });
 
     std::thread draw_1(draw_pixels, pixels, w, h, 0, 0, w / 2, h / 2);
     std::thread draw_2(draw_pixels, pixels, w, h, w / 2, 0, w, h / 2);
