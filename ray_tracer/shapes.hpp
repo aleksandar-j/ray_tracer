@@ -38,6 +38,26 @@ public:
 
 };
 
+class Rect : public Shape {
+
+public:
+    Rect() 
+    {
+    }
+    Rect(const Ray& edge_long, const Ray& edge_short) :
+        edge_long(edge_long), edge_short(edge_short)
+    {
+    }
+
+    virtual Intersect ray_intersect(const Ray& ray) const override;
+    virtual Color color_at_point(const Vector& point, const Shape& object) const override;
+    virtual Ray get_normal_ray_at_vec(const Vector& point) const override;
+
+    Ray edge_long;
+    Ray edge_short;
+
+};
+
 class Cube : public Shape {
 
 public:

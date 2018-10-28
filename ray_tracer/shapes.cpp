@@ -1,11 +1,6 @@
 
 #include "shapes.hpp"
 
-Intersect Cube::ray_intersect(const Ray & ray) const
-{
-    return Intersect();
-}
-
 Intersect Sphere::ray_intersect(const Ray& ray) const
 {
     Intersect result = {};
@@ -53,4 +48,26 @@ Color Sphere::color_at_point(const Vector& point, const Shape& object) const
 Ray Sphere::get_normal_ray_at_vec(const Vector& point) const
 {
     return { point, { point - this->center } };
+}
+
+
+Intersect Rect::ray_intersect(const Ray & ray) const
+{
+    return Intersect();
+}
+
+
+Intersect Cube::ray_intersect(const Ray & ray) const
+{
+    return Intersect();
+}
+
+Color Cube::color_at_point(const Vector & point, const Shape & object) const
+{
+    return Color();
+}
+
+Ray Cube::get_normal_ray_at_vec(const Vector & point) const
+{
+    return Ray();
 }
