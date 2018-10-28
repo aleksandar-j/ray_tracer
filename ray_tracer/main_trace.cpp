@@ -11,7 +11,7 @@
 Camera cam;
 ObjectList shapes;
 
-#define AA 10
+#define AA 2
 
 void draw_pixels(uint32_t* pixels, int w, int h,
                 size_t start_x, size_t start_y, 
@@ -22,22 +22,24 @@ void draw_pixels(uint32_t* pixels, int w, int h,
             Ray camera_ray;
             Color final_color = { 0, 0, 0 };
 
-            for (size_t i = 0; i < AA; i++) {
-                camera_ray = cam.get_ray_on_pixel_rand(x, y);
-                
-                Intersect intersect = object_ray_intersect(shapes, camera_ray);
-                Color color = color_at_point(shapes, intersect);
-                final_color += color;
+            for (size_t y_new = 0; y_new < AA; y_new++) {
+                for (size_t x_new = 0; x_new < AA; x_new++) {
+                    camera_ray = cam.get_ray_on_pixel(x*AA + x_new, y*AA + y_new);
+
+                    Intersect intersect = object_ray_intersect(shapes, camera_ray);
+                    Color color = color_at_point(shapes, intersect);
+                    final_color += color;
+                }
             }
 
-            pixels[y*w + x] = final_color / (double)AA;
+            pixels[y*w + x] = final_color / ((double)AA*(double)AA);
         }
     }
 }
 
 void trace(uint32_t* pixels, int w, int h)
 {
-    cam = { {0, 0, 1}, {1, 1, 0}, 90.0, w, h };
+    cam = { {0, 0, 1}, {1, 1, 0}, 90.0, w * AA, h * AA };
 
     shapes.object_list.push_back(new Sphere{ {10000, 10000, 50}, 20000, { 135, 160, 255 } });
     shapes.object_list.push_back(new Sphere{ {1, 1, -5000}, 5000, { 12, 200, 23 } });
