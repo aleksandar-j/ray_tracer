@@ -11,7 +11,7 @@
 Camera cam;
 ObjectList shapes;
 
-#define AA 5
+#define AA 10
 
 void draw_pixels(uint32_t* pixels, int w, int h,
                 size_t start_x, size_t start_y, 
@@ -22,16 +22,45 @@ void draw_pixels(uint32_t* pixels, int w, int h,
             Ray camera_ray;
             Color final_color = { 0, 0, 0 };
 
-            for (size_t y_new = 0; y_new < AA; y_new++) {
-                for (size_t x_new = 0; x_new < AA; x_new++) {
-                    camera_ray = cam.get_ray_on_pixel(x*AA + x_new, y*AA + y_new);
+            bool run_aa = false;
+            Color prev_color;
+            for (size_t i = 0; i < AA; i++) {
+                camera_ray = cam.get_ray_on_pixel(x*AA + i, y*AA + i);
 
-                    Intersect intersect = object_ray_intersect(shapes, camera_ray);
-                    final_color += color_at_point(shapes, intersect);
+                Intersect intersect = object_ray_intersect(shapes, camera_ray);
+                Color test_color = color_at_point(shapes, intersect);
+
+                if (i > 0) {
+                    if (test_color != prev_color) {
+                        run_aa = true;
+                    }
+                }
+
+                prev_color = test_color;
+                final_color += test_color;
+            }
+
+            if (run_aa) {
+                for (size_t y_new = 0; y_new < AA; y_new++) {
+                    for (size_t x_new = 0; x_new < AA; x_new++) {
+                        if (x_new == y_new) {
+                            // We already did this while testing whether we should do AA
+                            continue;
+                        }
+
+                        camera_ray = cam.get_ray_on_pixel(x*AA + x_new, y*AA + y_new);
+
+                        Intersect intersect = object_ray_intersect(shapes, camera_ray);
+                        final_color += color_at_point(shapes, intersect);
+                    }
                 }
             }
 
-            pixels[y*w + x] = final_color / ((double)AA*(double)AA);
+            if (run_aa) {
+                pixels[y*w + x] = final_color / ((double)AA*(double)AA);
+            } else {
+                pixels[y*w + x] = final_color / ((double)AA);
+            }
         }
     }
 }
