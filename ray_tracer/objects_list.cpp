@@ -37,7 +37,7 @@ double light_level_at_point(const ObjectList& world, const Vector& point)
     //       (a .3 and a .5 light doesn't give .5 light)...
     for (auto& light : world.light_list) {
         double light_level = light->light_level_at_point(world.object_list, point);
-        result = (light_level > result) ? light_level : result;
+        result += (1.0 - result) * light_level;
     }
 
     return result;
