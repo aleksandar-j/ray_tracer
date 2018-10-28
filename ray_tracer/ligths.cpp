@@ -32,7 +32,12 @@ double PointLight::light_level_at_point(const std::vector<Shape*>& objects, cons
     if (result != 0.0) {
         // We do hit the point
 
-        
+        Ray objectnormal_ray = intersect.shape_hit->get_normal_ray_at_vec(intersect.point);
+        Vector objectlight_direction = { this->center - intersect.point };
+
+        double angle = vec_anglebetween_rad(objectnormal_ray.direction, objectlight_direction);
+
+        result *= cos(angle);
     }
 
     return result;

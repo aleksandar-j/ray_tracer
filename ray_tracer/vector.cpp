@@ -66,6 +66,11 @@ bool operator!=(const Vector& A, const Vector& B)
     return !(A == B);
 }
 
+Vector operator-(const Vector& A)
+{
+    return { -A.x, -A.y, -A.z };
+}
+
 Vector operator+(const Vector& A, const Vector& B)
 {
     return { A.x + B.x, A.y + B.y, A.z + B.z };
@@ -108,6 +113,11 @@ Vector get_unit_vector(const Vector& A)
 double vec_dot_product(const Vector& A, const Vector& B)
 {
     return A.x*B.x + A.y*B.y + A.z*B.z;
+}
+
+double vec_anglebetween_rad(const Vector& A, const Vector& B)
+{
+    return acos(vec_dot_product(A, B) / (A.magnitude() * B.magnitude()));
 }
 
 double vec_distance(const Vector& A, const Vector& B)

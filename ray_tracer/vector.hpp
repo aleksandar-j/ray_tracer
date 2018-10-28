@@ -39,6 +39,8 @@ public:
 bool operator==(const Vector& A, const Vector& B);
 bool operator!=(const Vector& A, const Vector& B);
 
+Vector operator-(const Vector& A);
+
 Vector operator+(const Vector& A, const Vector& B);
 Vector operator+(const Vector& A, const double B);
 Vector operator-(const Vector& A, const Vector& B);
@@ -50,6 +52,7 @@ Vector operator/(const Vector& A, const double B);
 
 Vector get_unit_vector(const Vector& A);
 double vec_dot_product(const Vector& A, const Vector& B);
+double vec_anglebetween_rad(const Vector& A, const Vector& B);
 double vec_distance(const Vector& A, const Vector& B);
 
 class Ray {

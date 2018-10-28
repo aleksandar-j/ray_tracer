@@ -11,7 +11,7 @@
 Camera cam;
 ObjectList shapes;
 
-#define AA 20
+#define AA 10
 
 void draw_pixels(uint32_t* pixels, int w, int h,
                 size_t start_x, size_t start_y, 
@@ -37,7 +37,7 @@ void draw_pixels(uint32_t* pixels, int w, int h,
 
 void trace(uint32_t* pixels, int w, int h)
 {
-    cam = { {0, 0, 1}, {1, 1, 0}, 150.0, w, h };
+    cam = { {0, 0, 1}, {1, 1, 0}, 90.0, w, h };
 
     shapes.object_list.push_back(new Sphere{ {10000, 10000, 50}, 20000, { 135, 160, 255 } });
     shapes.object_list.push_back(new Sphere{ {1, 1, -5000}, 5000, { 12, 200, 23 } });
