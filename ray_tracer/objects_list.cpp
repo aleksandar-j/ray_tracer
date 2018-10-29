@@ -79,8 +79,8 @@ double light_level_at_point(const ObjectList& world, const Intersect& intersect)
 Color reflect_light(const ObjectList& world, const Intersect& intersect, const Color& object_color_in, int depth)
 {
     if ((intersect.shape_hit->material.diffuse + intersect.shape_hit->material.specular) > 1.0) {
-        // More light out than in
-        // TODO: raise error
+        // More light out than in (in is 1.0 - 100%)
+        throw "reflect_light got an object with more than 1.0 light amount";
     }
     if (depth > MAX_STACK_DEPTH) {
         return object_color_in;
@@ -125,7 +125,13 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect, const C
 
         Ray reflection = { normal.origin, reflected_vec };
     
-        Intersect intersect_new = object_ray_intersect(world, normal, depth + 1);
+        // Specular Fuzz implementation
+        if (intersect.shape_hit->material.specular_fuzz > 0.0) {
+            reflection.direction += rand_unit_vector() * intersect.shape_hit->material.specular_fuzz;
+            reflection.direction.make_unit_vector();
+        }
+
+        Intersect intersect_new = object_ray_intersect(world, reflection, depth + 1);
 
         if (intersect_new.shape_hit != nullptr) {
             specular_result = color_at_point(world, intersect_new, depth + 1);

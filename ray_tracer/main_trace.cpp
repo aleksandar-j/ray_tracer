@@ -10,7 +10,7 @@
 Camera cam;
 ObjectList shapes;
 
-#define AA 2
+#define AA 3
 
 void draw_pixels(uint32_t* pixels, int w, int h,
                 size_t start_x, size_t start_y, 
@@ -75,19 +75,20 @@ void trace(uint32_t* pixels, int w, int h)
     shapes.object_list.push_back(new Sphere{ {10000, 10000, 50}, 20000, { 135, 160, 255 }, {1.0, 0.0} });
     shapes.object_list.push_back(new Sphere{ {1, 1, -5000}, 5000, { 12, 200, 23 }, {1.0, 0.0} });
 
-    shapes.object_list.push_back(new Sphere{ {3, 3, 1}, 1, {23, 48, 69}, { 0.1, 0.9 } });
+    shapes.object_list.push_back(new Sphere{ {3, 3, 1}, 1, {23, 48, 69}, { 0.2, 0.8 } });
+    shapes.object_list[2]->material.specular_fuzz = 0.05;
     shapes.object_list.push_back(new Sphere{ {2.5, 2.5, 2.5}, 0.5, RED });
     shapes.object_list.push_back(new Sphere{ {3.2, 1.6, 0.6}, 0.05, {23, 48, 69} });
     shapes.object_list.push_back(new Sphere{ {4, 2, 2.5}, 0.3 });
-    shapes.object_list.push_back(new Sphere{ {10, 2, 1.5}, 3, RED, { 0.8, 0.2 } });
+    shapes.object_list.push_back(new Sphere{ {10, 2, 1.5}, 3, RED, { 0.5, 0.5 } });
     shapes.object_list.push_back(new Sphere{ {2, 4, 2}, 0.5, {150, 23, 0} });
     shapes.object_list.push_back(new Sphere{ {0.5, 1.1, 0.7}, 0.3 });
 
     // Lights
-    shapes.light_list.push_back(new AmbientLight{ 0.3 });
-    shapes.light_list.push_back(new PointLight{ {3, 3, 5}, 1.0, 1000.0 });
-    shapes.light_list.push_back(new PointLight{ {5, 3, 2}, 1.0, 500.0 });
-    shapes.light_list.push_back(new PointLight{ {2, 2, 0.7}, 0.2, 200.0 });
+    shapes.light_list.push_back(new AmbientLight{ 0.1 });
+    shapes.light_list.push_back(new PointLight{ {3, 3, 5}, 1.0, 50.0 });
+    shapes.light_list.push_back(new PointLight{ {5, 3, 2}, 1.0, 25.0 });
+    shapes.light_list.push_back(new PointLight{ {2, 2, 0.7}, 0.2, 10.0 });
 
     // Worker treads
     std::thread draw_1(draw_pixels, pixels, w, h, 0, 0, w / 2, h / 2);

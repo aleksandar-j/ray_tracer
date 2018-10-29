@@ -15,4 +15,8 @@ public:
     double diffuse;
     double specular;
 
+    // No constructor avaiable for these
+    //// Value between 0-1, how big of a random angle to chose from unit sphere when reflecting
+    double specular_fuzz = 0.0;
+
 };
