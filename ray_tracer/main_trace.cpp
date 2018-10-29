@@ -72,13 +72,13 @@ void trace(uint32_t* pixels, int w, int h)
     cam = { {0, 0, 1}, {1, 1, 0}, 90.0, w * AA, h * AA };
 
     // Objects
-    shapes.object_list.push_back(new Sphere{ {10000, 10000, 50}, 20000, { 135, 160, 255 } });
-    shapes.object_list.push_back(new Sphere{ {1, 1, -5000}, 5000, { 12, 200, 23 } });
+    shapes.object_list.push_back(new Sphere{ {10000, 10000, 50}, 20000, { 135, 160, 255 }, {1.0, 0.0} });
+    shapes.object_list.push_back(new Sphere{ {1, 1, -5000}, 5000, { 12, 200, 23 }, {1.0, 0.0} });
 
-    shapes.object_list.push_back(new Sphere{ {3, 3, 1}, 1, {23, 48, 69} });
+    shapes.object_list.push_back(new Sphere{ {3, 3, 1}, 1, {23, 48, 69}, { 0.0, 1.0 } });
     shapes.object_list.push_back(new Sphere{ {3.2, 1.6, 0.6}, 0.05, {23, 48, 69} });
     shapes.object_list.push_back(new Sphere{ {4, 2, 2.5}, 0.3 });
-    shapes.object_list.push_back(new Sphere{ {10, 2, 1.5}, 3 });
+    shapes.object_list.push_back(new Sphere{ {10, 2, 1.5}, 3, RED, { 0.5, 0.5 } });
     shapes.object_list.push_back(new Sphere{ {2, 4, 2}, 0.5, {150, 23, 0} });
     shapes.object_list.push_back(new Sphere{ {0.5, 1.1, 0.7}, 0.3 });
 

@@ -6,11 +6,13 @@ public:
     Material()
     {
     }
-    Material(const double albedo) :
-        albedo(albedo)
+    Material(const double diffuse, const double specular) :
+        diffuse(diffuse), specular(specular)
     {
     }
 
-    double albedo;
+    // Values range from 0 to 1 and represent a portion of light for each
+    double diffuse;
+    double specular;
 
 };

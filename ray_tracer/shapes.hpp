@@ -23,18 +23,19 @@ public:
     Sphere(const Vector& center, const double radius) :
                 center(center), radius(radius) 
     {
-        color = WHITE;
-        material = Material(0.1);
+        this->color = WHITE;
+        this->material = { 1.0, 0.0 };
     }
     Sphere(const Vector& center, const double radius, const Color& color) :
         center(center), radius(radius), color(color)
     {
-        material = Material(0.1);
+        this->material = { 1.0, 0.0 };
     }
     Sphere(const Vector& center, const double radius, 
            const Color& color, const Material& material) :
-        center(center), radius(radius), color(color), material(material)
+        center(center), radius(radius), color(color)
     {
+        this->material = material;
     }
 
     virtual Intersect ray_intersect(const Ray& ray) const override;
@@ -45,7 +46,6 @@ public:
     double radius;
 
     Color color;
-    Material material;
 
 };
 

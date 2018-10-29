@@ -42,7 +42,11 @@ Color color_at_point(const ObjectList& world, const Intersect& intersect)
     object_color = intersect.shape_hit->texture_at_point(intersect.point);
     
     // Get any reflections and edit our color
-    Color reflection = reflect_light(world, intersect);
+    object_color = reflect_light(world, intersect, object_color);
+
+    /*object_color.red = ((double)object_color.red / 255.0) * reflection.red;
+    object_color.green = ((double)object_color.green / 255.0) * reflection.green;
+    object_color.blue = ((double)object_color.blue / 255.0) * reflection.blue;*/
 
     // Lower the final color depending on the light level
     object_color *= light_level_at_point(world, intersect);
@@ -62,28 +66,53 @@ double light_level_at_point(const ObjectList& world, const Intersect& intersect)
     return result;
 }
 
-Color reflect_light(const ObjectList& world, const Intersect& intersect) 
+Color reflect_light(const ObjectList& world, const Intersect& intersect, const Color& object_color_in) 
 {
-    Color result;
+    if ((intersect.shape_hit->material.diffuse + intersect.shape_hit->material.specular) > 1.0) {
+        // More light out than in
+        // TODO: raise error
+    }
 
-    if (intersect.shape_hit->material.albedo < 1.0) {
+    Color diffuse_result;
+    if (intersect.shape_hit->material.diffuse > 0.0) {
         // Shoot diffuse rays
 
         Ray normal = intersect.shape_hit->get_normal_ray_at_vec(intersect.point);
-        normal.direction *= 2;
         normal.direction += rand_unit_vector();
         normal.direction.make_unit_vector();
 
         Intersect intersect_new = object_ray_intersect(world, normal);
 
         if (intersect_new.shape_hit != nullptr) {
-            result = color_at_point(world, intersect_new);
-            result *= 1.0 - intersect.shape_hit->material.albedo;
+            diffuse_result = color_at_point(world, intersect_new)*0.6 + object_color_in*0.4;
         } else {
-            result = WHITE;
+            diffuse_result = object_color_in;
         }
+
+        diffuse_result *= intersect.shape_hit->material.diffuse;
 
     }
 
-    return result;
+    Color specular_result;
+    if (intersect.shape_hit->material.specular > 0.0) {
+        // Shoot specular rays
+
+        Ray normal = intersect.shape_hit->get_normal_ray_at_vec(intersect.point);
+        Vector reflected_vec = intersect.ray_shot.direction + normal.direction*2;
+
+        Ray reflection = { normal.origin, reflected_vec };
+    
+        Intersect intersect_new = object_ray_intersect(world, normal);
+
+        if (intersect_new.shape_hit != nullptr) {
+            specular_result = color_at_point(world, intersect_new);
+        } else {
+            specular_result = BLACK;
+        }
+
+        specular_result *= intersect.shape_hit->material.specular;
+
+    }
+
+    return diffuse_result + specular_result;
 }

@@ -84,7 +84,12 @@ public:
     int green;
     int blue;
 
-    Color() {}
+    Color() 
+    {
+        this->red = 0;
+        this->green = 0;
+        this->blue = 0;
+    }
     Color(const int red, const int green, const int blue) :
         red(red), green(green), blue(blue)
     {

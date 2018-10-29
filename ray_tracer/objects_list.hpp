@@ -20,4 +20,4 @@ Intersect object_ray_intersect(const ObjectList& world, const Ray& ray);
 Color color_at_point(const ObjectList& world, const Intersect& intersect);
 double light_level_at_point(const ObjectList& world, const Intersect& intersect);
 
-Color reflect_light(const ObjectList& world, const Intersect& intersect);
+Color reflect_light(const ObjectList& world, const Intersect& intersect, const Color& object_color_in);
