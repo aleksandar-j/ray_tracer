@@ -30,7 +30,7 @@ void draw_pixels(uint32_t* pixels, int w, int h,
             for (size_t i = 0; i < AA; i++) {
                 // Calculate color on current pixel
                 camera_ray = cam.get_ray_on_pixel(x*AA + i, y*AA + i);
-                Color new_color = color_at_ray_intersect(shapes, camera_ray);
+                Color new_color = color_at_ray_intersect(shapes, camera_ray, 0);
 
                 if (i > 0) {
                     if (new_color != prev_color) {
@@ -53,7 +53,7 @@ void draw_pixels(uint32_t* pixels, int w, int h,
 
                         // Calculate color on current pixel
                         camera_ray = cam.get_ray_on_pixel(x*AA + x_new, y*AA + y_new);
-                        final_color += color_at_ray_intersect(shapes, camera_ray);
+                        final_color += color_at_ray_intersect(shapes, camera_ray, 0);
                     }
                 }
             }
@@ -75,7 +75,8 @@ void trace(uint32_t* pixels, int w, int h)
     shapes.object_list.push_back(new Sphere{ {10000, 10000, 50}, 20000, { 135, 160, 255 }, {1.0, 0.0} });
     shapes.object_list.push_back(new Sphere{ {1, 1, -5000}, 5000, { 12, 200, 23 }, {1.0, 0.0} });
 
-    shapes.object_list.push_back(new Sphere{ {3, 3, 1}, 1, {23, 48, 69}, { 0.0, 1.0 } });
+    shapes.object_list.push_back(new Sphere{ {3, 3, 1}, 1, {23, 48, 69}, { 0.1, 0.9 } });
+    shapes.object_list.push_back(new Sphere{ {2.5, 2.5, 2.5}, 0.5, RED });
     shapes.object_list.push_back(new Sphere{ {3.2, 1.6, 0.6}, 0.05, {23, 48, 69} });
     shapes.object_list.push_back(new Sphere{ {4, 2, 2.5}, 0.3 });
     shapes.object_list.push_back(new Sphere{ {10, 2, 1.5}, 3, RED, { 0.8, 0.2 } });
