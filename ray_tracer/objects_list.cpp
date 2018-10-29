@@ -44,10 +44,6 @@ Color color_at_point(const ObjectList& world, const Intersect& intersect)
     // Get any reflections and edit our color
     object_color = reflect_light(world, intersect, object_color);
 
-    /*object_color.red = ((double)object_color.red / 255.0) * reflection.red;
-    object_color.green = ((double)object_color.green / 255.0) * reflection.green;
-    object_color.blue = ((double)object_color.blue / 255.0) * reflection.blue;*/
-
     // Lower the final color depending on the light level
     object_color *= light_level_at_point(world, intersect);
 
