@@ -2,16 +2,12 @@
 #include <SDL.h>
 
 #include "main_trace.hpp"
-#include <random>
-#include <ctime>
 
 const int SCREEN_WIDTH = 1366;
 const int SCREEN_HEIGHT = 768;
 
 int WinMain(int argc, char* argv[])
 {
-    srand(time(nullptr));
-
     SDL_Init(SDL_INIT_VIDEO);
 
     SDL_Window* window = SDL_CreateWindow("Ray Tracer",
@@ -44,5 +40,5 @@ int WinMain(int argc, char* argv[])
     SDL_DestroyWindow(window);
     SDL_Quit();
 
-    return EXIT_SUCCESS;
+    return 0;
 }

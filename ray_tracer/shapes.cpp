@@ -39,9 +39,8 @@ Intersect Sphere::ray_intersect(const Ray& ray) const
     }
 }
 
-Color Sphere::color_at_point(const Vector& point, const Shape& object) const
+Color Sphere::texture_at_point(const Vector& point) const
 {
-    // TODO: texture mapping
     return this->color;
 }
 
@@ -51,23 +50,23 @@ Ray Sphere::get_normal_ray_at_vec(const Vector& point) const
 }
 
 
-Intersect Rect::ray_intersect(const Ray & ray) const
-{
-    return Intersect();
-}
-
-
-Intersect Cube::ray_intersect(const Ray & ray) const
-{
-    return Intersect();
-}
-
-Color Cube::color_at_point(const Vector & point, const Shape & object) const
-{
-    return Color();
-}
-
-Ray Cube::get_normal_ray_at_vec(const Vector & point) const
-{
-    return Ray();
-}
+//Intersect Rect::ray_intersect(const Ray & ray) const
+//{
+//    return Intersect();
+//}
+//
+//
+//Intersect Cube::ray_intersect(const Ray & ray) const
+//{
+//    return Intersect();
+//}
+//
+//Color Cube::color_at_point(const Vector & point, const Shape & object) const
+//{
+//    return Color();
+//}
+//
+//Ray Cube::get_normal_ray_at_vec(const Vector & point) const
+//{
+//    return Ray();
+//}

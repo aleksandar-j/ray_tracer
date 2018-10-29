@@ -152,6 +152,7 @@
     <ClInclude Include="intersect.hpp" />
     <ClInclude Include="ligths.hpp" />
     <ClInclude Include="main_trace.hpp" />
+    <ClInclude Include="materials.hpp" />
     <ClInclude Include="math_extension.hpp" />
     <ClInclude Include="objects_list.hpp" />
     <ClInclude Include="shapes.hpp" />

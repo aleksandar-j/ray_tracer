@@ -56,6 +56,8 @@ Vector vec_rotate_x_deg(const Vector&A, const double deg);
 Vector vec_rotate_y_deg(const Vector&A, const double deg);
 Vector vec_rotate_z_deg(const Vector&A, const double deg);
 
+Vector rand_unit_vector();
+
 double vec_dot_product(const Vector& A, const Vector& B);
 double vec_anglebetween_rad(const Vector& A, const Vector& B);
 double vec_distance(const Vector& A, const Vector& B);
@@ -117,6 +119,7 @@ public:
 
 Color operator+(const Color& A, const Color& B);
 Color operator-(const Color& A, const Color& B);
+Color operator*(const Color& A, const Color& B);
 Color operator*(const Color& A, const double B);
 Color operator/(const Color& A, const double B);
 

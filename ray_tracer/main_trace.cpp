@@ -16,6 +16,8 @@ void draw_pixels(uint32_t* pixels, int w, int h,
                 size_t start_x, size_t start_y, 
                 size_t end_x, size_t end_y)
 {
+    srand(time(0));
+
     for (size_t y = start_y; y < end_y; y++) {
         for (size_t x = start_x; x < end_x; x++) {
             Ray camera_ray;
@@ -26,10 +28,9 @@ void draw_pixels(uint32_t* pixels, int w, int h,
             // Tracing all diagonal AA pixels, if all are equal, we don't do more
             Color prev_color;
             for (size_t i = 0; i < AA; i++) {
+                // Calculate color on current pixel
                 camera_ray = cam.get_ray_on_pixel(x*AA + i, y*AA + i);
-
-                Intersect intersect = object_ray_intersect(shapes, camera_ray);
-                Color new_color = color_at_point(shapes, intersect);
+                Color new_color = color_at_ray_intersect(shapes, camera_ray);
 
                 if (i > 0) {
                     if (new_color != prev_color) {
@@ -50,10 +51,9 @@ void draw_pixels(uint32_t* pixels, int w, int h,
                             continue;
                         }
 
+                        // Calculate color on current pixel
                         camera_ray = cam.get_ray_on_pixel(x*AA + x_new, y*AA + y_new);
-
-                        Intersect intersect = object_ray_intersect(shapes, camera_ray);
-                        final_color += color_at_point(shapes, intersect);
+                        final_color += color_at_ray_intersect(shapes, camera_ray);
                     }
                 }
             }
@@ -83,10 +83,10 @@ void trace(uint32_t* pixels, int w, int h)
     shapes.object_list.push_back(new Sphere{ {0.5, 1.1, 0.7}, 0.3 });
 
     // Lights
-    shapes.light_list.push_back(new AmbientLight{ 1.0 });
-    shapes.light_list.push_back(new PointLight{ {3, 3, 5}, 1.0, 25.0 });
-    shapes.light_list.push_back(new PointLight{ {5, 3, 2}, 1.0, 10.0 });
-    shapes.light_list.push_back(new PointLight{ {2, 2, 0.7}, 0.2, 5.0 });
+    shapes.light_list.push_back(new AmbientLight{ 0.3 });
+    shapes.light_list.push_back(new PointLight{ {3, 3, 5}, 1.0, 1000.0 });
+    shapes.light_list.push_back(new PointLight{ {5, 3, 2}, 1.0, 500.0 });
+    shapes.light_list.push_back(new PointLight{ {2, 2, 0.7}, 0.2, 200.0 });
 
     // Worker treads
     std::thread draw_1(draw_pixels, pixels, w, h, 0, 0, w / 2, h / 2);

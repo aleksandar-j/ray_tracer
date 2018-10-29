@@ -146,6 +146,15 @@ double vec_distance(const Vector& A, const Vector& B)
     return sqrt((A.x - B.x)*(A.x - B.x) + (A.y - B.y)*(A.y - B.y) + (A.z - B.z)*(A.z - B.z));
 }
 
+Vector rand_unit_vector()
+{
+    double rand_x = (rand() / (double)RAND_MAX) * 2 - 1.0;
+    double rand_y = (rand() / (double)RAND_MAX) * 2 - 1.0;
+    double rand_z = (rand() / (double)RAND_MAX) * 2 - 1.0;
+
+    return get_unit_vector({ rand_x, rand_y, rand_z });
+}
+
 
 void Color::operator+=(const Color& B)
 {
@@ -184,6 +193,10 @@ Color operator+(const Color& A, const Color& B)
 Color operator-(const Color& A, const Color& B)
 {
     return { A.red - B.red, A.green - B.green, A.blue - B.blue };
+}
+Color operator*(const Color& A, const Color& B)
+{
+    return { A.red * B.red, A.green * B.green, A.blue * B.blue };
 }
 Color operator*(const Color& A, const double B)
 {

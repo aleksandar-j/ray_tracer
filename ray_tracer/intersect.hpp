@@ -1,5 +1,7 @@
 #pragma once
 
+class Vector;
+class Ray;
 class Shape;
 
 class Intersect {
@@ -12,6 +14,8 @@ public:
 
     Vector point;
     double ray_to_point_dist;
+
+    Ray ray_shot;
 
     const Shape* shape_hit;
 
