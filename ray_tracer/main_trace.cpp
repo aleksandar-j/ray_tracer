@@ -80,7 +80,8 @@ void trace(uint32_t* pixels, int w, int h)
     shapes.object_list.push_back(new Sphere{ {2.5, 2.5, 2.5}, 0.5, RED });
     shapes.object_list.push_back(new Sphere{ {3.2, 1.6, 0.6}, 0.05, {23, 48, 69} });
     shapes.object_list.push_back(new Sphere{ {4, 2, 2.5}, 0.3 });
-    shapes.object_list.push_back(new Sphere{ {10, 2, 1.5}, 3, RED, { 0.5, 0.5 } });
+    shapes.object_list.push_back(new Sphere{ {10, 2, 1.5}, 3, RED, { 0.7, 0.3 } });
+    shapes.object_list[6]->material.specular_fuzz = 0.1;
     shapes.object_list.push_back(new Sphere{ {2, 4, 2}, 0.5, {150, 23, 0} });
     shapes.object_list.push_back(new Sphere{ {0.5, 1.1, 0.7}, 0.3 });
 
