@@ -99,12 +99,12 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect, const C
         if (intersect_new.shape_hit != nullptr) {
             // Objects that are closer will have a greater impact on our color
 
-            constexpr double diffuse_length_lim = 0.01;
+            constexpr double diffuse_length_lim = 10;
             if (intersect_new.ray_to_point_dist < diffuse_length_lim) {
                 Color color_new = color_at_point(world, intersect_new, depth + 1);
 
-                double diffuse_intensity = 1.0 - (intersect_new.ray_to_point_dist / diffuse_length_lim);
-                diffuse_result = color_new*diffuse_intensity + object_color_in*(1.0 - diffuse_intensity);
+                double diffuse_intensity = (1.0 - (intersect_new.ray_to_point_dist / diffuse_length_lim)) * 0.5;
+                diffuse_result = color_new*0.5*diffuse_intensity + object_color_in*(1.0 - diffuse_intensity);
             } else {
                 diffuse_result = object_color_in;
             }

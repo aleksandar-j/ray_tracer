@@ -1,5 +1,6 @@
 
 #include <SDL.h>
+#include <thread>
 
 #include "main_trace.hpp"
 
@@ -19,21 +20,21 @@ int WinMain(int argc, char* argv[])
     SDL_Surface* our_surface = SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0);
 
     // Main tracing function
-    for (size_t i = 0; i < 1; i++) {
-        trace((uint32_t*)our_surface->pixels, SCREEN_WIDTH, SCREEN_HEIGHT);
-    }
-
-    SDL_BlitSurface(our_surface, nullptr, window_surface, nullptr);
-    SDL_UpdateWindowSurface(window);
+    std::thread trace(trace, (uint32_t*)our_surface->pixels, SCREEN_WIDTH, SCREEN_HEIGHT);
 
     SDL_Event eve;
     while (true) {
         if (SDL_PollEvent(&eve)) {
             if (eve.type == SDL_KEYDOWN) {
-                break;
-            } else {
-                SDL_Delay(100);
+                if (eve.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
+                    break;
+                }
             }
+        } else {
+            SDL_BlitSurface(our_surface, nullptr, window_surface, nullptr);
+            SDL_UpdateWindowSurface(window);
+
+            SDL_Delay(100);
         }
     }
 

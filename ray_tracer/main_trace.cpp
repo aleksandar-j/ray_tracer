@@ -10,7 +10,7 @@
 Camera cam;
 ObjectList shapes;
 
-#define AA 3
+#define AA 10
 
 void draw_pixels(uint32_t* pixels, int w, int h,
                 size_t start_x, size_t start_y, 
