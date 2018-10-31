@@ -5,10 +5,28 @@
 
 double PointLight::light_level_at_point(const ObjectList& objects, const Intersect& intersect) const
 {
-    double result = 1.0;
+    double result = this->intensity;
+
+    // Atmospheres on light and object
+    Atmosphere light_atmosphere = get_atmosphere_at_point(objects, this->center);
+    Atmosphere object_atmosphere = get_atmosphere_at_point(objects, intersect.point);
+
+    bool same_atmosperes;
+    if (light_atmosphere.atmosphere_shape == object_atmosphere.atmosphere_shape) {
+        same_atmosperes = true;
+    } else {
+        same_atmosperes = false;
+    }
 
     // Distance between light and point hit
     double lightpoint_dist = vec_distance(this->center, intersect.point);
+
+    if (same_atmosperes) {
+        if (light_atmosphere.light_dropoff_linear_intensity < lightpoint_dist) {
+            // Even if we can hit the point, light is too weak there in this atmosphere
+            return 0.0;
+        }
+    }
 
     // Angle between light and point hit normal
     Ray objectnormal_ray = intersect.shape_hit->normal_ray_at_point(intersect.point);
@@ -48,24 +66,14 @@ double PointLight::light_level_at_point(const ObjectList& objects, const Interse
         // We do hit the point
 
         // The greater the distance between the light and surface, the lower the light level, depending on the atmosphere
-        Atmosphere light_atmosphere = get_atmosphere_at_point(objects, this->center);
-        Atmosphere object_atmosphere = get_atmosphere_at_point(objects, intersect.point);
-
-        if (light_atmosphere.atmosphere_shape == object_atmosphere.atmosphere_shape) {
+        if (same_atmosperes) {
             // If the same atmosphere object surrounds source and point, we can calculate just based on distance
+            
+            double light_at_distance =
+                (light_atmosphere.light_dropoff_linear_intensity - lightpoint_dist) /
+                        light_atmosphere.light_dropoff_linear_intensity;
 
-            if (light_atmosphere.light_dropoff_linear) {
-                if (light_atmosphere.light_dropoff_linear_intensity < lightpoint_dist) {
-                    // Even if we can hit the point, light is too weak there
-                    return 0.0;
-                }
-
-                double light_at_distance = 
-                    (light_atmosphere.light_dropoff_linear_intensity - lightpoint_dist) / 
-                                light_atmosphere.light_dropoff_linear_intensity;
-
-                result *= light_at_distance;
-            }
+            result *= light_at_distance;
         } else {
             // TODO: Complicated work of seeing all intermediary atmospheres and their interactions
         }
