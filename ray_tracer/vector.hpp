@@ -106,8 +106,11 @@ public:
     void operator*=(const double B);
 
     operator int() const;
+    
+    bool is_valid();
 
     void abs_col();
+    void make_grey();
 
     int red;
     int green;

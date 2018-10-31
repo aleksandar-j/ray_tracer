@@ -186,6 +186,13 @@ Color::operator int() const
     return new_red | new_green | new_blue;
 }
 
+bool Color::is_valid()
+{
+    return (this->red < 256 && this->red >= 0 &&
+            this->green < 256 && this->green >= 0 &&
+            this->blue < 256 && this->blue >= 0);
+}
+
 Color operator+(const Color& A, const Color& B)
 {
     return { A.red + B.red, A.green + B.green, A.blue + B.blue };
@@ -212,6 +219,14 @@ void Color::abs_col()
     this->red = abs(this->red);
     this->green = abs(this->green);
     this->blue = abs(this->blue);
+}
+
+void Color::make_grey()
+{
+    double avg = (this->red + this->green + this->blue) / 3.0;
+    this->red = avg;
+    this->green = avg;
+    this->blue = avg;
 }
 
 Color color_diff(const Color& A, const Color& B)

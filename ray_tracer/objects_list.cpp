@@ -86,6 +86,8 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect, const C
     if (intersect.shape_hit->material.diffuse > 0.0) {
         // Shoot diffuse rays
 
+        diffuse_result = object_color_in;
+
         Ray normal = intersect.shape_hit->get_normal_ray_at_vec(intersect.point);
         normal.direction += rand_unit_vector();
         normal.direction.make_unit_vector();
@@ -96,12 +98,17 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect, const C
             // Objects that are closer will have a greater impact on our color
 
             Color color_new = color_at_point(world, intersect_new, depth + 1);
+            color_new.make_grey();
 
-            constexpr double diffuse_length_lim = std::numeric_limits<double>::max();
-            double diffuse_intensity = (1.0 - (intersect_new.ray_to_point_dist / diffuse_length_lim)) * 0.5;
-            diffuse_result = (color_new*0.5)*diffuse_intensity + (object_color_in*1.5)*(1.0 - diffuse_intensity);
-        } else {
-            diffuse_result = object_color_in;
+            constexpr double diffuse_length_lim = 32.0;
+            if (intersect_new.ray_to_point_dist < diffuse_length_lim) {
+                double diffuse_intensity = (1.0 - (intersect_new.ray_to_point_dist / diffuse_length_lim))*0.5;
+                diffuse_result = (color_new*0.5)*(diffuse_intensity) + (object_color_in)*(1.0 - diffuse_intensity);
+
+                if (diffuse_result.is_valid() == false) {
+                    throw "error";
+                }
+            }
         }
 
         diffuse_result *= intersect.shape_hit->material.diffuse;
