@@ -65,7 +65,7 @@ double light_level_at_point(const ObjectList& world, const Intersect& intersect)
     double result = 0.0;
     
     for (auto& light : world.light_list) {
-        double light_level = light->light_level_at_point(world.object_list, intersect);
+        double light_level = light->light_level_at_point(world, intersect);
         result += (1.0 - result) * light_level;
     }
 

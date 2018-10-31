@@ -7,10 +7,12 @@
 #include <vector>
 #include <limits>
 
+struct ObjectList;
+
 class Light {
 
 public:
-    virtual double light_level_at_point(const std::vector<Shape*>& objects, const Intersect& intersect) const = 0;
+    virtual double light_level_at_point(const ObjectList& objects, const Intersect& intersect) const = 0;
 
     // Color which light emits
     Color light_color;
@@ -41,7 +43,7 @@ public:
         this->intensity_dropoff_linear = intensity_dropoff_linear;
     }
 
-    virtual double light_level_at_point(const std::vector<Shape*>& objects, const Intersect& intersect) const;
+    virtual double light_level_at_point(const ObjectList& objects, const Intersect& intersect) const;
 
     Vector center;
 
@@ -58,6 +60,6 @@ public:
         this->intensity = intensity;
     }
     
-    virtual double light_level_at_point(const std::vector<Shape*>& objects, const Intersect& intersect) const;
+    virtual double light_level_at_point(const ObjectList& objects, const Intersect& intersect) const;
 
 };

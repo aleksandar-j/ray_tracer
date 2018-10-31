@@ -13,7 +13,7 @@ ObjectList shapes;
 #define AA 5
 
 #define AA_OPTIMIZE true
-#define AA_OPTIMIZE_DIFFACCEPTED 10.0
+#define AA_OPTIMIZE_DIFFACCEPTED 5.0
 
 void draw_pixels(uint32_t* pixels, int w, int h,
                 size_t start_x, size_t start_y, 
@@ -83,13 +83,13 @@ void trace(uint32_t* pixels, int w, int h)
 
     // Objects
     shapes.object_list.push_back(new Sphere{ {0, 0, 0}, 50, TEAL, {0.5, 0.5} });
-    shapes.object_list.push_back(new Sphere{ {1, 1, -5000}, 5000, LIME, {1.0, 0.0} });
+    shapes.object_list.push_back(new Sphere{ {1, 1, -5000}, 5000, WHITE, {1.0, 0.0} });
 
     shapes.object_list.push_back(new Sphere{ {3, 3, 1}, 1, NAVY, { 0.1, 0.9 } });
-    shapes.object_list[2]->material.specular_fuzz = 0.05;
+    //shapes.object_list[2]->material.specular_fuzz = 0.05;
     shapes.object_list.push_back(new Sphere{ {2.5, 2.5, 2.5}, 0.5, MAROON });
     shapes.object_list.push_back(new Sphere{ {3.2, 1.6, 0.6}, 0.05, GREEN });
-    shapes.object_list.push_back(new Sphere{ {4, 2, 2.5}, 0.3, WHITE });
+    shapes.object_list.push_back(new Sphere{ {4, 2, 2.5}, 0.3, NAVY });
     shapes.object_list.push_back(new Sphere{ {10, 2, 1.5}, 3, PURPLE, { 0.7, 0.3 } });
     shapes.object_list[6]->material.specular_fuzz = 0.1;
     shapes.object_list.push_back(new Sphere{ {2, 4, 2}, 0.5, AQUA });
