@@ -17,9 +17,9 @@ public:
         
     }
 
-    // Defines the weight by which we choose which atmosphere to pick when two clash, min is 0 and 
-    //      if two have the same weight, we pick at random
-    int weight = 0;
+    // Defines the weight by which we choose which atmosphere to pick when two clash 
+    //  if two have the same weight, we pick at random
+    int density = 0;
 
     // Shape in which any light refraction works
     const Shape* atmosphere_shape = nullptr;
