@@ -2,8 +2,6 @@
 
 #include "objects_list.hpp"
 
-#define MAX_STACK_DEPTH 10
-
 Color color_at_ray_intersect(const ObjectList& world, const Ray& ray, int depth)
 {
     if (depth > MAX_STACK_DEPTH) {
@@ -60,7 +58,7 @@ Intersect object_ray_intersect(const ObjectList& world, const Ray& ray)
     return final_intersect;
 }
 
-Atmosphere vacuum = Atmosphere{ new Sphere{ {0, 0, 0}, MAX_DOUBLE }, 0.0 };
+Atmosphere vacuum = Atmosphere{ new Sphere{ {0, 0, 0}, MAX_DOUBLE }, MAX_DOUBLE, 0.0 };
 Atmosphere atmosphere_at_point(const ObjectList& world, const Vector& point)
 {
     Atmosphere* result = &vacuum;
@@ -172,6 +170,29 @@ double light_level_at_point(const ObjectList& world, const Intersect& intersect,
 
         // Light level of 1.0 fills the whole remainder (1.0 - result), others fill only partially
         result += (1.0 - result) * light_level;
+    }
+
+    if (result < 1.0) {
+        // Atmosphere refractions
+        Vector close_point{ intersect.point + rand_unit_vector()*0.1 };
+        double close_point_light_level = light_level_at_point(world, { close_point }, depth + 1);
+
+        Atmosphere our_atmosphere = atmosphere_at_point(world, intersect.point);
+        Atmosphere close_point_atmosphere = atmosphere_at_point(world, close_point);
+
+        if (our_atmosphere.atmosphere_shape == close_point_atmosphere.atmosphere_shape) {
+            // Same atmospheres, no light transition happens
+
+            if (close_point_light_level > 0.0) {
+                // We multiply by density because if in vacuum (0) - no refractions, but strong lights at distance
+                //  if in very dense material (1) - very great refractions but light difficult to travel
+                double light_at_distance = (our_atmosphere.light_dropoff_intensity - 1.0) / 
+                                                our_atmosphere.light_dropoff_intensity;
+                result += (1.0 - result) * light_at_distance * our_atmosphere.light_refraction_amount;
+            }
+        } else {
+            // TODO: Atmosphere transition, probably difficult to write through how many atmospheres we pass
+        }
     }
 
     return result;

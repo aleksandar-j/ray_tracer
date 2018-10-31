@@ -10,7 +10,7 @@
 Camera cam;
 ObjectList shapes;
 
-#define AA 3
+#define AA 5
 
 #define AA_OPTIMIZE false
 #define AA_OPTIMIZE_AVGDIFFACCEPTED 2.0
@@ -94,25 +94,25 @@ void trace(uint32_t* pixels, int w, int h)
     cam = { {0, 0, 1}, {1, 1, 0}, 90.0, w * AA, h * AA };
 
     // Objects
-    shapes.object_list.push_back(new Sphere{ {0, 0, 0}, 10, TEAL, {0.5, 0.5} });
+    //shapes.object_list.push_back(new Sphere{ {0, 0, 0}, 10, TEAL });
     shapes.object_list.push_back(new Sphere{ {0, 0, -50000}, 50000, WHITE, {1.0, 0.0} });
 
-    shapes.object_list.push_back(new Sphere{ {3, 3, 1}, 1, WHITE, { 0.5, 0.5 } });
-    shapes.object_list[2]->material.specular_fuzz = 0.05;
+    shapes.object_list.push_back(new Sphere{ {3, 3, 1}, 1, WHITE, { 0.0, 1.0 } });
+    shapes.object_list[1]->material.specular_fuzz = 0.05;
     shapes.object_list.push_back(new Sphere{ {2.5, 2.5, 2.5}, 0.5, MAROON });
     shapes.object_list.push_back(new Sphere{ {3.2, 1.6, 0.6}, 0.05, GREEN });
     shapes.object_list.push_back(new Sphere{ {4, 2, 2.5}, 0.3, NAVY });
-    shapes.object_list.push_back(new Sphere{ {10, 2, 1.5}, 3, PURPLE, { 0.7, 0.3 } });
-    shapes.object_list[6]->material.specular_fuzz = 0.1;
+    shapes.object_list.push_back(new Sphere{ {10, 2, 1.5}, 3, PURPLE, { 0.5, 0.5 } });
+    shapes.object_list[5]->material.specular_fuzz = 0.1;
     shapes.object_list.push_back(new Sphere{ {2, 4, 2}, 0.5, AQUA });
     shapes.object_list.push_back(new Sphere{ {0.5, 1.1, 0.7}, 0.3, YELLOW });
 
     // Lights
-    shapes.light_list.push_back(new PointLight{ {5, 3, 2}, 0.3 });
-    shapes.light_list.push_back(new PointLight{ {2, 2, 0.7}, 1.0 });
+    shapes.light_list.push_back(new PointLight{ {5, 3, 2}, 0.5 });
+    shapes.light_list.push_back(new PointLight{ {2, 2, 0.7}, 0.3 });
 
     // Atmospheres
-    shapes.atmospheres_list.push_back(new Atmosphere{ new Sphere{ {0,0,0}, 50.0 }, 0.1 });
+    shapes.atmospheres_list.push_back(new Atmosphere{ new Sphere{ {0,0,0}, 50.0 }, 10, 0.3 });
 
     // Worker treads
     std::thread draw_1(draw_pixels, pixels, w, h, 0, 0, w / 2, h / 2);

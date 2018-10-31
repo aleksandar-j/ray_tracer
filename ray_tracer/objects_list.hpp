@@ -6,6 +6,8 @@
 #include "light.hpp"
 #include "atmosphere.hpp"
 
+#define MAX_STACK_DEPTH 10
+
 struct ObjectList {
 
     std::vector<Shape*> object_list;

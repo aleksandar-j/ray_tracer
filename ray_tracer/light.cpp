@@ -63,20 +63,16 @@ double PointLight::light_level_at_point(const ObjectList& world, const Intersect
         }
     }
 
-    if (result == 0.0) {
-        // Light is blocked, but by how much?
-
-        // TODO: Maybe sample close points? What is a close point?...
-    } else {
-        // We do hit the point
+    if (result != 0.0) {
+        // We do hit the point by direct light
 
         // The greater the distance between the light and surface, the lower the light level, depending on the atmosphere
         if (same_atmosperes) {
             // If the same atmosphere object surrounds source and point, we can calculate just based on distance
-            
+
             double light_at_distance =
                 (light_atmosphere.light_dropoff_intensity - light_point_dist) /
-                        light_atmosphere.light_dropoff_intensity;
+                light_atmosphere.light_dropoff_intensity;
 
             result *= light_at_distance;
         } else {
@@ -85,8 +81,12 @@ double PointLight::light_level_at_point(const ObjectList& world, const Intersect
 
         // The greater the angle between the light and surface, the lower the light level
         if (intersect.shape_hit != nullptr) {
-            result *= abs(cos(object_light_angle));
+            double angle_mod = abs(cos(object_light_angle));
+            result *= angle_mod;
         }
+    } else {
+        // We don't get hit by direct light
+
     }
 
     return result;
