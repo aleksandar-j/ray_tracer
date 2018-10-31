@@ -140,3 +140,24 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect, const C
 
     return diffuse_result + specular_result;
 }
+
+Atmosphere get_atmosphere_at_point(const ObjectList& world, const Vector& point)
+{
+    Atmosphere* result = nullptr;
+
+    double min_weight = std::numeric_limits<double>::max();
+    for (auto& x : world.atmospheres_list) {
+        // We go through all our atmospheres
+
+        if (x->weight < min_weight) {
+            // We first check whether weight is smaller because this is cheaper than point in atmosphere call
+
+            if (x->atmosphere_volume->point_in_object(point)) {
+                // Our atmosphere surrounds the point
+                result = x;
+            }
+        }
+    }
+
+    return *result;
+}

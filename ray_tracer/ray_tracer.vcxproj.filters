@@ -33,13 +33,13 @@
     <ClCompile Include="objects_list.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ligth.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="shape.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="light.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -71,7 +71,10 @@
     <ClInclude Include="material.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ligth.hpp">
+    <ClInclude Include="atmosphere.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="light.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

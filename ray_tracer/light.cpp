@@ -1,5 +1,5 @@
 
-#include "ligth.hpp"
+#include "light.hpp"
 
 #include "objects_list.hpp"
 
@@ -47,16 +47,28 @@ double PointLight::light_level_at_point(const ObjectList& objects, const Interse
     } else {
         // We do hit the point
 
-        // The greater the distance between the light and surface, the lower the light level
-        // TODO: Atmosphere
-        //if (this->intensity_dropoff_linear < lightpoint_dist) {
-        //    // Even if we can hit the point, light is too weak there
-        //    return 0.0;
-        //}
+        // The greater the distance between the light and surface, the lower the light level, depending on the atmosphere
+        Atmosphere light_atmosphere = get_atmosphere_at_point(objects, this->center);
+        Atmosphere object_atmosphere = get_atmosphere_at_point(objects, intersect.point);
 
-        //double light_at_distance = (this->intensity_dropoff_linear - lightpoint_dist) / this->intensity_dropoff_linear;
+        if (light_atmosphere.atmosphere_volume == object_atmosphere.atmosphere_volume) {
+            // If the same atmosphere object surrounds source and point, we can calculate just based on distance
 
-        //result *= light_at_distance;
+            if (light_atmosphere.light_dropoff_linear) {
+                if (light_atmosphere.light_dropoff_linear_intensity < lightpoint_dist) {
+                    // Even if we can hit the point, light is too weak there
+                    return 0.0;
+                }
+
+                double light_at_distance = 
+                    (light_atmosphere.light_dropoff_linear_intensity - lightpoint_dist) / 
+                                light_atmosphere.light_dropoff_linear_intensity;
+
+                result *= light_at_distance;
+            }
+        } else {
+            // TODO: Complicated work of seeing all intermediary atmospheres and their interactions
+        }
 
         // The greater the angle between the light and surface, the lower the light level
         result *= abs(cos(angle));

@@ -1,0 +1,31 @@
+#pragma once
+
+class Shape;
+
+#include <limits>
+
+class Atmosphere {
+
+public:
+    Atmosphere()
+    {
+    }
+    Atmosphere(const Shape* volume, const bool light_dropoff_linear, const double light_dropoff_linear_intensity) :
+        atmosphere_volume(volume), 
+        light_dropoff_linear(light_dropoff_linear), light_dropoff_linear_intensity(light_dropoff_linear_intensity)
+    {
+        
+    }
+
+    // Defines the weight by which we choose which atmosphere to pick when two clash, min is 0 and 
+    //      if two have the same weight, we pick at random
+    int weight = 0;
+
+    // Shape in which any light refraction works
+    const Shape* atmosphere_volume = nullptr;
+
+    // How many distance units before any light intensity is 0, if it drops linearly
+    bool light_dropoff_linear = true;
+    double light_dropoff_linear_intensity = std::numeric_limits<double>::max();
+
+};

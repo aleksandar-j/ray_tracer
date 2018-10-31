@@ -141,7 +141,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="camera.cpp" />
-    <ClCompile Include="ligth.cpp" />
+    <ClCompile Include="light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_trace.cpp" />
     <ClCompile Include="math_extension.cpp" />
@@ -151,9 +151,10 @@
     <ClCompile Include="vector.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="atmosphere.hpp" />
     <ClInclude Include="camera.hpp" />
     <ClInclude Include="intersect.hpp" />
-    <ClInclude Include="ligth.hpp" />
+    <ClInclude Include="light.hpp" />
     <ClInclude Include="main_trace.hpp" />
     <ClInclude Include="material.hpp" />
     <ClInclude Include="math_extension.hpp" />
