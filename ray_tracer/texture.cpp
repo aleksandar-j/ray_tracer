@@ -88,3 +88,15 @@ Color color_diff(const Color& A, const Color& B)
 
     return new_color;
 }
+
+double color_greatest_diff(const Color& A, const Color& B)
+{
+    Color diff = color_diff(A, B);
+    return std::fmax(diff.blue, (std::fmax(diff.red, diff.green)));
+}
+
+double color_average_diff(const Color & A, const Color & B)
+{
+    Color diff = color_diff(A, B);
+    return (diff.red + diff.green + diff.blue) / 3.0;
+}

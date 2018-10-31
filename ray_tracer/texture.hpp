@@ -55,6 +55,7 @@ public:
 // Common colors
 #define BLACK { 0.0, 0.0, 0.0 }
 #define WHITE { 255.0, 255.0, 255.0 }
+#define GRAY { 128.0, 128.0, 128.0 }
 
 #define RED { 255.0, 0.0, 0.0 }
 #define GREEN { 0.0, 255.0, 0.0 }
@@ -69,3 +70,5 @@ Color operator*(const Color& A, const double B);
 Color operator/(const Color& A, const double B);
 
 Color color_diff(const Color& A, const Color& B);
+double color_greatest_diff(const Color& A, const Color& B);
+double color_average_diff(const Color& A, const Color& B);
