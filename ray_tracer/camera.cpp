@@ -13,6 +13,12 @@ Ray Camera::get_ray_on_pixel(int x, int y) const
     return { this->position, point_on_viewport - this->position };
 }
 
+void Camera::get_ray_on_pixel_next_horz(Ray& current_ray_out) const
+{
+    current_ray_out.direction += camrect_width_ray.direction * camrect_width_per_pixel;
+    current_ray_out.direction.make_unit_vector();
+}
+
 void Camera::initialize_view()
 {
     Vector rect_side1(cos(acos(direction.x) + (FOV / 2)),

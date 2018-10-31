@@ -24,6 +24,7 @@ public:
     }
 
     Ray get_ray_on_pixel(const int x, const int y) const;
+    void get_ray_on_pixel_next_horz(Ray& current_ray_out) const;
 
     Vector position;
     Vector direction;

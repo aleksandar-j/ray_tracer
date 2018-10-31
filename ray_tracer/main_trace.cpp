@@ -10,10 +10,11 @@
 Camera cam;
 ObjectList shapes;
 
-#define AA 1
+#define AA 3
 
 #define AA_OPTIMIZE true
-#define AA_OPTIMIZE_DIFFACCEPTED 5.0
+#define AA_OPTIMIZE_AVGDIFFACCEPTED 0.8
+#define AA_OPTIMIZE_MAXDIFFACCEPTED 1.0
 
 void draw_pixels(uint32_t* pixels, int w, int h,
                 size_t start_x, size_t start_y, 
@@ -21,14 +22,14 @@ void draw_pixels(uint32_t* pixels, int w, int h,
 {
     srand((unsigned int)time(0));
 
+    Ray camera_ray;
+    Color final_color;
+
     for (size_t y = start_y; y < end_y; y++) {
         for (size_t x = start_x; x < end_x; x++) {
-            Ray camera_ray;
-            Color final_color;
-
+            
             camera_ray = cam.get_ray_on_pixel(x*AA, y*AA);
             Color first_pixel = color_at_ray_intersect(shapes, camera_ray, 0);
-
             final_color = first_pixel;
 
             if (AA > 1) {
@@ -51,8 +52,15 @@ void draw_pixels(uint32_t* pixels, int w, int h,
                     // Get average final color
                     final_color /= 4.0;
 
-                    if (color_average_diff(final_color, first_pixel) < AA_OPTIMIZE_DIFFACCEPTED) {
-                        run_aa = false;
+                    if (run_aa) {
+                        if (color_average_diff(final_color, first_pixel) < AA_OPTIMIZE_AVGDIFFACCEPTED) {
+                            run_aa = false;
+                        }
+                    }
+                    if (run_aa) {
+                        if (color_greatest_diff(final_color, first_pixel) < AA_OPTIMIZE_MAXDIFFACCEPTED) {
+                            run_aa = false;
+                        }
                     }
                 }
 
@@ -60,10 +68,13 @@ void draw_pixels(uint32_t* pixels, int w, int h,
                 if (run_aa) {
                     final_color = {};
 
-                    for (size_t y_new = 0; y_new < AA; y_new++) {
-                        for (size_t x_new = 0; x_new < AA; x_new++) {
-                            // Calculate color on current pixel
-                            camera_ray = cam.get_ray_on_pixel(x*AA + x_new, y*AA + y_new);
+                    size_t x_new = 0, y_new = 0;
+                    for (y_new = 0; y_new < AA; y_new++) {
+                        camera_ray = cam.get_ray_on_pixel(x*AA + x_new, y*AA + y_new);
+
+                        for (x_new = 0; x_new < AA; x_new++) {
+                            cam.get_ray_on_pixel_next_horz(camera_ray);
+
                             final_color += color_at_ray_intersect(shapes, camera_ray, 0);
                         }
                     }
@@ -85,8 +96,8 @@ void trace(uint32_t* pixels, int w, int h)
     shapes.object_list.push_back(new Sphere{ {0, 0, 0}, 10, TEAL, {0.5, 0.5} });
     shapes.object_list.push_back(new Sphere{ {0, 0, -50000}, 50000, WHITE, {1.0, 0.0} });
 
-    shapes.object_list.push_back(new Sphere{ {3, 3, 1}, 1, NAVY, { 0.1, 0.9 } });
-    shapes.object_list[2]->material.specular_fuzz = 0.005;
+    shapes.object_list.push_back(new Sphere{ {3, 3, 1}, 1, NAVY, { 1.0, 0.0 } });
+    shapes.object_list[2]->material.specular_fuzz = 0.05;
     shapes.object_list.push_back(new Sphere{ {2.5, 2.5, 2.5}, 0.5, MAROON });
     shapes.object_list.push_back(new Sphere{ {3.2, 1.6, 0.6}, 0.05, GREEN });
     shapes.object_list.push_back(new Sphere{ {4, 2, 2.5}, 0.3, NAVY });
@@ -97,7 +108,7 @@ void trace(uint32_t* pixels, int w, int h)
 
     // Lights
     shapes.light_list.push_back(new PointLight{ {5, 3, 2}, 1.0 });
-    shapes.light_list.push_back(new PointLight{ {2, 2, 0.7}, 0.2 });
+    shapes.light_list.push_back(new PointLight{ {2, 2, 0.7}, 1.0 });
 
     // Atmospheres
     shapes.atmospheres_list.push_back(new Atmosphere{ new Sphere{ {0,0,0}, 50.0 }, 0.8 });
