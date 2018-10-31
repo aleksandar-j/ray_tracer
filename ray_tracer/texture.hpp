@@ -54,14 +54,23 @@ public:
 };
 // Common colors
 #define BLACK { 0.0, 0.0, 0.0 }
-#define WHITE { 255.0, 255.0, 255.0 }
 #define GRAY { 128.0, 128.0, 128.0 }
+#define WHITE { 255.0, 255.0, 255.0 }
 
 #define RED { 255.0, 0.0, 0.0 }
-#define GREEN { 0.0, 255.0, 0.0 }
+#define LIME { 0.0, 255.0, 0.0 }
 #define BLUE { 0.0, 0.0, 255.0 }
 
+#define YELLOW { 255.0, 255.0, 0.0 }
+#define AQUA { 0.0, 255.0, 255.0 }
+
 #define MAROON { 128.0, 0.0, 0.0 }
+#define GREEN { 0.0, 128.0, 0.0 }
+#define NAVY { 0.0, 0.0, 128.0 }
+
+#define OLIVE { 128.0, 128.0, 0.0 }
+#define PURPLE { 128.0, 0.0, 128.0 }
+#define TEAL { 0.0, 128.0, 128.0 }
 
 Color operator+(const Color& A, const Color& B);
 Color operator-(const Color& A, const Color& B);

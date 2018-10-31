@@ -102,12 +102,8 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect, const C
 
             constexpr double diffuse_length_lim = 32.0;
             if (intersect_new.ray_to_point_dist < diffuse_length_lim) {
-                double diffuse_intensity = (1.0 - (intersect_new.ray_to_point_dist / diffuse_length_lim))*0.5;
-                diffuse_result = (color_new*0.5)*(diffuse_intensity) + (object_color_in)*(1.0 - diffuse_intensity);
-
-                if (diffuse_result.is_valid() == false) {
-                    throw "error";
-                }
+                double diffuse_intensity = (1.0 - (intersect_new.ray_to_point_dist / diffuse_length_lim))*0.25;
+                diffuse_result = (color_new)*(diffuse_intensity) + (object_color_in)*(1.0 - diffuse_intensity);
             }
         }
 

@@ -10,10 +10,10 @@
 Camera cam;
 ObjectList shapes;
 
-#define AA 2
+#define AA 5
 
-#define AA_OPTIMIZE false
-#define AA_OPTIMIZE_DIFFACCEPTED 5.0
+#define AA_OPTIMIZE true
+#define AA_OPTIMIZE_DIFFACCEPTED 10.0
 
 void draw_pixels(uint32_t* pixels, int w, int h,
                 size_t start_x, size_t start_y, 
@@ -82,22 +82,22 @@ void trace(uint32_t* pixels, int w, int h)
     cam = { {0, 0, 1}, {1, 1, 0}, 90.0, w * AA, h * AA };
 
     // Objects
-    shapes.object_list.push_back(new Sphere{ {10000, 10000, 50}, 20000, { 135, 160, 255 }, {1.0, 0.0} });
-    shapes.object_list.push_back(new Sphere{ {1, 1, -5000}, 5000, { 12, 200, 23 }, {1.0, 0.0} });
+    shapes.object_list.push_back(new Sphere{ {0, 0, 0}, 50, TEAL, {0.5, 0.5} });
+    shapes.object_list.push_back(new Sphere{ {1, 1, -5000}, 5000, LIME, {1.0, 0.0} });
 
-    shapes.object_list.push_back(new Sphere{ {3, 3, 1}, 1, {23, 48, 69}, { 0.2, 0.8 } });
+    shapes.object_list.push_back(new Sphere{ {3, 3, 1}, 1, NAVY, { 0.1, 0.9 } });
     shapes.object_list[2]->material.specular_fuzz = 0.05;
-    shapes.object_list.push_back(new Sphere{ {2.5, 2.5, 2.5}, 0.5, RED });
-    shapes.object_list.push_back(new Sphere{ {3.2, 1.6, 0.6}, 0.05, {23, 48, 69} });
-    shapes.object_list.push_back(new Sphere{ {4, 2, 2.5}, 0.3 });
-    shapes.object_list.push_back(new Sphere{ {10, 2, 1.5}, 3, RED, { 1.0, 0.0 } });
+    shapes.object_list.push_back(new Sphere{ {2.5, 2.5, 2.5}, 0.5, MAROON });
+    shapes.object_list.push_back(new Sphere{ {3.2, 1.6, 0.6}, 0.05, GREEN });
+    shapes.object_list.push_back(new Sphere{ {4, 2, 2.5}, 0.3, WHITE });
+    shapes.object_list.push_back(new Sphere{ {10, 2, 1.5}, 3, PURPLE, { 0.7, 0.3 } });
     shapes.object_list[6]->material.specular_fuzz = 0.1;
-    shapes.object_list.push_back(new Sphere{ {2, 4, 2}, 0.5, {150, 23, 0} });
-    shapes.object_list.push_back(new Sphere{ {0.5, 1.1, 0.7}, 0.3 });
+    shapes.object_list.push_back(new Sphere{ {2, 4, 2}, 0.5, AQUA });
+    shapes.object_list.push_back(new Sphere{ {0.5, 1.1, 0.7}, 0.3, YELLOW });
 
     // Lights
     shapes.light_list.push_back(new AmbientLight{ 0.1 });
-    shapes.light_list.push_back(new PointLight{ {3, 3, 5}, 1.0, 50.0 });
+    //shapes.light_list.push_back(new PointLight{ {3, 3, 5}, 1.0, 50.0 });
     shapes.light_list.push_back(new PointLight{ {5, 3, 2}, 1.0, 25.0 });
     shapes.light_list.push_back(new PointLight{ {2, 2, 0.7}, 0.2, 10.0 });
 
