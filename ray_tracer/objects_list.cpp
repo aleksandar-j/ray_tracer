@@ -141,9 +141,11 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect, const C
     return diffuse_result + specular_result;
 }
 
+Atmosphere vacuum = Atmosphere{ new Sphere{ {0, 0, 0}, MAX_DOUBLE }, 0.0 };
+
 Atmosphere get_atmosphere_at_point(const ObjectList& world, const Vector& point)
 {
-    Atmosphere* result = nullptr;
+    Atmosphere* result = &vacuum;
 
     double greatest_density = -0.1;
     for (auto& x : world.atmospheres_list) {

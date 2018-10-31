@@ -22,7 +22,7 @@ double PointLight::light_level_at_point(const ObjectList& objects, const Interse
     double lightpoint_dist = vec_distance(this->center, intersect.point);
 
     if (same_atmosperes) {
-        if (light_atmosphere.light_dropoff_linear_intensity < lightpoint_dist) {
+        if (light_atmosphere.light_dropoff_intensity < lightpoint_dist) {
             // Even if we can hit the point, light is too weak there in this atmosphere
             return 0.0;
         }
@@ -70,8 +70,8 @@ double PointLight::light_level_at_point(const ObjectList& objects, const Interse
             // If the same atmosphere object surrounds source and point, we can calculate just based on distance
             
             double light_at_distance =
-                (light_atmosphere.light_dropoff_linear_intensity - lightpoint_dist) /
-                        light_atmosphere.light_dropoff_linear_intensity;
+                (light_atmosphere.light_dropoff_intensity - lightpoint_dist) /
+                        light_atmosphere.light_dropoff_intensity;
 
             result *= light_at_distance;
         } else {

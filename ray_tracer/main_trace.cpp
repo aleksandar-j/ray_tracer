@@ -10,7 +10,7 @@
 Camera cam;
 ObjectList shapes;
 
-#define AA 5
+#define AA 1
 
 #define AA_OPTIMIZE true
 #define AA_OPTIMIZE_DIFFACCEPTED 5.0
@@ -19,7 +19,7 @@ void draw_pixels(uint32_t* pixels, int w, int h,
                 size_t start_x, size_t start_y, 
                 size_t end_x, size_t end_y)
 {
-    srand(time(0));
+    srand((unsigned int)time(0));
 
     for (size_t y = start_y; y < end_y; y++) {
         for (size_t x = start_x; x < end_x; x++) {
@@ -82,8 +82,8 @@ void trace(uint32_t* pixels, int w, int h)
     cam = { {0, 0, 1}, {1, 1, 0}, 90.0, w * AA, h * AA };
 
     // Objects
-    shapes.object_list.push_back(new Sphere{ {0, 0, 0}, 50, TEAL, {0.5, 0.5} });
-    shapes.object_list.push_back(new Sphere{ {1, 1, -5000}, 5000, WHITE, {1.0, 0.0} });
+    shapes.object_list.push_back(new Sphere{ {0, 0, 0}, 10, TEAL, {0.5, 0.5} });
+    shapes.object_list.push_back(new Sphere{ {0, 0, -50000}, 50000, WHITE, {1.0, 0.0} });
 
     shapes.object_list.push_back(new Sphere{ {3, 3, 1}, 1, NAVY, { 0.1, 0.9 } });
     shapes.object_list[2]->material.specular_fuzz = 0.005;
@@ -100,7 +100,7 @@ void trace(uint32_t* pixels, int w, int h)
     shapes.light_list.push_back(new PointLight{ {2, 2, 0.7}, 0.2 });
 
     // Atmospheres
-    shapes.atmospheres_list.push_back(new Atmosphere{ new Sphere{ {0,0,0}, 50000 }, true, 30.0 });
+    shapes.atmospheres_list.push_back(new Atmosphere{ new Sphere{ {0,0,0}, 50.0 }, 0.8 });
 
     // Worker treads
     std::thread draw_1(draw_pixels, pixels, w, h, 0, 0, w / 2, h / 2);
