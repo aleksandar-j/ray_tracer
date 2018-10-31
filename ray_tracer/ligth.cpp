@@ -1,5 +1,5 @@
 
-#include "ligths.hpp"
+#include "ligth.hpp"
 
 double PointLight::light_level_at_point(const std::vector<Shape*>& objects, const Intersect& intersect) const
 {

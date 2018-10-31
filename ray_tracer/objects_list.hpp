@@ -1,7 +1,7 @@
 #pragma once
 
-#include "shapes.hpp"
-#include "ligths.hpp"
+#include "shape.hpp"
+#include "ligth.hpp"
 
 struct ObjectList {
 

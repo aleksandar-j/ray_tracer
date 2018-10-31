@@ -1,5 +1,5 @@
 
-#include "shapes.hpp"
+#include "shape.hpp"
 
 Intersect Sphere::ray_intersect(const Ray& ray) const
 {

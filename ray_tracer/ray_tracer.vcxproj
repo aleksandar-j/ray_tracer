@@ -141,23 +141,25 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="camera.cpp" />
-    <ClCompile Include="ligths.cpp" />
+    <ClCompile Include="ligth.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="main_trace.cpp" />
     <ClCompile Include="math_extension.cpp" />
     <ClCompile Include="objects_list.cpp" />
-    <ClCompile Include="shapes.cpp" />
+    <ClCompile Include="shape.cpp" />
+    <ClCompile Include="texture.cpp" />
     <ClCompile Include="vector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="camera.hpp" />
     <ClInclude Include="intersect.hpp" />
-    <ClInclude Include="ligths.hpp" />
+    <ClInclude Include="ligth.hpp" />
     <ClInclude Include="main_trace.hpp" />
-    <ClInclude Include="materials.hpp" />
+    <ClInclude Include="material.hpp" />
     <ClInclude Include="math_extension.hpp" />
     <ClInclude Include="objects_list.hpp" />
-    <ClInclude Include="shapes.hpp" />
+    <ClInclude Include="shape.hpp" />
+    <ClInclude Include="texture.hpp" />
     <ClInclude Include="vector.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

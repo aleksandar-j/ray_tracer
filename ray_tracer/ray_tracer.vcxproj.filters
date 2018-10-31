@@ -21,9 +21,6 @@
     <ClCompile Include="main_trace.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="shapes.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="math_extension.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -36,15 +33,18 @@
     <ClCompile Include="objects_list.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ligths.cpp">
+    <ClCompile Include="ligth.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="shape.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main_trace.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="shapes.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="math_extension.hpp">
@@ -59,13 +59,19 @@
     <ClInclude Include="intersect.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ligths.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="objects_list.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="materials.hpp">
+    <ClInclude Include="texture.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="shape.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="material.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ligth.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

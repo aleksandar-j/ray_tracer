@@ -2,7 +2,9 @@
 
 #include "vector.hpp"
 #include "intersect.hpp"
-#include "materials.hpp"
+
+#include "material.hpp"
+#include "texture.hpp"
 
 class Shape {
 
