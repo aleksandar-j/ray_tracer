@@ -10,8 +10,8 @@ public:
     Atmosphere()
     {
     }
-    Atmosphere(const Shape* volume, const bool light_dropoff_linear, const double light_dropoff_linear_intensity) :
-        atmosphere_volume(volume), 
+    Atmosphere(const Shape* atmosphere_shape, const bool light_dropoff_linear, const double light_dropoff_linear_intensity) :
+        atmosphere_shape(atmosphere_shape),
         light_dropoff_linear(light_dropoff_linear), light_dropoff_linear_intensity(light_dropoff_linear_intensity)
     {
         
@@ -22,7 +22,7 @@ public:
     int weight = 0;
 
     // Shape in which any light refraction works
-    const Shape* atmosphere_volume = nullptr;
+    const Shape* atmosphere_shape = nullptr;
 
     // How many distance units before any light intensity is 0, if it drops linearly
     bool light_dropoff_linear = true;

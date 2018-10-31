@@ -51,7 +51,7 @@ double PointLight::light_level_at_point(const ObjectList& objects, const Interse
         Atmosphere light_atmosphere = get_atmosphere_at_point(objects, this->center);
         Atmosphere object_atmosphere = get_atmosphere_at_point(objects, intersect.point);
 
-        if (light_atmosphere.atmosphere_volume == object_atmosphere.atmosphere_volume) {
+        if (light_atmosphere.atmosphere_shape == object_atmosphere.atmosphere_shape) {
             // If the same atmosphere object surrounds source and point, we can calculate just based on distance
 
             if (light_atmosphere.light_dropoff_linear) {
