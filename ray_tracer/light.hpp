@@ -9,8 +9,7 @@ struct ObjectList;
 class Light {
 
 public:
-    virtual double light_level_at_shape_point(const ObjectList& world, const Intersect& intersect) const = 0;
-    virtual double light_level_at_point(const ObjectList& world, const Vector& point) const = 0;
+    virtual double light_level_at_point(const ObjectList& world, const Intersect& intersect) const = 0;
 
     // Color which light emits
     Color light_color;
@@ -32,8 +31,7 @@ public:
         this->intensity = intensity;
     }
 
-    virtual double light_level_at_shape_point(const ObjectList& world, const Intersect& intersect) const;
-    virtual double light_level_at_point(const ObjectList& world, const Vector& point) const;
+    virtual double light_level_at_point(const ObjectList& world, const Intersect& intersect) const;
 
     Vector center;
 

@@ -3,7 +3,7 @@
 
 #include "objects_list.hpp"
 
-double PointLight::light_level_at_shape_point(const ObjectList& world, const Intersect& intersect) const
+double PointLight::light_level_at_point(const ObjectList& world, const Intersect& intersect) const
 {
     double result = this->intensity;
 
@@ -19,44 +19,46 @@ double PointLight::light_level_at_shape_point(const ObjectList& world, const Int
     }
 
     // Distance between light and point hit
-    double lightpoint_dist = vec_distance(this->center, intersect.point);
+    double light_point_dist = vec_distance(this->center, intersect.point);
 
     if (same_atmosperes) {
-        if (light_atmosphere.light_dropoff_intensity < lightpoint_dist) {
+        if (light_atmosphere.light_dropoff_intensity < light_point_dist) {
             // Even if we can hit the point, light is too weak there in this atmosphere
             return 0.0;
         }
     }
 
-    // Angle between light and point hit normal
+    // Direction from our point towards light and back
+    Ray point_light_ray{ {this->center}, {this->center - intersect.point } };
+    Ray light_point_ray{ {this->center}, { intersect.point - this->center } };
+
+    // Angle between light and object hit, only if we are actually checking object
     double object_light_angle;
+    Ray object_normal_ray;
+    
     if (intersect.shape_hit != nullptr) {
-        Ray objectnormal_ray = intersect.shape_hit->normal_ray_at_point(intersect.point);
-        Vector objectlight_direction = { this->center - intersect.point };
-        object_light_angle = vec_anglebetween_rad(objectnormal_ray.direction, objectlight_direction);
+        object_normal_ray = intersect.shape_hit->normal_ray_at_point(intersect.point);
+        object_light_angle = vec_anglebetween_rad(object_normal_ray.direction, point_light_ray.direction);
     }
 
     for (auto& object : world.object_list) {
         // We check whether some other object blocks us from hitting the main one
 
-        Ray lightobject_ray{ {this->center}, {intersect.point - this->center} };
-        Intersect intersect_data = object->ray_intersect(lightobject_ray);
+        Intersect intersect_data = object->ray_intersect(light_point_ray);
         
         if (intersect_data.shape_hit == nullptr) {
             // Nothing is hit, continue
             continue;
         }
         
-        if (intersect_data.ray_to_point_dist < lightpoint_dist) {
-            // We hit something that is closer than our point
+        if (intersect_data.ray_to_point_dist <= light_point_dist) {
+            // We hit something that is closer than our point (or maybe our point)
 
-            // We check whether the thing we hit is actually our point
-            if (abs(lightpoint_dist - intersect_data.ray_to_point_dist) > 0.0001) {
-                // Blocks light, we hit something before the point
+            if (abs(light_point_dist - intersect_data.ray_to_point_dist) > 0.0001) {
+                // We hit something else, point is dark
+
                 result = 0.0;
                 break;
-            } else {
-                // This object doesn't block light
             }
         }
     }
@@ -73,7 +75,7 @@ double PointLight::light_level_at_shape_point(const ObjectList& world, const Int
             // If the same atmosphere object surrounds source and point, we can calculate just based on distance
             
             double light_at_distance =
-                (light_atmosphere.light_dropoff_intensity - lightpoint_dist) /
+                (light_atmosphere.light_dropoff_intensity - light_point_dist) /
                         light_atmosphere.light_dropoff_intensity;
 
             result *= light_at_distance;
@@ -88,9 +90,4 @@ double PointLight::light_level_at_shape_point(const ObjectList& world, const Int
     }
 
     return result;
-}
-
-double PointLight::light_level_at_point(const ObjectList& world, const Vector& point) const
-{
-    return this->light_level_at_shape_point(world, { point });
 }
