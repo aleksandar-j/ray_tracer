@@ -60,16 +60,28 @@ Intersect object_ray_intersect(const ObjectList& world, const Ray& ray)
     return final_intersect;
 }
 
-double light_level_at_point(const ObjectList& world, const Intersect& intersect)
+Atmosphere vacuum = Atmosphere{ new Sphere{ {0, 0, 0}, MAX_DOUBLE }, 0.0 };
+Atmosphere atmosphere_at_point(const ObjectList& world, const Vector& point)
 {
-    double result = 0.0;
-    
-    for (auto& light : world.light_list) {
-        double light_level = light->light_level_at_point(world, intersect);
-        result += (1.0 - result) * light_level;
+    Atmosphere* result = &vacuum;
+
+    double greatest_density = -0.1;
+    for (auto& x : world.atmospheres_list) {
+        // We go through all our atmospheres
+
+        if (x->density > greatest_density) {
+            // Atmosphere with greatest density wins
+
+            if (x->atmosphere_shape->point_in_object(point)) {
+                // Our atmosphere surrounds the point
+
+                result = x;
+                greatest_density = x->density;
+            }
+        }
     }
 
-    return result;
+    return *result;
 }
 
 Color reflect_light(const ObjectList& world, const Intersect& intersect, const Color& object_color_in, int depth)
@@ -145,27 +157,14 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect, const C
     return diffuse_result + specular_result;
 }
 
-Atmosphere vacuum = Atmosphere{ new Sphere{ {0, 0, 0}, MAX_DOUBLE }, 0.0 };
-
-Atmosphere atmosphere_at_point(const ObjectList& world, const Vector& point)
+double light_level_at_point(const ObjectList& world, const Intersect& intersect)
 {
-    Atmosphere* result = &vacuum;
+    double result = 0.0;
 
-    double greatest_density = -0.1;
-    for (auto& x : world.atmospheres_list) {
-        // We go through all our atmospheres
-
-        if (x->density > greatest_density) {
-            // Atmosphere with greatest density wins
-
-            if (x->atmosphere_shape->point_in_object(point)) {
-                // Our atmosphere surrounds the point
-                
-                result = x;
-                greatest_density = x->density;
-            }
-        }
+    for (auto& light : world.light_list) {
+        double light_level = light->light_level_at_point(world, intersect);
+        result += (1.0 - result) * light_level;
     }
 
-    return *result;
+    return result;
 }
