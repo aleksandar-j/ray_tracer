@@ -145,7 +145,7 @@ Atmosphere get_atmosphere_at_point(const ObjectList& world, const Vector& point)
 {
     Atmosphere* result = nullptr;
 
-    double greatest_density = 0.0;
+    double greatest_density = -0.1;
     for (auto& x : world.atmospheres_list) {
         // We go through all our atmospheres
 
