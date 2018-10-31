@@ -10,7 +10,7 @@ Color color_at_ray_intersect(const ObjectList& world, const Ray& ray, int depth)
         return BLACK;
     }
 
-    Intersect intersect = object_ray_intersect(world, ray, depth);
+    Intersect intersect = object_ray_intersect(world, ray);
 
     if (intersect.shape_hit != nullptr) {
         return color_at_point(world, intersect, depth);
@@ -39,12 +39,8 @@ Color color_at_point(const ObjectList& world, const Intersect& intersect, int de
     return object_color;
 }
 
-Intersect object_ray_intersect(const ObjectList& world, const Ray& ray, int depth)
+Intersect object_ray_intersect(const ObjectList& world, const Ray& ray)
 {
-    if (depth > MAX_STACK_DEPTH) {
-        return {};
-    }
-
     Intersect final_intersect;
     final_intersect.ray_shot = ray;
 
@@ -94,20 +90,16 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect, const C
         normal.direction += rand_unit_vector();
         normal.direction.make_unit_vector();
 
-        Intersect intersect_new = object_ray_intersect(world, normal, depth + 1);
+        Intersect intersect_new = object_ray_intersect(world, normal);
 
         if (intersect_new.shape_hit != nullptr) {
             // Objects that are closer will have a greater impact on our color
 
-            constexpr double diffuse_length_lim = 10;
-            if (intersect_new.ray_to_point_dist < diffuse_length_lim) {
-                Color color_new = color_at_point(world, intersect_new, depth + 1);
+            Color color_new = color_at_point(world, intersect_new, depth + 1);
 
-                double diffuse_intensity = (1.0 - (intersect_new.ray_to_point_dist / diffuse_length_lim)) * 0.5;
-                diffuse_result = color_new*0.5*diffuse_intensity + object_color_in*(1.0 - diffuse_intensity);
-            } else {
-                diffuse_result = object_color_in;
-            }
+            constexpr double diffuse_length_lim = std::numeric_limits<double>::max();
+            double diffuse_intensity = (1.0 - (intersect_new.ray_to_point_dist / diffuse_length_lim)) * 0.5;
+            diffuse_result = (color_new*0.5)*diffuse_intensity + (object_color_in*1.5)*(1.0 - diffuse_intensity);
         } else {
             diffuse_result = object_color_in;
         }
@@ -131,7 +123,7 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect, const C
             reflection.direction.make_unit_vector();
         }
 
-        Intersect intersect_new = object_ray_intersect(world, reflection, depth + 1);
+        Intersect intersect_new = object_ray_intersect(world, reflection);
 
         if (intersect_new.shape_hit != nullptr) {
             specular_result = color_at_point(world, intersect_new, depth + 1);

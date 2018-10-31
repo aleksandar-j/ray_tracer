@@ -1,6 +1,5 @@
 #pragma once
 
-#include "math_extension.hpp"
 #include "vector.hpp"
 #include "intersect.hpp"
 #include "materials.hpp"

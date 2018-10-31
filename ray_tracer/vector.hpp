@@ -1,16 +1,10 @@
 #pragma once
 
 #include "math_extension.hpp"
-#include <vector>
 
 class Vector {
 
 public:
-
-    double x;
-    double y;
-    double z;
-    
     Vector()
     {
     }
@@ -33,6 +27,10 @@ public:
     void rotate_x_deg(const double deg);
     void rotate_y_deg(const double deg);
     void rotate_z_deg(const double deg);
+
+    double x;
+    double y;
+    double z;
 
 };
 
@@ -65,9 +63,6 @@ double vec_distance(const Vector& A, const Vector& B);
 class Ray {
 
 public:
-    Vector origin;
-    Vector direction;
-
     Ray() {}
     Ray(const Vector& origin, const Vector& direction) :
         origin(origin), direction(direction)
@@ -75,15 +70,14 @@ public:
         this->direction.make_unit_vector();
     }
 
+    Vector origin;
+    Vector direction;
+
 };
 
 class Color {
 
 public:
-    int red;
-    int green;
-    int blue;
-
     Color() 
     {
         this->red = 0;
@@ -114,6 +108,10 @@ public:
     operator int() const;
 
     void abs_col();
+
+    int red;
+    int green;
+    int blue;
 
 };
 #define BLACK { 0x00, 0x00, 0x00 }

@@ -8,8 +8,8 @@ class Camera {
 public:
     Camera() {}
     Camera(const Vector& cam_position, const Vector& cam_direction,
-        const double FOV_deg,
-        const int scr_width, const int scr_height) :
+           const double FOV_deg,
+           const int scr_width, const int scr_height) :
         position(cam_position), direction(cam_direction),
         FOV(deg_to_rad(FOV_deg)),
         screen_width(scr_width), screen_height(scr_height),
