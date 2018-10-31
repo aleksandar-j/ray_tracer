@@ -7,11 +7,11 @@ struct ObjectList {
 
     std::vector<Shape*> object_list;
     std::vector<Light*> light_list;
+    std::vector<Atmosphere*> atmospheres_list;
 
 };
 
 // Increase depth when you shoot new ray
-
 Color color_at_ray_intersect(const ObjectList& world, const Ray& ray, int depth);
 Color color_at_point(const ObjectList& world, const Intersect& intersect, int depth);
 

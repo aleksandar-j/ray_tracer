@@ -96,9 +96,11 @@ void trace(uint32_t* pixels, int w, int h)
     shapes.object_list.push_back(new Sphere{ {0.5, 1.1, 0.7}, 0.3, YELLOW });
 
     // Lights
-    shapes.light_list.push_back(new AmbientLight{ 0.1 });
-    shapes.light_list.push_back(new PointLight{ {5, 3, 2}, 1.0, 25.0 });
-    shapes.light_list.push_back(new PointLight{ {2, 2, 0.7}, 0.2, 10.0 });
+    shapes.light_list.push_back(new PointLight{ {5, 3, 2}, 1.0 });
+    shapes.light_list.push_back(new PointLight{ {2, 2, 0.7}, 0.2 });
+
+    // Atmospheres
+    shapes.atmospheres_list.push_back(new Atmosphere());
 
     // Worker treads
     std::thread draw_1(draw_pixels, pixels, w, h, 0, 0, w / 2, h / 2);
