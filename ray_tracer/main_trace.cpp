@@ -12,8 +12,8 @@ ObjectList shapes;
 
 #define AA 3
 
-#define AA_OPTIMIZE true
-#define AA_OPTIMIZE_AVGDIFFACCEPTED 0.8
+#define AA_OPTIMIZE false
+#define AA_OPTIMIZE_AVGDIFFACCEPTED 0.5
 #define AA_OPTIMIZE_MAXDIFFACCEPTED 1.0
 
 void draw_pixels(uint32_t* pixels, int w, int h,
@@ -37,6 +37,7 @@ void draw_pixels(uint32_t* pixels, int w, int h,
 
                 if (AA_OPTIMIZE && AA > 2) {
                     // Tracing four edge AA pixels, if all are similar, we don't do more
+
                     // Calculate color on current pixel lower left
                     camera_ray = cam.get_ray_on_pixel(x*AA, y*AA + (AA - 1));
                     final_color += color_at_ray_intersect(shapes, camera_ray, 0);
@@ -53,12 +54,12 @@ void draw_pixels(uint32_t* pixels, int w, int h,
                     final_color /= 4.0;
 
                     if (run_aa) {
-                        if (color_average_diff(final_color, first_pixel) < AA_OPTIMIZE_AVGDIFFACCEPTED) {
+                        if (color_greatest_diff(final_color, first_pixel) < AA_OPTIMIZE_MAXDIFFACCEPTED) {
                             run_aa = false;
                         }
                     }
                     if (run_aa) {
-                        if (color_greatest_diff(final_color, first_pixel) < AA_OPTIMIZE_MAXDIFFACCEPTED) {
+                        if (color_average_diff(final_color, first_pixel) < AA_OPTIMIZE_AVGDIFFACCEPTED) {
                             run_aa = false;
                         }
                     }
