@@ -8,8 +8,8 @@ double PointLight::light_level_at_point(const ObjectList& objects, const Interse
     double result = this->intensity;
 
     // Atmospheres on light and object
-    Atmosphere light_atmosphere = get_atmosphere_at_point(objects, this->center);
-    Atmosphere object_atmosphere = get_atmosphere_at_point(objects, intersect.point);
+    Atmosphere light_atmosphere = atmosphere_at_point(objects, this->center);
+    Atmosphere object_atmosphere = atmosphere_at_point(objects, intersect.point);
 
     bool same_atmosperes;
     if (light_atmosphere.atmosphere_shape == object_atmosphere.atmosphere_shape) {

@@ -13,8 +13,8 @@ ObjectList shapes;
 #define AA 3
 
 #define AA_OPTIMIZE false
-#define AA_OPTIMIZE_AVGDIFFACCEPTED 0.5
-#define AA_OPTIMIZE_MAXDIFFACCEPTED 1.0
+#define AA_OPTIMIZE_AVGDIFFACCEPTED 2.0
+#define AA_OPTIMIZE_MAXDIFFACCEPTED 0.5
 
 void draw_pixels(uint32_t* pixels, int w, int h,
                 size_t start_x, size_t start_y, 
@@ -97,7 +97,7 @@ void trace(uint32_t* pixels, int w, int h)
     shapes.object_list.push_back(new Sphere{ {0, 0, 0}, 10, TEAL, {0.5, 0.5} });
     shapes.object_list.push_back(new Sphere{ {0, 0, -50000}, 50000, WHITE, {1.0, 0.0} });
 
-    shapes.object_list.push_back(new Sphere{ {3, 3, 1}, 1, NAVY, { 1.0, 0.0 } });
+    shapes.object_list.push_back(new Sphere{ {3, 3, 1}, 1, WHITE, { 0.5, 0.5 } });
     shapes.object_list[2]->material.specular_fuzz = 0.05;
     shapes.object_list.push_back(new Sphere{ {2.5, 2.5, 2.5}, 0.5, MAROON });
     shapes.object_list.push_back(new Sphere{ {3.2, 1.6, 0.6}, 0.05, GREEN });
@@ -108,11 +108,11 @@ void trace(uint32_t* pixels, int w, int h)
     shapes.object_list.push_back(new Sphere{ {0.5, 1.1, 0.7}, 0.3, YELLOW });
 
     // Lights
-    shapes.light_list.push_back(new PointLight{ {5, 3, 2}, 1.0 });
-    shapes.light_list.push_back(new PointLight{ {2, 2, 0.7}, 1.0 });
+    shapes.light_list.push_back(new PointLight{ {5, 3, 2}, 0.3 });
+    shapes.light_list.push_back(new PointLight{ {2, 2, 0.7}, 0.1 });
 
     // Atmospheres
-    shapes.atmospheres_list.push_back(new Atmosphere{ new Sphere{ {0,0,0}, 50.0 }, 0.8 });
+    //shapes.atmospheres_list.push_back(new Atmosphere{ new Sphere{ {0,0,0}, 50.0 }, 0.1 });
 
     // Worker treads
     std::thread draw_1(draw_pixels, pixels, w, h, 0, 0, w / 2, h / 2);

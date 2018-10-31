@@ -101,9 +101,13 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect, const C
             color_new.make_grey();
 
             constexpr double diffuse_length_lim = 32.0;
+            constexpr double max_diffuse_intensity = 0.5;
+            constexpr double diffuse_color_darkness_mult = 0.5;
             if (intersect_new.ray_to_point_dist < diffuse_length_lim) {
-                double diffuse_intensity = (1.0 - (intersect_new.ray_to_point_dist / diffuse_length_lim))*0.25;
-                diffuse_result = (color_new)*(diffuse_intensity) + (object_color_in)*(1.0 - diffuse_intensity);
+                double diffuse_intensity = (1.0 - (intersect_new.ray_to_point_dist / diffuse_length_lim)) * 
+                                        max_diffuse_intensity;
+                diffuse_result = (color_new*diffuse_color_darkness_mult)*
+                                (diffuse_intensity) + (object_color_in)*(1.0 - diffuse_intensity);
             }
         }
 
@@ -143,7 +147,7 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect, const C
 
 Atmosphere vacuum = Atmosphere{ new Sphere{ {0, 0, 0}, MAX_DOUBLE }, 0.0 };
 
-Atmosphere get_atmosphere_at_point(const ObjectList& world, const Vector& point)
+Atmosphere atmosphere_at_point(const ObjectList& world, const Vector& point)
 {
     Atmosphere* result = &vacuum;
 
