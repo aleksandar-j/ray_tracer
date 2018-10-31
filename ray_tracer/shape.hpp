@@ -10,8 +10,9 @@ class Shape {
 
 public:
     virtual Intersect ray_intersect(const Ray& ray) const = 0;
-    virtual Color texture_at_point(const Vector& point) const = 0;
-    virtual Ray get_normal_ray_at_vec(const Vector& point) const = 0;
+    
+    virtual Ray normal_ray_at_point(const Vector& point) const = 0;
+    virtual Color color_at_point(const Vector& point) const = 0;
 
     Material material;
 
@@ -40,8 +41,8 @@ public:
     }
 
     virtual Intersect ray_intersect(const Ray& ray) const override;
-    virtual Color texture_at_point(const Vector& point) const override;
-    virtual Ray get_normal_ray_at_vec(const Vector& point) const override;
+    virtual Color color_at_point(const Vector& point) const override;
+    virtual Ray normal_ray_at_point(const Vector& point) const override;
 
     Vector center;
     double radius;
@@ -62,8 +63,8 @@ public:
 //    }
 //
 //    virtual Intersect ray_intersect(const Ray& ray) const override;
-//    virtual Color texture_at_point(const Vector& point, const Shape& object) const override;
-//    virtual Ray get_normal_ray_at_vec(const Vector& point) const override;
+//    virtual Color color_at_point(const Vector& point, const Shape& object) const override;
+//    virtual Ray normal_ray_at_point(const Vector& point) const override;
 //
 //    Ray edge_long;
 //    Ray edge_short;
@@ -84,8 +85,8 @@ public:
 //    }
 //
 //    virtual Intersect ray_intersect(const Ray& ray) const override;
-//    virtual Color texture_at_point(const Vector& point, const Shape& object) const override;
-//    virtual Ray get_normal_ray_at_vec(const Vector& point) const override;
+//    virtual Color color_at_point(const Vector& point, const Shape& object) const override;
+//    virtual Ray normal_ray_at_point(const Vector& point) const override;
 //
 //    Vector center;
 //    Vector height;

@@ -28,7 +28,7 @@ Color color_at_point(const ObjectList& world, const Intersect& intersect, int de
     Color object_color;
 
     // Get object's color at the point
-    object_color = intersect.shape_hit->texture_at_point(intersect.point);
+    object_color = intersect.shape_hit->color_at_point(intersect.point);
 
     // Lower the final color depending on the light level
     object_color *= light_level_at_point(world, intersect);
@@ -88,7 +88,7 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect, const C
 
         diffuse_result = object_color_in;
 
-        Ray normal = intersect.shape_hit->get_normal_ray_at_vec(intersect.point);
+        Ray normal = intersect.shape_hit->normal_ray_at_point(intersect.point);
         normal.direction += rand_unit_vector();
         normal.direction.make_unit_vector();
 
@@ -115,7 +115,7 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect, const C
     if (intersect.shape_hit->material.specular > 0.0) {
         // Shoot specular rays
 
-        Ray normal = intersect.shape_hit->get_normal_ray_at_vec(intersect.point);
+        Ray normal = intersect.shape_hit->normal_ray_at_point(intersect.point);
         Vector reflected_vec = intersect.ray_shot.direction + normal.direction*2;
 
         Ray reflection = { normal.origin, reflected_vec };

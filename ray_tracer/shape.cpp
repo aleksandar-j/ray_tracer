@@ -39,12 +39,12 @@ Intersect Sphere::ray_intersect(const Ray& ray) const
     }
 }
 
-Color Sphere::texture_at_point(const Vector& point) const
+Color Sphere::color_at_point(const Vector& point) const
 {
     return this->color;
 }
 
-Ray Sphere::get_normal_ray_at_vec(const Vector& point) const
+Ray Sphere::normal_ray_at_point(const Vector& point) const
 {
     return { point, { point - this->center } };
 }
@@ -66,7 +66,7 @@ Ray Sphere::get_normal_ray_at_vec(const Vector& point) const
 //    return Color();
 //}
 //
-//Ray Cube::get_normal_ray_at_vec(const Vector & point) const
+//Ray Cube::normal_ray_at_point(const Vector & point) const
 //{
 //    return Ray();
 //}

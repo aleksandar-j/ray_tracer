@@ -11,7 +11,7 @@ double PointLight::light_level_at_point(const ObjectList& objects, const Interse
     double lightpoint_dist = vec_distance(this->center, intersect.point);
 
     // Angle between light and point hit normal
-    Ray objectnormal_ray = intersect.shape_hit->get_normal_ray_at_vec(intersect.point);
+    Ray objectnormal_ray = intersect.shape_hit->normal_ray_at_point(intersect.point);
     Vector objectlight_direction = { this->center - intersect.point };
     double angle = vec_anglebetween_rad(objectnormal_ray.direction, objectlight_direction);
 
