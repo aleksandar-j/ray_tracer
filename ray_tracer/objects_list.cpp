@@ -31,7 +31,7 @@ Color color_at_point(const ObjectList& world, const Intersect& intersect, int de
     object_color = intersect.shape_hit->color_at_point(intersect.point);
 
     // Lower the final color depending on the light level
-    object_color *= light_level_at_shape_point(world, intersect);
+    object_color *= light_level_at_shape_point(world, intersect, depth);
 
     // Get any reflections and edit our color
     object_color = reflect_light(world, intersect, object_color, depth);
