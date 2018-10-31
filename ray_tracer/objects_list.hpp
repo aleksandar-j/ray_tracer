@@ -23,4 +23,5 @@ Atmosphere atmosphere_at_point(const ObjectList& world, const Vector& point);
 
 Color reflect_light(const ObjectList& world, const Intersect& intersect, const Color& object_color_in, int depth);
 
-double light_level_at_point(const ObjectList& world, const Intersect& intersect);
+double light_level_at_shape_point(const ObjectList& world, const Intersect& intersect, int depth);
+double light_level_at_point(const ObjectList& world, const Vector& intersect, int depth);

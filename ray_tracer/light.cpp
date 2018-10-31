@@ -3,13 +3,13 @@
 
 #include "objects_list.hpp"
 
-double PointLight::light_level_at_point(const ObjectList& objects, const Intersect& intersect) const
+double PointLight::light_level_at_shape_point(const ObjectList& world, const Intersect& intersect) const
 {
     double result = this->intensity;
 
     // Atmospheres on light and object
-    Atmosphere light_atmosphere = atmosphere_at_point(objects, this->center);
-    Atmosphere object_atmosphere = atmosphere_at_point(objects, intersect.point);
+    Atmosphere light_atmosphere = atmosphere_at_point(world, this->center);
+    Atmosphere object_atmosphere = atmosphere_at_point(world, intersect.point);
 
     bool same_atmosperes;
     if (light_atmosphere.atmosphere_shape == object_atmosphere.atmosphere_shape) {
@@ -29,11 +29,14 @@ double PointLight::light_level_at_point(const ObjectList& objects, const Interse
     }
 
     // Angle between light and point hit normal
-    Ray objectnormal_ray = intersect.shape_hit->normal_ray_at_point(intersect.point);
-    Vector objectlight_direction = { this->center - intersect.point };
-    double angle = vec_anglebetween_rad(objectnormal_ray.direction, objectlight_direction);
+    double object_light_angle;
+    if (intersect.shape_hit != nullptr) {
+        Ray objectnormal_ray = intersect.shape_hit->normal_ray_at_point(intersect.point);
+        Vector objectlight_direction = { this->center - intersect.point };
+        object_light_angle = vec_anglebetween_rad(objectnormal_ray.direction, objectlight_direction);
+    }
 
-    for (auto& object : objects.object_list) {
+    for (auto& object : world.object_list) {
         // We check whether some other object blocks us from hitting the main one
 
         Ray lightobject_ray{ {this->center}, {intersect.point - this->center} };
@@ -79,8 +82,15 @@ double PointLight::light_level_at_point(const ObjectList& objects, const Interse
         }
 
         // The greater the angle between the light and surface, the lower the light level
-        result *= abs(cos(angle));
+        if (intersect.shape_hit != nullptr) {
+            result *= abs(cos(object_light_angle));
+        }
     }
 
     return result;
+}
+
+double PointLight::light_level_at_point(const ObjectList& world, const Vector& point) const
+{
+    return this->light_level_at_shape_point(world, { point });
 }

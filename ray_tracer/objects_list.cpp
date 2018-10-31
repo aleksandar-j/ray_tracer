@@ -31,7 +31,7 @@ Color color_at_point(const ObjectList& world, const Intersect& intersect, int de
     object_color = intersect.shape_hit->color_at_point(intersect.point);
 
     // Lower the final color depending on the light level
-    object_color *= light_level_at_point(world, intersect);
+    object_color *= light_level_at_shape_point(world, intersect);
 
     // Get any reflections and edit our color
     object_color = reflect_light(world, intersect, object_color, depth);
@@ -157,12 +157,30 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect, const C
     return diffuse_result + specular_result;
 }
 
-double light_level_at_point(const ObjectList& world, const Intersect& intersect)
+double light_level_at_point(const ObjectList& world, const Vector& point, int depth)
 {
+    return light_level_at_shape_point(world, { point }, depth);
+}
+
+double light_level_at_shape_point(const ObjectList& world, const Intersect& intersect, int depth)
+{
+    if (depth > MAX_STACK_DEPTH) {
+        return 0.0;
+    }
+
     double result = 0.0;
 
     for (auto& light : world.light_list) {
-        double light_level = light->light_level_at_point(world, intersect);
+        // Get light level of each individual light at the point
+
+        double light_level = 0.0;
+        if (intersect.shape_hit != nullptr) {
+            light_level = light->light_level_at_shape_point(world, intersect);
+        } else {
+            light_level = light->light_level_at_point(world, intersect.point);
+        }
+
+        // Light level of 1.0 fills the whole remainder (1.0 - result), others fill only partially
         result += (1.0 - result) * light_level;
     }
 
