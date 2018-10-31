@@ -34,7 +34,7 @@ void draw_pixels(uint32_t* pixels, int w, int h,
             if (AA > 1) {
                 bool run_aa = true;
 
-                if (AA_OPTIMIZE) {
+                if (AA_OPTIMIZE && AA > 2) {
                     // Tracing four edge AA pixels, if all are similar, we don't do more
                     // Calculate color on current pixel lower left
                     camera_ray = cam.get_ray_on_pixel(x*AA, y*AA + (AA - 1));
