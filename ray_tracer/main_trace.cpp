@@ -86,7 +86,7 @@ void trace(uint32_t* pixels, int w, int h)
     shapes.object_list.push_back(new Sphere{ {1, 1, -5000}, 5000, WHITE, {1.0, 0.0} });
 
     shapes.object_list.push_back(new Sphere{ {3, 3, 1}, 1, NAVY, { 0.1, 0.9 } });
-    //shapes.object_list[2]->material.specular_fuzz = 0.05;
+    shapes.object_list[2]->material.specular_fuzz = 0.005;
     shapes.object_list.push_back(new Sphere{ {2.5, 2.5, 2.5}, 0.5, MAROON });
     shapes.object_list.push_back(new Sphere{ {3.2, 1.6, 0.6}, 0.05, GREEN });
     shapes.object_list.push_back(new Sphere{ {4, 2, 2.5}, 0.3, NAVY });
@@ -97,7 +97,6 @@ void trace(uint32_t* pixels, int w, int h)
 
     // Lights
     shapes.light_list.push_back(new AmbientLight{ 0.1 });
-    //shapes.light_list.push_back(new PointLight{ {3, 3, 5}, 1.0, 50.0 });
     shapes.light_list.push_back(new PointLight{ {5, 3, 2}, 1.0, 25.0 });
     shapes.light_list.push_back(new PointLight{ {2, 2, 0.7}, 0.2, 10.0 });
 
