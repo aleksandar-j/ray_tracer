@@ -29,7 +29,7 @@ Color color_at_point(const ObjectList& world, const Intersect& intersect, int de
     object_color = intersect.shape_hit->color_at_point(intersect.point);
 
     // Lower the final color depending on the light level
-    object_color *= light_level_at_point(world, intersect, depth);
+    object_color = color_safe_multiply(object_color, light_level_at_point(world, intersect, depth));
 
     // Get any reflections and edit our color
     object_color = reflect_light(world, intersect, object_color, depth);
@@ -93,63 +93,71 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect, const C
     }
 
     Color diffuse_result;
+    
     if (intersect.shape_hit->material.diffuse > 0.0) {
         // Shoot diffuse rays
 
-        diffuse_result = object_color_in;
+        if (depth > MAX_STACK_DEPTH * MAX_STACK_DEPTH_SPECULAR_MULT) {
+            diffuse_result = object_color_in;
+        } else {
+            diffuse_result = object_color_in;
 
-        Ray normal = intersect.shape_hit->normal_ray_at_point(intersect.point);
-        normal.direction += rand_unit_vector();
-        normal.direction.make_unit_vector();
+            Ray normal = intersect.shape_hit->normal_ray_at_point(intersect.point);
+            normal.direction += rand_unit_vector();
+            normal.direction.make_unit_vector();
 
-        Intersect intersect_new = object_ray_intersect(world, normal);
+            Intersect intersect_new = object_ray_intersect(world, normal);
 
-        if (intersect_new.shape_hit != nullptr) {
-            // Objects that are closer will have a greater impact on our color
+            if (intersect_new.shape_hit != nullptr) {
+                // Objects that are closer will have a greater impact on our color
 
-            Color color_new = color_at_point(world, intersect_new, depth + 1);
-            color_new.make_grey();
+                Color color_new = color_at_point(world, intersect_new, depth + 1);
+                color_new.make_grey();
 
-            constexpr double diffuse_length_lim = 32.0;
-            constexpr double max_diffuse_intensity = 0.75;
-            constexpr double diffuse_color_darkness_mult = 0.5;
-            if (intersect_new.ray_to_point_dist < diffuse_length_lim) {
-                double diffuse_intensity = (1.0 - (intersect_new.ray_to_point_dist / diffuse_length_lim)) * 
-                                        max_diffuse_intensity;
-                diffuse_result = (color_new*diffuse_color_darkness_mult)*
-                                (diffuse_intensity) + (object_color_in)*(1.0 - diffuse_intensity);
+                constexpr double diffuse_length_lim = 32.0;
+                constexpr double max_diffuse_intensity = 0.75;
+                constexpr double diffuse_color_darkness_mult = 0.4;
+                if (intersect_new.ray_to_point_dist < diffuse_length_lim) {
+                    double diffuse_intensity = (1.0 - (intersect_new.ray_to_point_dist / diffuse_length_lim)) *
+                        max_diffuse_intensity;
+                    diffuse_result = (color_new*diffuse_color_darkness_mult)*
+                        (diffuse_intensity)+(object_color_in)*(1.0 - diffuse_intensity);
+                }
             }
+
+            diffuse_result *= intersect.shape_hit->material.diffuse;
         }
-
-        diffuse_result *= intersect.shape_hit->material.diffuse;
-
     }
 
     Color specular_result;
+    
     if (intersect.shape_hit->material.specular > 0.0) {
         // Shoot specular rays
 
-        Ray normal = intersect.shape_hit->normal_ray_at_point(intersect.point);
-        Vector reflected_vec = intersect.ray_shot.direction + normal.direction*2;
-
-        Ray reflection = { normal.origin, reflected_vec };
-    
-        // Specular Fuzz implementation
-        if (intersect.shape_hit->material.specular_fuzz > 0.0) {
-            reflection.direction += rand_unit_vector() * intersect.shape_hit->material.specular_fuzz;
-            reflection.direction.make_unit_vector();
-        }
-
-        Intersect intersect_new = object_ray_intersect(world, reflection);
-
-        if (intersect_new.shape_hit != nullptr) {
-            specular_result = color_at_point(world, intersect_new, depth + 1);
-        } else {
+        if (depth > MAX_STACK_DEPTH * MAX_STACK_DEPTH_SPECULAR_MULT) {
             specular_result = BLACK;
+        } else {
+            Ray normal = intersect.shape_hit->normal_ray_at_point(intersect.point);
+            Vector reflected_vec = intersect.ray_shot.direction + normal.direction * 2;
+
+            Ray reflection = { normal.origin, reflected_vec };
+
+            // Specular Fuzz implementation
+            if (intersect.shape_hit->material.specular_fuzz > 0.0) {
+                reflection.direction += rand_unit_vector() * intersect.shape_hit->material.specular_fuzz;
+                reflection.direction.make_unit_vector();
+            }
+
+            Intersect intersect_new = object_ray_intersect(world, reflection);
+
+            if (intersect_new.shape_hit != nullptr) {
+                specular_result = color_at_point(world, intersect_new, depth + 1);
+            } else {
+                specular_result = BLACK;
+            }
+
+            specular_result *= intersect.shape_hit->material.specular;
         }
-
-        specular_result *= intersect.shape_hit->material.specular;
-
     }
 
     return diffuse_result + specular_result;
@@ -174,24 +182,29 @@ double light_level_at_point(const ObjectList& world, const Intersect& intersect,
 
     if (result < 1.0) {
         // Atmosphere refractions
-        Vector close_point{ intersect.point + rand_unit_vector()*0.1 };
-        double close_point_light_level = light_level_at_point(world, { close_point }, depth + 1);
 
-        Atmosphere our_atmosphere = atmosphere_at_point(world, intersect.point);
-        Atmosphere close_point_atmosphere = atmosphere_at_point(world, close_point);
-
-        if (our_atmosphere.atmosphere_shape == close_point_atmosphere.atmosphere_shape) {
-            // Same atmospheres, no light transition happens
-
-            if (close_point_light_level > 0.0) {
-                // We multiply by density because if in vacuum (0) - no refractions, but strong lights at distance
-                //  if in very dense material (1) - very great refractions but light difficult to travel
-                double light_at_distance = (our_atmosphere.light_dropoff_intensity - 1.0) / 
-                                                our_atmosphere.light_dropoff_intensity;
-                result += (1.0 - result) * light_at_distance * our_atmosphere.light_refraction_amount;
-            }
+        if (depth > MAX_STACK_DEPTH * MAX_STACK_DEPTH_ATMOSPHERE_MULT) {
+            
         } else {
-            // TODO: Atmosphere transition, probably difficult to write through how many atmospheres we pass
+            Vector close_point{ intersect.point + rand_unit_vector()*0.1 };
+            double close_point_light_level = light_level_at_point(world, { close_point }, depth + 1);
+
+            Atmosphere our_atmosphere = atmosphere_at_point(world, intersect.point);
+            Atmosphere close_point_atmosphere = atmosphere_at_point(world, close_point);
+
+            if (our_atmosphere.atmosphere_shape == close_point_atmosphere.atmosphere_shape) {
+                // Same atmospheres, no light transition happens
+
+                if (close_point_light_level > 0.0) {
+                    // We multiply by density because if in vacuum (0) - no refractions, but strong lights at distance
+                    //  if in very dense material (1) - very great refractions but light difficult to travel
+                    double light_at_distance = (our_atmosphere.light_dropoff_intensity - 1.0) /
+                                                    our_atmosphere.light_dropoff_intensity;
+                    result += (1.0 - result) * light_at_distance * our_atmosphere.light_refraction_amount * close_point_light_level;
+                }
+            } else {
+                // TODO: Atmosphere transition, probably difficult to write through how many atmospheres we pass
+            }
         }
     }
 

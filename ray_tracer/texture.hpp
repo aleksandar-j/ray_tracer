@@ -78,6 +78,8 @@ Color operator*(const Color& A, const Color& B);
 Color operator*(const Color& A, const double B);
 Color operator/(const Color& A, const double B);
 
+Color color_safe_multiply(const Color& A, const double B);
+
 Color color_diff(const Color& A, const Color& B);
 double color_greatest_diff(const Color& A, const Color& B);
 double color_average_diff(const Color& A, const Color& B);

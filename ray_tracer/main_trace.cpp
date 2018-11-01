@@ -17,117 +17,114 @@ ObjectList shapes;
 #define AA_OPTIMIZE_AVGDIFFACCEPTED (2.0)
 #define AA_OPTIMIZE_MAXDIFFACCEPTED (0.5)
 
-#define NUM_SCREENS (2)
-#define NUM_THREADS (NUM_SCREENS * 2)
+#define NUM_SCREENS (16)
+#define NUM_THREADS (4)
 
-uint32_t get_pixel_color(int x, int y)
+void draw_pixels(uint32_t* pixels, int w, int h,
+                    size_t start_y, size_t end_y, 
+                    int screen_part)
 {
-    Color final_color;
+    srand((unsigned int)time(0));
 
-    Ray camera_ray = cam.get_ray_on_pixel(x*AA, y*AA);
-    Color first_pixel = color_at_ray_intersect(shapes, camera_ray, 0);
-    final_color = first_pixel;
+    for (size_t y = start_y; y < end_y; y++) {
+        for (size_t x = 0; x < w; x++) {
+            Ray camera_ray = cam.get_ray_on_pixel(x*AA, y*AA);
+            Color first_pixel = color_at_ray_intersect(shapes, camera_ray, 0);
 
-    if (AA > 1) {
-        bool run_aa = true;
+            Color final_color = first_pixel;
 
-        if (AA_OPTIMIZE && AA > 2) {
-            // Tracing four edge AA pixels, if all are similar, we don't do more
+            if (AA > 1) {
+                bool run_aa = true;
 
-            // Calculate color on current pixel lower left
-            camera_ray = cam.get_ray_on_pixel(x*AA, y*AA + (AA - 1));
-            final_color += color_at_ray_intersect(shapes, camera_ray, 0);
+                if (AA_OPTIMIZE && AA > 2) {
+                    // Tracing four edge AA pixels, if all are similar, we don't do more
 
-            // Calculate color on current pixel upper right
-            camera_ray = cam.get_ray_on_pixel(x*AA + (AA - 1), y*AA);
-            final_color += color_at_ray_intersect(shapes, camera_ray, 0);
-
-            // Calculate color on current pixel lower right
-            camera_ray = cam.get_ray_on_pixel(x*AA + (AA - 1), y*AA + (AA - 1));
-            final_color += color_at_ray_intersect(shapes, camera_ray, 0);
-
-            // Get average final color
-            final_color /= 4.0;
-
-            if (run_aa) {
-                if (color_greatest_diff(final_color, first_pixel) < AA_OPTIMIZE_MAXDIFFACCEPTED) {
-                    run_aa = false;
-                }
-            }
-            if (run_aa) {
-                if (color_average_diff(final_color, first_pixel) < AA_OPTIMIZE_AVGDIFFACCEPTED) {
-                    run_aa = false;
-                }
-            }
-        }
-
-        // If there are some different pixels, we run the full aa routines
-        if (run_aa) {
-            final_color = {};
-
-            size_t x_new = 0, y_new = 0;
-            for (y_new = 0; y_new < AA; y_new++) {
-                camera_ray = cam.get_ray_on_pixel(x*AA + x_new, y*AA + y_new);
-
-                for (x_new = 0; x_new < AA; x_new++) {
-                    cam.get_ray_on_pixel_next_horz(camera_ray);
-
+                    // Calculate color on current pixel lower left
+                    camera_ray = cam.get_ray_on_pixel(x*AA, y*AA + (AA - 1));
                     final_color += color_at_ray_intersect(shapes, camera_ray, 0);
+
+                    // Calculate color on current pixel upper right
+                    camera_ray = cam.get_ray_on_pixel(x*AA + (AA - 1), y*AA);
+                    final_color += color_at_ray_intersect(shapes, camera_ray, 0);
+
+                    // Calculate color on current pixel lower right
+                    camera_ray = cam.get_ray_on_pixel(x*AA + (AA - 1), y*AA + (AA - 1));
+                    final_color += color_at_ray_intersect(shapes, camera_ray, 0);
+
+                    // Get average final color
+                    final_color /= 4.0;
+
+                    if (run_aa) {
+                        if (color_greatest_diff(final_color, first_pixel) < AA_OPTIMIZE_MAXDIFFACCEPTED) {
+                            run_aa = false;
+                        }
+                    }
+                    if (run_aa) {
+                        if (color_average_diff(final_color, first_pixel) < AA_OPTIMIZE_AVGDIFFACCEPTED) {
+                            run_aa = false;
+                        }
+                    }
+                }
+
+                // If there are some different pixels, we run the full aa routines
+                if (run_aa) {
+                    final_color = {};
+
+                    size_t x_new = 0, y_new = 0;
+                    for (y_new = 0; y_new < AA; y_new++) {
+                        camera_ray = cam.get_ray_on_pixel(x*AA + x_new, y*AA + y_new);
+
+                        for (x_new = 0; x_new < AA; x_new++) {
+                            cam.get_ray_on_pixel_next_horz(camera_ray);
+
+                            final_color += color_at_ray_intersect(shapes, camera_ray, 0);
+                        }
+                    }
+
+                    final_color /= ((double)AA*(double)AA);
                 }
             }
 
-            final_color /= ((double)AA*(double)AA);
-        }
-    }
-
-    return final_color;
-}
-
-std::mutex screen_pos[NUM_SCREENS];
-std::vector<int> down_drawing(NUM_SCREENS, 0);
-std::vector<int> up_drawing(NUM_SCREENS, INT_MAX);
-
-void draw_pixels_down(uint32_t* pixels, int w, int h,
-                    size_t start_x, size_t end_x, 
-                    int screen_part)
-{
-    srand((unsigned int)time(0));
-
-    for (size_t y = 0; y < h - 1; y++) {
-
-        screen_pos[screen_part].lock();
-        if (up_drawing[screen_part] != y) {
-            down_drawing[screen_part] = y;
-        } else {
-            return;
-        }
-        screen_pos[screen_part].unlock();
-
-        for (size_t x = start_x; x < end_x; x++) {
-            pixels[y*w + x] = get_pixel_color(x, y);
+            pixels[y*w + x] = final_color;
         }
     }
 }
 
-void draw_pixels_up(uint32_t* pixels, int w, int h,
-                    size_t start_x, size_t end_x, 
-                    int screen_part)
+std::mutex screen_drawing;
+std::vector<bool> screens_drawn(NUM_SCREENS, false);
+
+int get_free_screen_part() 
 {
-    srand((unsigned int)time(0));
+    int result = -1;
 
-    for (size_t y = h - 1; y > 0; y--) {
-
-        screen_pos[screen_part].lock();
-        if (down_drawing[screen_part] != y) {
-            up_drawing[screen_part] = y;
-        } else {
-            return;
+    screen_drawing.lock();
+    for (size_t i = 0; i < NUM_SCREENS; i++) {
+        if (screens_drawn[i] == false) {
+            screens_drawn[i] = true;
+            result = i;
+            break;
         }
-        screen_pos[screen_part].unlock();
+    }
+    screen_drawing.unlock();
 
-        for (size_t x = start_x; x < end_x; x++) {
-            pixels[y*w + x] = get_pixel_color(x, y);
+    return result;
+}
+
+void thread_manager(uint32_t* pixels, int w, int h) 
+{
+    while (true) {
+        int i = get_free_screen_part();
+
+        if (i == -1) {
+            break;
         }
+
+        int start_y = i * (h / NUM_SCREENS);
+        int end_y = start_y + (h / NUM_SCREENS);
+
+        std::thread down{ draw_pixels, pixels, w, h, start_y, end_y, i };
+        
+        down.join();
     }
 }
 
@@ -150,22 +147,17 @@ void trace(uint32_t* pixels, int w, int h)
     shapes.object_list.push_back(new Sphere{ {0.5, 1.1, 0.7}, 0.3, YELLOW });
 
     // Lights
-    shapes.light_list.push_back(new PointLight{ {5, 3, 2}, 0.5 });
-    shapes.light_list.push_back(new PointLight{ {2, 2, 0.7}, 0.3 });
+    shapes.light_list.push_back(new PointLight{ {5, 3, 2}, 1.2 });
+    shapes.light_list.push_back(new PointLight{ {2, 2, 0.7}, 1.0 });
 
     // Atmospheres
-    shapes.atmospheres_list.push_back(new Atmosphere{ new Sphere{ {0,0,0}, 50.0 }, 10, 0.3 });
+    shapes.atmospheres_list.push_back(new Atmosphere{ new Sphere{ {0,0,0}, 50.0 }, 100, 0.3 });
 
     // Worker treads
     std::thread threads[NUM_THREADS];
 
-    for (size_t i = 0; i < NUM_THREADS; i += 2) {
-        int screen_pos = i / 2;
-        int start_x = screen_pos * (w / NUM_SCREENS);
-        int end_x = start_x + (w / NUM_SCREENS);
-
-        threads[i] = std::thread{ draw_pixels_down, pixels, w, h,    start_x, end_x, screen_pos };
-        threads[i + 1] = std::thread{ draw_pixels_up, pixels, w, h,  start_x, end_x, screen_pos };
+    for (size_t i = 0; i < NUM_THREADS; i++) {
+        threads[i] = std::thread{ thread_manager, pixels, w, h };
     }
 
     for (auto& x : threads) {

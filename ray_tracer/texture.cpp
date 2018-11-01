@@ -78,6 +78,17 @@ Color operator/(const Color& A, const double B)
     return { A.red / B, A.green / B, A.blue / B };
 }
 
+Color color_safe_multiply(const Color & A, const double B)
+{
+    Color result = A * B;
+
+    result.red = (result.red > 255.0) ? 255.0 : result.red;
+    result.green = (result.green > 255.0) ? 255.0 : result.green;
+    result.blue = (result.blue > 255.0) ? 255.0 : result.blue;
+
+    return result;
+}
+
 Color color_diff(const Color& A, const Color& B)
 {
     Color new_color;

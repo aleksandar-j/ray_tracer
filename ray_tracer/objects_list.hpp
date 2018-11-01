@@ -6,7 +6,14 @@
 #include "light.hpp"
 #include "atmosphere.hpp"
 
-#define MAX_STACK_DEPTH 10
+// Maximum depth baseline
+#define MAX_STACK_DEPTH 20
+
+// How deep are we willing to go for any specific calculations
+#define MAX_STACK_DEPTH_ATMOSPHERE_MULT 0.2
+
+#define MAX_STACK_DEPTH_SPECULAR_MULT 0.1
+#define MAX_STACK_DEPTH_DIFFUSE_MULT 0.1
 
 struct ObjectList {
 
