@@ -26,4 +26,7 @@ public:
     // If the point lies on the shape, this is the pointer to that shape
     const Shape* shape_hit = nullptr;
 
+    // If the shape is hit, this is the normal vector of that hitpoint
+    Vector point_hit_normal = {};
+
 };

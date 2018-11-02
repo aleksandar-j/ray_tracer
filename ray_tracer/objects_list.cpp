@@ -29,10 +29,14 @@ Color color_at_point(const ObjectList& world, const Intersect& intersect, int de
     object_color = intersect.shape_hit->color_at_point(intersect.point);
 
     // Adjust the final color depending on the light level
-    object_color = light_color_at_point(world, intersect, object_color, nullptr, depth);
+    if (RUN_LIGHT) {
+        object_color = light_color_at_point(world, intersect, object_color, nullptr, depth);
+    }
 
     // Get any reflections and edit our color
-    object_color = reflect_light(world, intersect, object_color, depth);
+    if (RUN_REFLECTION) {
+        object_color = reflect_light(world, intersect, object_color, depth);
+    }
 
     return object_color;
 }
@@ -96,7 +100,7 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect,
 
     Color diffuse_result = object_color_in;
     
-    if (RUN_DIFFUSE && intersect.shape_hit->material.diffuse > 0.0) {
+    if (RUN_REFLECTION_DIFFUSE && intersect.shape_hit->material.diffuse > 0.0) {
         // Shoot diffuse rays
 
         Ray normal = intersect.shape_hit->normal_ray_at_point(intersect.point);
@@ -114,11 +118,13 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect,
             constexpr double diffuse_length_lim = 32.0;
             constexpr double max_diffuse_intensity = 0.75;
             constexpr double diffuse_color_darkness_mult = 0.4;
+
             if (intersect_new.ray_to_point_dist < diffuse_length_lim) {
                 double diffuse_intensity = (1.0 - (intersect_new.ray_to_point_dist / diffuse_length_lim)) *
                     max_diffuse_intensity;
-                diffuse_result = (color_new*diffuse_color_darkness_mult)*
-                    (diffuse_intensity)+(object_color_in)*(1.0 - diffuse_intensity);
+
+                diffuse_result = color_mix_weights(color_new*diffuse_color_darkness_mult, diffuse_intensity,
+                                                   object_color_in, 1.0 - diffuse_intensity);
             }
         }
 
@@ -127,7 +133,7 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect,
 
     Color specular_result = BLACK;
     
-    if (RUN_SPECULAR && intersect.shape_hit->material.specular > 0.0) {
+    if (RUN_REFLECTION_SPECULAR && intersect.shape_hit->material.specular > 0.0) {
         // Shoot specular rays
 
         Ray normal = intersect.shape_hit->normal_ray_at_point(intersect.point);
@@ -152,7 +158,11 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect,
         specular_result *= intersect.shape_hit->material.specular;
     }
 
-    return diffuse_result + specular_result;
+    double object_color_in_strength = (1.0 - (color_get_grey(object_color_in).red / 255.0)) / 2;
+
+    Color result = color_mix_weights(object_color_in, object_color_in_strength, 
+                  (diffuse_result + specular_result), 1.0 - object_color_in_strength);
+    return result;
 }
 
 Color light_color_at_point(const ObjectList& world, const Intersect& intersect, 
@@ -184,12 +194,33 @@ Color light_color_at_point(const ObjectList& world, const Intersect& intersect,
     if (RUN_LIGHT_ATMOSPHEREREF) {
         // Calculating atmosphere-light interaction
 
-        for (size_t i = 0; i < 1; i++) {
-            Vector close_point{ intersect.point + rand_unit_vector() };
-            double close_point_light_intensity = 0;
+        for (size_t i = 0; i < MAX_ATMOSPHERE_ITERATIONS; i++) {
+            // Pick random points around our main one and see their light levels...
+            
+            Vector close_point;
+            double close_point_distance;
+            if (intersect.shape_hit && i == 0) {
+                // We only try this once
+                Ray normal = intersect.shape_hit->normal_ray_at_point(intersect.point);
+                close_point = { normal.origin + normal.direction + rand_unit_vector() };
+                close_point_distance = vec_distance(intersect.point, close_point);
+            } else {
+                close_point = { intersect.point + rand_unit_vector() };
+                close_point_distance = 1.0;
+            }
+
+            double close_point_light_intensity = 0.0;
             Color close_point_light_color = light_color_at_point(world, { close_point },
                                                         BLACK, &close_point_light_intensity, 
                                                         depth + STACK_DEPTH_ATMOSPHERE_ADD);
+
+            if (close_point_light_intensity == 0.0) {
+                // The point is dark...
+                continue;
+            } else {
+                // We managed to get some light, there is no need to check as many times...
+                i += 2;
+            }
 
             Atmosphere our_atmosphere = atmosphere_at_point(world, intersect.point);
             Atmosphere close_point_atmosphere = atmosphere_at_point(world, close_point);
@@ -197,20 +228,20 @@ Color light_color_at_point(const ObjectList& world, const Intersect& intersect,
             if (our_atmosphere.atmosphere_shape == close_point_atmosphere.atmosphere_shape) {
                 // Same atmospheres, no light transition happens
 
-                if (close_point_light_color > 0) {
-                    // If we can get light at our close point...
+                double distance_intensity_falloff = (our_atmosphere.light_dropoff_intensity - close_point_distance) /
+                                                                our_atmosphere.light_dropoff_intensity;
 
-                    // We multiply by density because if in vacuum (0) - no refractions, but strong lights at distance
-                    //  if in very dense material (1) - very great refractions but light difficult to travel
-                    double refracted_light_intensity = close_point_light_intensity * our_atmosphere.light_refraction_amount;
+                // We multiply by density because if in vacuum (0) - no refractions, but strong lights at distance
+                //  if in very dense material (1) - very great refractions but light difficult to travel
+                double refracted_light_intensity = close_point_light_intensity * distance_intensity_falloff *
+                                                    our_atmosphere.light_refraction_amount;
 
-                    // Mix with our color
-                    final_light_color = color_mix_weights(final_light_color, final_intensity,
-                        close_point_light_color, close_point_light_intensity);
+                // Mix with our color
+                final_light_color = color_mix_weights(final_light_color, final_intensity,
+                                                close_point_light_color, refracted_light_intensity);
 
-                    // Increase intensity
-                    final_intensity += (1.0 - final_intensity) * refracted_light_intensity;
-                }
+                // Increase intensity
+                final_intensity += (1.0 - final_intensity) * refracted_light_intensity;
             } else {
                 // TODO: Atmosphere transition, probably difficult to write through how many atmospheres we pass
             }

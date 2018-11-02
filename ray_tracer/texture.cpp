@@ -89,6 +89,12 @@ Color color_safe_multiply(const Color & A, const double B)
     return result;
 }
 
+Color color_get_grey(Color A)
+{
+    A.make_grey();
+    return A;
+}
+
 Color color_mix_weights(const Color& A, double A_weight, const Color& B, double B_weight)
 {
     if (A_weight + B_weight > 1.0) {

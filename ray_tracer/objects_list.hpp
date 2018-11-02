@@ -7,20 +7,27 @@
 #include "atmosphere.hpp"
 
 // Rendering switches
-#define RUN_DIFFUSE (false)
-#define RUN_SPECULAR (true)
-
+#define RUN_REFLECTION (true)
+#define RUN_REFLECTION_DIFFUSE (true)
+#define RUN_REFLECTION_SPECULAR (true)
 #define RUN_LIGHT (true)
 #define RUN_LIGHT_ATMOSPHEREREF (true)
 
 // Maximum depth baseline
-#define MAX_STACK_DEPTH 30
+#define MAX_STACK_DEPTH (100.0)
+
+// What is the maximum times these could get called, given that they are only ones called
+#define STACK_DEPTH_ATMOSPHERE (5.0)
+#define STACK_DEPTH_DIFFUSE (3.0)
+#define STACK_DEPTH_SPECULAR (3.0)
 
 // How much do we increase depth for any operation
-#define STACK_DEPTH_ATMOSPHERE_ADD (MAX_STACK_DEPTH / 10)
+#define STACK_DEPTH_ATMOSPHERE_ADD (MAX_STACK_DEPTH / STACK_DEPTH_ATMOSPHERE)
+#define STACK_DEPTH_DIFFUSE_ADD (MAX_STACK_DEPTH / STACK_DEPTH_DIFFUSE)
+#define STACK_DEPTH_SPECULAR_ADD (MAX_STACK_DEPTH / STACK_DEPTH_SPECULAR)
 
-#define STACK_DEPTH_DIFFUSE_ADD (MAX_STACK_DEPTH / 5)
-#define STACK_DEPTH_SPECULAR_ADD (MAX_STACK_DEPTH / 5)
+// How many times do we run the atmosphere light check in the worst case, best case is half that
+#define MAX_ATMOSPHERE_ITERATIONS 2
 
 struct ObjectList {
 

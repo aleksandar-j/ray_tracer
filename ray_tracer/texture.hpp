@@ -80,6 +80,8 @@ Color operator/(const Color& A, const double B);
 
 Color color_safe_multiply(const Color& A, const double B);
 
+Color color_get_grey(Color A);
+
 // Used to mix the two colors based on weight (range [0.0-1.0]), greater weight - greater color amount
 //  if weights add up to greater than 1, we keep their ratio but lower their value so they add to 1
 Color color_mix_weights(const Color& A, double A_weight, const Color& B, double B_weight);
