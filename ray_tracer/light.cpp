@@ -3,9 +3,34 @@
 
 #include "objects_list.hpp"
 
+PointLight::PointLight()
+{
+}
+
+PointLight::PointLight(const Vector& center, const double intensity)
+    :
+    center(center)
+{
+    if (intensity < 0.0 || intensity > 1.0) {
+        throw "Light intensity invalid, valid range is [0.0-1.0]";
+    }
+
+    this->intensity = intensity;
+}
+
+PointLight::PointLight(const Vector& center, const double intensity, const Color& light_color)
+{
+    if (intensity < 0.0 || intensity > 1.0) {
+        throw "Light intensity invalid, valid range is [0.0-1.0]";
+    }
+
+    this->light_color = light_color;
+    this->intensity = intensity;
+}
+
 double PointLight::light_level_at_point(const ObjectList& world, const Intersect& intersect) const
 {
-    double result = this->intensity;
+    double result = 1.0;
 
     // Atmospheres on light and object
     Atmosphere light_atmosphere = atmosphere_at_point(world, this->center);

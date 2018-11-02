@@ -24,12 +24,18 @@ struct ObjectList {
 };
 
 // Increase depth when you shoot new ray
-Color color_at_ray_intersect(const ObjectList& world, const Ray& ray, int depth);
-Color color_at_point(const ObjectList& world, const Intersect& intersect, int depth);
+Color color_at_ray_intersect(const ObjectList& world, const Ray& ray, 
+                             int depth);
+Color color_at_point(const ObjectList& world, const Intersect& intersect, 
+                     int depth);
 
 Intersect object_ray_intersect(const ObjectList& world, const Ray& ray);
 Atmosphere atmosphere_at_point(const ObjectList& world, const Vector& point);
 
-Color reflect_light(const ObjectList& world, const Intersect& intersect, const Color& object_color_in, int depth);
+Color reflect_light(const ObjectList& world, const Intersect& intersect, 
+                    const Color& object_color_in, 
+                    int depth);
 
-double light_level_at_point(const ObjectList& world, const Intersect& intersect, int depth);
+Color light_color_at_point(const ObjectList& world, const Intersect& intersect, 
+                           const Color& object_color_in, double* light_intensity_at_point_out, 
+                           int depth);

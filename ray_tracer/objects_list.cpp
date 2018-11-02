@@ -28,8 +28,8 @@ Color color_at_point(const ObjectList& world, const Intersect& intersect, int de
     // Get object's color at the point
     object_color = intersect.shape_hit->color_at_point(intersect.point);
 
-    // Lower the final color depending on the light level
-    object_color = color_safe_multiply(object_color, light_level_at_point(world, intersect, depth));
+    // Adjust the final color depending on the light level
+    object_color = light_color_at_point(world, intersect, object_color, nullptr, depth);
 
     // Get any reflections and edit our color
     object_color = reflect_light(world, intersect, object_color, depth);
@@ -82,7 +82,9 @@ Atmosphere atmosphere_at_point(const ObjectList& world, const Vector& point)
     return *result;
 }
 
-Color reflect_light(const ObjectList& world, const Intersect& intersect, const Color& object_color_in, int depth)
+Color reflect_light(const ObjectList& world, const Intersect& intersect, 
+                    const Color& object_color_in, 
+                    int depth)
 {
     if ((intersect.shape_hit->material.diffuse + intersect.shape_hit->material.specular) > 1.0) {
         // More light out than in (in is 1.0 - 100%)
@@ -163,31 +165,43 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect, const C
     return diffuse_result + specular_result;
 }
 
-double light_level_at_point(const ObjectList& world, const Intersect& intersect, int depth)
+Color light_color_at_point(const ObjectList& world, const Intersect& intersect, 
+                           const Color& object_color_in, double* light_intensity_at_point_out, 
+                           int depth)
 {
     if (depth > MAX_STACK_DEPTH) {
         return 0.0;
     }
 
-    double result = 0.0;
+    Color final_light_color = {};
+    double final_intensity = 0.0;
 
     for (auto& light : world.light_list) {
         // Get light level of each individual light at the point
 
+        // This is how strong the light is at the point, from 0-1 doesn't take intensity into account
         double light_level = light->light_level_at_point(world, intersect);
+        double light_intensity = light_level * light->intensity;
 
-        // Light level of 1.0 fills the whole remainder (1.0 - result), others fill only partially
-        result += (1.0 - result) * light_level;
+        // Blend the light color and our color, on first run fin_inten is 0 - all light color comes, later blends
+        final_light_color = color_mix_weights(final_light_color, final_intensity, light->light_color, light_intensity);
+
+        // Light intensity of 1.0 fills the whole remainder (1.0 - result), others fill only partially
+        final_intensity += (1.0 - final_intensity) * light_intensity;
     }
 
-    if (result < 1.0) {
-        // Atmosphere refractions
+    // Atmosphere refractions
+    if (depth > MAX_STACK_DEPTH * MAX_STACK_DEPTH_ATMOSPHERE_MULT) {
+        // We are too deep in to calculate atmosphere
 
-        if (depth > MAX_STACK_DEPTH * MAX_STACK_DEPTH_ATMOSPHERE_MULT) {
-            
-        } else {
-            Vector close_point{ intersect.point + rand_unit_vector()*0.1 };
-            double close_point_light_level = light_level_at_point(world, { close_point }, depth + 1);
+    } else {
+        // Calculating atmosphere-light interaction
+
+        for (size_t i = 0; i < 1; i++) {
+            Vector close_point{ intersect.point + rand_unit_vector() };
+            double close_point_light_intensity = 0;
+            Color close_point_light_color = light_color_at_point(world, { close_point },
+                                                BLACK, &close_point_light_intensity, depth + 1);
 
             Atmosphere our_atmosphere = atmosphere_at_point(world, intersect.point);
             Atmosphere close_point_atmosphere = atmosphere_at_point(world, close_point);
@@ -195,12 +209,19 @@ double light_level_at_point(const ObjectList& world, const Intersect& intersect,
             if (our_atmosphere.atmosphere_shape == close_point_atmosphere.atmosphere_shape) {
                 // Same atmospheres, no light transition happens
 
-                if (close_point_light_level > 0.0) {
+                if (close_point_light_color > 0) {
+                    // If we can get light at our close point...
+
                     // We multiply by density because if in vacuum (0) - no refractions, but strong lights at distance
                     //  if in very dense material (1) - very great refractions but light difficult to travel
-                    double light_at_distance = (our_atmosphere.light_dropoff_intensity - 1.0) /
-                                                    our_atmosphere.light_dropoff_intensity;
-                    result += (1.0 - result) * light_at_distance * our_atmosphere.light_refraction_amount * close_point_light_level;
+                    double refracted_light_intensity = close_point_light_intensity * our_atmosphere.light_refraction_amount;
+
+                    // Mix with our color
+                    final_light_color = color_mix_weights(final_light_color, final_intensity,
+                                                    close_point_light_color, close_point_light_intensity);
+
+                    // Increase intensity
+                    final_intensity += (1.0 - final_intensity) * refracted_light_intensity;
                 }
             } else {
                 // TODO: Atmosphere transition, probably difficult to write through how many atmospheres we pass
@@ -208,5 +229,16 @@ double light_level_at_point(const ObjectList& world, const Intersect& intersect,
         }
     }
 
-    return result;
+    // Give the calculated intensity back to the caller, if he gave a valid pointer
+    if (light_intensity_at_point_out != nullptr) {
+        *light_intensity_at_point_out = final_intensity;
+    }
+
+    // Mix the object color with the light color based on light intensity
+    Color final_color = color_mix_weights(object_color_in, 1.0 - final_intensity, final_light_color, final_intensity);
+
+    // 0.5 intensity is the default color so mult by 2, see light header
+    final_color = color_safe_multiply(final_color, final_intensity*2);
+
+    return final_color;
 }

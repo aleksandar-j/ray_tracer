@@ -30,6 +30,7 @@ public:
     double light_dropoff_intensity = MAX_DOUBLE;
 
     // This is how much light gets refracted and changes its path
+    //  More precisely, it is the multiplier by which light intensity changes on 1 unit when not under direct light
     double light_refraction_amount = 0.5;
 
 };

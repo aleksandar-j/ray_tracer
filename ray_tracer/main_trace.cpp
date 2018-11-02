@@ -9,7 +9,7 @@
 #include "objects_list.hpp"
 
 Camera cam;
-ObjectList shapes;
+ObjectList world;
 
 #define AA (3)
 
@@ -29,7 +29,7 @@ void draw_pixels(uint32_t* pixels, int w, int h,
     for (size_t y = start_y; y < end_y; y++) {
         for (size_t x = 0; x < w; x++) {
             Ray camera_ray = cam.get_ray_on_pixel(x*AA, y*AA);
-            Color first_pixel = color_at_ray_intersect(shapes, camera_ray, 0);
+            Color first_pixel = color_at_ray_intersect(world, camera_ray, 0);
 
             Color final_color = first_pixel;
 
@@ -41,15 +41,15 @@ void draw_pixels(uint32_t* pixels, int w, int h,
 
                     // Calculate color on current pixel lower left
                     camera_ray = cam.get_ray_on_pixel(x*AA, y*AA + (AA - 1));
-                    final_color += color_at_ray_intersect(shapes, camera_ray, 0);
+                    final_color += color_at_ray_intersect(world, camera_ray, 0);
 
                     // Calculate color on current pixel upper right
                     camera_ray = cam.get_ray_on_pixel(x*AA + (AA - 1), y*AA);
-                    final_color += color_at_ray_intersect(shapes, camera_ray, 0);
+                    final_color += color_at_ray_intersect(world, camera_ray, 0);
 
                     // Calculate color on current pixel lower right
                     camera_ray = cam.get_ray_on_pixel(x*AA + (AA - 1), y*AA + (AA - 1));
-                    final_color += color_at_ray_intersect(shapes, camera_ray, 0);
+                    final_color += color_at_ray_intersect(world, camera_ray, 0);
 
                     // Get average final color
                     final_color /= 4.0;
@@ -77,7 +77,7 @@ void draw_pixels(uint32_t* pixels, int w, int h,
                         for (x_new = 0; x_new < AA; x_new++) {
                             cam.get_ray_on_pixel_next_horz(camera_ray);
 
-                            final_color += color_at_ray_intersect(shapes, camera_ray, 0);
+                            final_color += color_at_ray_intersect(world, camera_ray, 0);
                         }
                     }
 
@@ -133,25 +133,25 @@ void trace(uint32_t* pixels, int w, int h)
     cam = { {0, 0, 1}, {1, 1, 0}, 90.0, w * AA, h * AA };
 
     // Objects
-    //shapes.object_list.push_back(new Sphere{ {0, 0, 0}, 10, TEAL });
-    shapes.object_list.push_back(new Sphere{ {0, 0, -50000}, 50000, WHITE, {1.0, 0.0} });
+    //world.object_list.push_back(new Sphere{ {0, 0, 0}, 10, TEAL });
+    world.object_list.push_back(new Sphere{ {0, 0, -50000}, 50000, WHITE, {1.0, 0.0} });
 
-    shapes.object_list.push_back(new Sphere{ {3, 3, 1}, 1, WHITE, { 0.0, 1.0 } });
-    shapes.object_list[1]->material.specular_fuzz = 0.05;
-    shapes.object_list.push_back(new Sphere{ {2.5, 2.5, 2.5}, 0.5, MAROON });
-    shapes.object_list.push_back(new Sphere{ {3.2, 1.6, 0.6}, 0.05, GREEN });
-    shapes.object_list.push_back(new Sphere{ {4, 2, 2.5}, 0.3, NAVY });
-    shapes.object_list.push_back(new Sphere{ {10, 2, 1.5}, 3, PURPLE, { 0.5, 0.5 } });
-    shapes.object_list[5]->material.specular_fuzz = 0.1;
-    shapes.object_list.push_back(new Sphere{ {2, 4, 2}, 0.5, AQUA });
-    shapes.object_list.push_back(new Sphere{ {0.5, 1.1, 0.7}, 0.3, YELLOW });
+    world.object_list.push_back(new Sphere{ {3, 3, 1}, 1, WHITE, { 1.0, 0.0 } });
+    world.object_list[1]->material.specular_fuzz = 0.05;
+    world.object_list.push_back(new Sphere{ {2.5, 2.5, 2.5}, 0.5, MAROON });
+    world.object_list.push_back(new Sphere{ {3.2, 1.6, 0.6}, 0.05, GREEN });
+    world.object_list.push_back(new Sphere{ {4, 2, 2.5}, 0.3, NAVY });
+    world.object_list.push_back(new Sphere{ {10, 2, 1.5}, 3, PURPLE, { 0.5, 0.5 } });
+    world.object_list[5]->material.specular_fuzz = 0.1;
+    world.object_list.push_back(new Sphere{ {2, 4, 2}, 0.5, AQUA });
+    world.object_list.push_back(new Sphere{ {0.5, 1.1, 0.7}, 0.3, YELLOW });
 
     // Lights
-    shapes.light_list.push_back(new PointLight{ {5, 3, 2}, 1.2 });
-    shapes.light_list.push_back(new PointLight{ {2, 2, 0.7}, 1.0 });
+    world.light_list.push_back(new PointLight{ {5, 3, 2}, 0.5 });
+    world.light_list.push_back(new PointLight{ {2, 2, 0.7}, 0.5 });
 
     // Atmospheres
-    shapes.atmospheres_list.push_back(new Atmosphere{ new Sphere{ {0,0,0}, 50.0 }, 100, 0.3 });
+    world.atmospheres_list.push_back(new Atmosphere{ new Sphere{ {0,0,0}, 50.0 }, 100, 0.3 });
 
     // Worker treads
     std::thread threads[NUM_THREADS];
@@ -165,5 +165,5 @@ void trace(uint32_t* pixels, int w, int h)
     }
     
     // In case we call this trace function multiple times
-    shapes.object_list.clear();
+    world.object_list.clear();
 }

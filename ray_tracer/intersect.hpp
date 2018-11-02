@@ -17,9 +17,9 @@ public:
     }
 
     Vector point;
-    double ray_to_point_dist;
 
     Ray ray_shot;
+    double ray_to_point_dist;
 
     const Shape* shape_hit;
 

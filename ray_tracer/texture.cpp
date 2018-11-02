@@ -89,6 +89,18 @@ Color color_safe_multiply(const Color & A, const double B)
     return result;
 }
 
+Color color_mix_weights(const Color& A, double A_weight, const Color& B, double B_weight)
+{
+    if (A_weight + B_weight > 1.0) {
+        double sum = A_weight + B_weight;
+
+        A_weight /= sum;
+        B_weight /= sum;
+    }
+
+    return A*A_weight + B*B_weight;
+}
+
 Color color_diff(const Color& A, const Color& B)
 {
     Color new_color;
