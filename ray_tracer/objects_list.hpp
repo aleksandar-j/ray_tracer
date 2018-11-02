@@ -6,14 +6,21 @@
 #include "light.hpp"
 #include "atmosphere.hpp"
 
+// Rendering switches
+#define RUN_DIFFUSE (false)
+#define RUN_SPECULAR (true)
+
+#define RUN_LIGHT (true)
+#define RUN_LIGHT_ATMOSPHEREREF (true)
+
 // Maximum depth baseline
-#define MAX_STACK_DEPTH 20
+#define MAX_STACK_DEPTH 30
 
-// How deep are we willing to go for any specific calculations
-#define MAX_STACK_DEPTH_ATMOSPHERE_MULT 0.2
+// How much do we increase depth for any operation
+#define STACK_DEPTH_ATMOSPHERE_ADD (MAX_STACK_DEPTH / 10)
 
-#define MAX_STACK_DEPTH_SPECULAR_MULT 0.1
-#define MAX_STACK_DEPTH_DIFFUSE_MULT 0.1
+#define STACK_DEPTH_DIFFUSE_ADD (MAX_STACK_DEPTH / 5)
+#define STACK_DEPTH_SPECULAR_ADD (MAX_STACK_DEPTH / 5)
 
 struct ObjectList {
 

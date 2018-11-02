@@ -2,6 +2,7 @@
 
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include <limits>
 
 #define MAX_DOUBLE (std::numeric_limits<double>::max())
 

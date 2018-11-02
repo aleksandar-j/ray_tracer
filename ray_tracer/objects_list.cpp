@@ -94,72 +94,62 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect,
         return object_color_in;
     }
 
-    Color diffuse_result;
+    Color diffuse_result = object_color_in;
     
-    if (intersect.shape_hit->material.diffuse > 0.0) {
+    if (RUN_DIFFUSE && intersect.shape_hit->material.diffuse > 0.0) {
         // Shoot diffuse rays
 
-        if (depth > MAX_STACK_DEPTH * MAX_STACK_DEPTH_SPECULAR_MULT) {
-            diffuse_result = object_color_in;
-        } else {
-            diffuse_result = object_color_in;
+        Ray normal = intersect.shape_hit->normal_ray_at_point(intersect.point);
+        normal.direction += rand_unit_vector();
+        normal.direction.make_unit_vector();
 
-            Ray normal = intersect.shape_hit->normal_ray_at_point(intersect.point);
-            normal.direction += rand_unit_vector();
-            normal.direction.make_unit_vector();
+        Intersect intersect_new = object_ray_intersect(world, normal);
 
-            Intersect intersect_new = object_ray_intersect(world, normal);
+        if (intersect_new.shape_hit != nullptr) {
+            // Objects that are closer will have a greater impact on our color
 
-            if (intersect_new.shape_hit != nullptr) {
-                // Objects that are closer will have a greater impact on our color
+            Color color_new = color_at_point(world, intersect_new, depth + STACK_DEPTH_DIFFUSE_ADD);
+            color_new.make_grey();
 
-                Color color_new = color_at_point(world, intersect_new, depth + 1);
-                color_new.make_grey();
-
-                constexpr double diffuse_length_lim = 32.0;
-                constexpr double max_diffuse_intensity = 0.75;
-                constexpr double diffuse_color_darkness_mult = 0.4;
-                if (intersect_new.ray_to_point_dist < diffuse_length_lim) {
-                    double diffuse_intensity = (1.0 - (intersect_new.ray_to_point_dist / diffuse_length_lim)) *
-                        max_diffuse_intensity;
-                    diffuse_result = (color_new*diffuse_color_darkness_mult)*
-                        (diffuse_intensity)+(object_color_in)*(1.0 - diffuse_intensity);
-                }
+            constexpr double diffuse_length_lim = 32.0;
+            constexpr double max_diffuse_intensity = 0.75;
+            constexpr double diffuse_color_darkness_mult = 0.4;
+            if (intersect_new.ray_to_point_dist < diffuse_length_lim) {
+                double diffuse_intensity = (1.0 - (intersect_new.ray_to_point_dist / diffuse_length_lim)) *
+                    max_diffuse_intensity;
+                diffuse_result = (color_new*diffuse_color_darkness_mult)*
+                    (diffuse_intensity)+(object_color_in)*(1.0 - diffuse_intensity);
             }
-
-            diffuse_result *= intersect.shape_hit->material.diffuse;
         }
+
+        diffuse_result *= intersect.shape_hit->material.diffuse;
     }
 
-    Color specular_result;
+    Color specular_result = BLACK;
     
-    if (intersect.shape_hit->material.specular > 0.0) {
+    if (RUN_SPECULAR && intersect.shape_hit->material.specular > 0.0) {
         // Shoot specular rays
 
-        if (depth > MAX_STACK_DEPTH * MAX_STACK_DEPTH_SPECULAR_MULT) {
-            specular_result = BLACK;
-        } else {
-            Ray normal = intersect.shape_hit->normal_ray_at_point(intersect.point);
-            Vector reflected_vec = intersect.ray_shot.direction + normal.direction * 2;
+        Ray normal = intersect.shape_hit->normal_ray_at_point(intersect.point);
+        Vector reflected_vec = intersect.ray_shot.direction + normal.direction * 2;
 
-            Ray reflection = { normal.origin, reflected_vec };
+        Ray reflection = { normal.origin, reflected_vec };
 
-            // Specular Fuzz implementation
-            if (intersect.shape_hit->material.specular_fuzz > 0.0) {
-                reflection.direction += rand_unit_vector() * intersect.shape_hit->material.specular_fuzz;
-                reflection.direction.make_unit_vector();
-            }
-
-            Intersect intersect_new = object_ray_intersect(world, reflection);
-
-            if (intersect_new.shape_hit != nullptr) {
-                specular_result = color_at_point(world, intersect_new, depth + 1);
-            } else {
-                specular_result = BLACK;
-            }
-
-            specular_result *= intersect.shape_hit->material.specular;
+        // Specular Fuzz implementation
+        if (intersect.shape_hit->material.specular_fuzz > 0.0) {
+            reflection.direction += rand_unit_vector() * intersect.shape_hit->material.specular_fuzz;
+            reflection.direction.make_unit_vector();
         }
+
+        Intersect intersect_new = object_ray_intersect(world, reflection);
+
+        if (intersect_new.shape_hit != nullptr) {
+            specular_result = color_at_point(world, intersect_new, depth + STACK_DEPTH_SPECULAR_ADD);
+        } else {
+            specular_result = BLACK;
+        }
+
+        specular_result *= intersect.shape_hit->material.specular;
     }
 
     return diffuse_result + specular_result;
@@ -170,7 +160,7 @@ Color light_color_at_point(const ObjectList& world, const Intersect& intersect,
                            int depth)
 {
     if (depth > MAX_STACK_DEPTH) {
-        return 0.0;
+        return 0;
     }
 
     Color final_light_color = {};
@@ -191,17 +181,15 @@ Color light_color_at_point(const ObjectList& world, const Intersect& intersect,
     }
 
     // Atmosphere refractions
-    if (depth > MAX_STACK_DEPTH * MAX_STACK_DEPTH_ATMOSPHERE_MULT) {
-        // We are too deep in to calculate atmosphere
-
-    } else {
+    if (RUN_LIGHT_ATMOSPHEREREF) {
         // Calculating atmosphere-light interaction
 
         for (size_t i = 0; i < 1; i++) {
             Vector close_point{ intersect.point + rand_unit_vector() };
             double close_point_light_intensity = 0;
             Color close_point_light_color = light_color_at_point(world, { close_point },
-                                                BLACK, &close_point_light_intensity, depth + 1);
+                                                        BLACK, &close_point_light_intensity, 
+                                                        depth + STACK_DEPTH_ATMOSPHERE_ADD);
 
             Atmosphere our_atmosphere = atmosphere_at_point(world, intersect.point);
             Atmosphere close_point_atmosphere = atmosphere_at_point(world, close_point);
@@ -218,7 +206,7 @@ Color light_color_at_point(const ObjectList& world, const Intersect& intersect,
 
                     // Mix with our color
                     final_light_color = color_mix_weights(final_light_color, final_intensity,
-                                                    close_point_light_color, close_point_light_intensity);
+                        close_point_light_color, close_point_light_intensity);
 
                     // Increase intensity
                     final_intensity += (1.0 - final_intensity) * refracted_light_intensity;

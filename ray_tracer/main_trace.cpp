@@ -11,7 +11,7 @@
 Camera cam;
 ObjectList world;
 
-#define AA (3)
+#define AA (1)
 
 #define AA_OPTIMIZE (false)
 #define AA_OPTIMIZE_AVGDIFFACCEPTED (2.0)

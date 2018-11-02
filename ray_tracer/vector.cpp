@@ -1,6 +1,15 @@
 
 #include "vector.hpp"
 
+Vector::Vector()
+{
+}
+Vector::Vector(const double x, const double y, const double z) 
+    :
+    x(x), y(y), z(z)
+{
+}
+
 void Vector::operator+=(const Vector& B)
 {
     *this = *this + B;
@@ -153,4 +162,14 @@ Vector rand_unit_vector()
     double rand_z = (rand() / (double)RAND_MAX) * 2 - 1.0;
 
     return get_unit_vector({ rand_x, rand_y, rand_z });
+}
+
+Ray::Ray() 
+{
+}
+Ray::Ray(const Vector& origin, const Vector& direction) 
+    :
+    origin(origin), direction(direction)
+{
+    this->direction.make_unit_vector();
 }

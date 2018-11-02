@@ -7,20 +7,23 @@ class Shape;
 class Intersect {
 
 public:
-    Intersect() : 
-        point({}), ray_to_point_dist(0.0), shape_hit(nullptr), ray_shot({})
+    Intersect()
     {
     }
-    Intersect(const Vector& point) :
-        point(point), ray_to_point_dist(0.0), shape_hit(nullptr), ray_shot({})
+    Intersect(const Vector& point)
+        :
+        point(point)
     {
     }
 
-    Vector point;
+    // Point in 3D space that we are using
+    Vector point = {};
 
-    Ray ray_shot;
-    double ray_to_point_dist;
+    // If camera or some reflection shoot rays, they would be initialized here
+    Ray ray_shot = {};
+    double ray_to_point_dist = 0.0;
 
-    const Shape* shape_hit;
+    // If the point lies on the shape, this is the pointer to that shape
+    const Shape* shape_hit = nullptr;
 
 };

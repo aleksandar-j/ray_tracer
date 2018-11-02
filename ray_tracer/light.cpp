@@ -6,7 +6,6 @@
 PointLight::PointLight()
 {
 }
-
 PointLight::PointLight(const Vector& center, const double intensity)
     :
     center(center)
@@ -17,7 +16,6 @@ PointLight::PointLight(const Vector& center, const double intensity)
 
     this->intensity = intensity;
 }
-
 PointLight::PointLight(const Vector& center, const double intensity, const Color& light_color)
 {
     if (intensity < 0.0 || intensity > 1.0) {

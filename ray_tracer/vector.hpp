@@ -5,15 +5,8 @@
 class Vector {
 
 public:
-    Vector()
-    {
-    }
-    Vector(double x, double y, double z)
-    {
-        this->x = x;
-        this->y = y;
-        this->z = z;
-    }
+    Vector();
+    Vector(const double x, const double y, const double z);
 
     void operator+=(const Vector& B);
     void operator+=(const double B);
@@ -28,9 +21,9 @@ public:
     void rotate_y_deg(const double deg);
     void rotate_z_deg(const double deg);
 
-    double x;
-    double y;
-    double z;
+    double x = 0.0;
+    double y = 0.0;
+    double z = 0.0;
 
 };
 
@@ -63,14 +56,10 @@ double vec_distance(const Vector& A, const Vector& B);
 class Ray {
 
 public:
-    Ray() {}
-    Ray(const Vector& origin, const Vector& direction) :
-        origin(origin), direction(direction)
-    {
-        this->direction.make_unit_vector();
-    }
+    Ray();
+    Ray(const Vector& origin, const Vector& direction);
 
-    Vector origin;
-    Vector direction;
+    Vector origin = {};
+    Vector direction = {};
 
 };

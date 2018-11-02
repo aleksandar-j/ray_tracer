@@ -1,6 +1,27 @@
 
 #include "shape.hpp"
 
+Sphere::Sphere() 
+{
+}
+Sphere::Sphere(const Vector& center, const double radius) 
+    :
+    center(center), radius(radius)
+{
+}
+Sphere::Sphere(const Vector& center, const double radius, const Color& color) 
+    :
+    center(center), radius(radius), color(color)
+{
+}
+Sphere::Sphere(const Vector& center, const double radius,
+               const Color& color, const Material& material) 
+    :
+    center(center), radius(radius), color(color)
+{
+    this->material = material;
+}
+
 Intersect Sphere::ray_intersect(const Ray& ray) const
 {
     Intersect result = {};

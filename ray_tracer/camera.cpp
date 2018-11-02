@@ -1,6 +1,26 @@
 
 #include "camera.hpp"
 
+Camera::Camera()
+{
+}
+Camera::Camera(const Vector& cam_position, const Vector& cam_direction,
+               const double FOV_deg,
+               const int scr_width, const int scr_height) 
+    :
+    position(cam_position), direction(cam_direction),
+    FOV(deg_to_rad(FOV_deg)),
+    screen_width(scr_width), screen_height(scr_height),
+    screen_ratio((double)scr_width / (double)scr_height)
+{
+    // We can just spin the camera on 2D axis right now
+    direction.z = 0;
+    direction.make_unit_vector();
+
+    // Make the rectangle that is the viewport
+    initialize_view();
+}
+
 Ray Camera::get_ray_on_pixel(int x, int y) const
 {
     Vector point_on_viewport = camrect_xy_start_point;
