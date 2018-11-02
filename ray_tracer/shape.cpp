@@ -26,38 +26,42 @@ Intersect Sphere::ray_intersect(const Ray& ray) const
 {
     Intersect result = {};
 
-    Vector cam_to_center{ this->center - ray.origin };
-    double dist_cam_to_center = cam_to_center.magnitude();
-    double dist_cam_from_center_normal = vec_dot_product(cam_to_center, ray.direction);
+    Vector ray_to_center{ this->center - ray.origin };
 
-    double dist_ray_from_center_sqrd = 
-        dist_cam_to_center*dist_cam_to_center - dist_cam_from_center_normal*dist_cam_from_center_normal;
-    if (dist_ray_from_center_sqrd > (this->radius*this->radius)) {
+    // Distance from ray origin to the center of the sphere
+    double dist_ray_to_center = ray_to_center.magnitude();
+    // Distance from ray origin in direction of ray.direction to the point where normal cuts the center
+    double dist_raydirection_from_center_normal = vec_dot_product(ray_to_center, ray.direction);
+
+    // How far is the raydirection from the center
+    double dist_raydirection_from_center_sqrd =
+        dist_ray_to_center * dist_ray_to_center - dist_raydirection_from_center_normal * dist_raydirection_from_center_normal;
+
+    if (dist_raydirection_from_center_sqrd > (this->radius*this->radius)) {
+        // Our ray is farther from the center than sphere radius, no hit
         return result;
     }
 
-    double dist_from_intersections = 2 * sqrt(this->radius*this->radius - dist_ray_from_center_sqrd);
+    // We do hit the sphere, but where?
 
-    double dist_cam_to_intersec_1 = dist_cam_from_center_normal - dist_from_intersections / 2;
-    double dist_cam_to_intersec_2 = dist_cam_from_center_normal + dist_from_intersections / 2;
+    double dist_from_intersections = 2 * sqrt(this->radius*this->radius - dist_raydirection_from_center_sqrd);
 
-    if (dist_cam_to_intersec_1 > 0 || dist_cam_to_intersec_2 > 0) {
+    double dist_cam_to_intersec_1 = dist_raydirection_from_center_normal - dist_from_intersections / 2;
+    double dist_cam_to_intersec_2 = dist_raydirection_from_center_normal + dist_from_intersections / 2;
+
+    if (dist_cam_to_intersec_1 > 0 && dist_cam_to_intersec_1 < dist_cam_to_intersec_2) {
         result.shape_hit = this;
-
-        if (dist_cam_to_intersec_1 > 0 && dist_cam_to_intersec_1 < dist_cam_to_intersec_2) {
-            result.point = ray.origin + (ray.direction * dist_cam_to_intersec_1);
-            result.ray_to_point_dist = dist_cam_to_intersec_1;
-            result.point_hit_normal = get_unit_vector({ result.point - this->center });
-        } else {
-            result.point = ray.origin + (ray.direction * dist_cam_to_intersec_2);
-            result.ray_to_point_dist = dist_cam_to_intersec_2;
-            result.point_hit_normal = get_unit_vector({ result.point - this->center });
-        }
-
-        return result;
-    } else {
-        return result;
+        result.point = ray.origin + (ray.direction * dist_cam_to_intersec_1);
+        result.ray_to_point_dist = dist_cam_to_intersec_1;
+        result.point_hit_normal = get_unit_vector({ result.point - this->center });
+    } else if (dist_cam_to_intersec_2 > 0) {
+        result.shape_hit = this;
+        result.point = ray.origin + (ray.direction * dist_cam_to_intersec_2);
+        result.ray_to_point_dist = dist_cam_to_intersec_2;
+        result.point_hit_normal = get_unit_vector({ result.point - this->center });
     }
+
+    return result;
 }
 
 bool Sphere::point_in_object(const Vector& point) const

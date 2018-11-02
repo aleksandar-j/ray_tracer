@@ -98,7 +98,7 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect,
         return object_color_in;
     }
 
-    Color diffuse_result = BLACK;
+    Color diffuse_result = object_color_in;
     if (RUN_REFLECTION_DIFFUSE && intersect.shape_hit->material.diffuse > 0.0) {
         // Shoot diffuse rays
 
@@ -112,11 +112,7 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect,
 
             diffuse_result = color_at_point(world, intersect_new, depth + 1)*0.5 * 
                              Color{red_energy_left, green_energy_left, blue_energy_left};
-        } else {
-            diffuse_result = object_color_in;
         }
-    } else {
-        diffuse_result = object_color_in;
     }
     diffuse_result *= intersect.shape_hit->material.diffuse;
 
