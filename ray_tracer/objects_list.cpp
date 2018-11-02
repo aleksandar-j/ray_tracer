@@ -86,53 +86,49 @@ Atmosphere atmosphere_at_point(const ObjectList& world, const Vector& point)
     return *result;
 }
 
-Color reflect_light(const ObjectList& world, const Intersect& intersect, 
-                    const Color& object_color_in, 
-                    int depth)
+Color reflect_light(const ObjectList& world, const Intersect& intersect,
+    const Color& object_color_in,
+    int depth)
 {
-    if ((intersect.shape_hit->material.diffuse + intersect.shape_hit->material.specular) > 1.0) {
-        // More light out than in (in is 1.0 - 100%)
-        throw "reflect_light got an object with more than 1.0 light amount";
+    if ((intersect.shape_hit->material.diffuse + intersect.shape_hit->material.specular) != 1.0) {
+        // More light out/in than in/out (in is 1.0 - 100%, out must also be 1.0 - 100%)
+        throw "reflect_light got an object with more/less than 1.0 light amount";
     }
     if (depth > MAX_STACK_DEPTH) {
         return object_color_in;
     }
 
-    Color diffuse_result = object_color_in;
-    
+    Color diffuse_result = BLACK;
+
     if (RUN_REFLECTION_DIFFUSE && intersect.shape_hit->material.diffuse > 0.0) {
         // Shoot diffuse rays
 
-        Ray normal = intersect.shape_hit->normal_ray_at_point(intersect.point);
-        normal.direction += rand_unit_vector();
-        normal.direction.make_unit_vector();
+        diffuse_result = object_color_in;
 
-        Intersect intersect_new = object_ray_intersect(world, normal);
+        // TODO: I can't seem to understand what to do here... Needs more research
 
-        if (intersect_new.shape_hit != nullptr) {
-            // Objects that are closer will have a greater impact on our color
+        //Ray normal = intersect.shape_hit->normal_ray_at_point(intersect.point);
+        //normal.direction += rand_unit_vector();
+        //normal.direction.make_unit_vector();
 
-            Color color_new = color_at_point(world, intersect_new, depth + STACK_DEPTH_DIFFUSE_ADD);
-            color_new.make_grey();
+        //Intersect intersect_new = object_ray_intersect(world, normal);
 
-            constexpr double diffuse_length_lim = 32.0;
-            constexpr double max_diffuse_intensity = 0.75;
-            constexpr double diffuse_color_darkness_mult = 0.4;
+        //constexpr double diffuse_matters_dist = 50.0;
+        //if (intersect_new.shape_hit != nullptr && intersect_new.ray_to_point_dist < diffuse_matters_dist) {
+        //    // Objects that are closer will have a greater impact on our color
 
-            if (intersect_new.ray_to_point_dist < diffuse_length_lim) {
-                double diffuse_intensity = (1.0 - (intersect_new.ray_to_point_dist / diffuse_length_lim)) *
-                    max_diffuse_intensity;
+        //    Color color_new = color_at_point(world, intersect_new, depth + STACK_DEPTH_DIFFUSE_ADD);
 
-                diffuse_result = color_mix_weights(color_new*diffuse_color_darkness_mult, diffuse_intensity,
-                                                   object_color_in, 1.0 - diffuse_intensity);
-            }
-        }
+        //    double diffuse_intensity = (1.0 - (pow((intersect_new.ray_to_point_dist/diffuse_matters_dist)*2, 2)/4));
+        //    
+        //    diffuse_result = color_mix_weights(diffuse_result, 1.0, color_new, diffuse_intensity);
+        //}
 
         diffuse_result *= intersect.shape_hit->material.diffuse;
     }
 
     Color specular_result = BLACK;
-    
+
     if (RUN_REFLECTION_SPECULAR && intersect.shape_hit->material.specular > 0.0) {
         // Shoot specular rays
 
@@ -158,11 +154,7 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect,
         specular_result *= intersect.shape_hit->material.specular;
     }
 
-    double object_color_in_strength = (1.0 - (color_get_grey(object_color_in).red / 255.0)) / 2;
-
-    Color result = color_mix_weights(object_color_in, object_color_in_strength, 
-                  (diffuse_result + specular_result), 1.0 - object_color_in_strength);
-    return result;
+    return diffuse_result + specular_result;
 }
 
 Color light_color_at_point(const ObjectList& world, const Intersect& intersect, 

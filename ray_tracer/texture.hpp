@@ -78,6 +78,7 @@ Color operator*(const Color& A, const Color& B);
 Color operator*(const Color& A, const double B);
 Color operator/(const Color& A, const double B);
 
+Color color_safe_add(const Color& A, const Color& B);
 Color color_safe_multiply(const Color& A, const double B);
 
 Color color_get_grey(Color A);
