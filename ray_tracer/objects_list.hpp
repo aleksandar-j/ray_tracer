@@ -11,15 +11,15 @@
 #define RUN_REFLECTION_DIFFUSE (true)
 #define RUN_REFLECTION_SPECULAR (true)
 #define RUN_LIGHT (true)
-#define RUN_LIGHT_ATMOSPHEREREF (false)
+#define RUN_LIGHT_ATMOSPHEREREF (true)
 
 // Maximum depth baseline
 #define MAX_STACK_DEPTH (100.0)
 
 // What is the maximum times these could get called, given that they are only ones called
-#define STACK_DEPTH_ATMOSPHERE (5.0)
-#define STACK_DEPTH_DIFFUSE (3.0)
-#define STACK_DEPTH_SPECULAR (10.0)
+#define STACK_DEPTH_ATMOSPHERE (3.0)
+#define STACK_DEPTH_DIFFUSE (5.0)
+#define STACK_DEPTH_SPECULAR (5.0)
 
 // How much do we increase depth for any operation
 #define STACK_DEPTH_ATMOSPHERE_ADD (MAX_STACK_DEPTH / STACK_DEPTH_ATMOSPHERE)
@@ -27,7 +27,7 @@
 #define STACK_DEPTH_SPECULAR_ADD (MAX_STACK_DEPTH / STACK_DEPTH_SPECULAR)
 
 // How many times do we run the atmosphere light check in the worst case, best case is half that
-#define MAX_ATMOSPHERE_ITERATIONS 2
+#define MAX_ATMOSPHERE_ITERATIONS 1
 
 struct ObjectList {
 

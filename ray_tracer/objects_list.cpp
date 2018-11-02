@@ -28,14 +28,14 @@ Color color_at_point(const ObjectList& world, const Intersect& intersect, int de
     // Get object's color at the point
     object_color = intersect.shape_hit->color_at_point(intersect.point);
 
-    // Adjust the final color depending on the light level
-    if (RUN_LIGHT) {
-        object_color = light_color_at_point(world, intersect, object_color, nullptr, depth);
-    }
-
     // Get any reflections and edit our color
     if (RUN_REFLECTION) {
         object_color = reflect_light(world, intersect, object_color, depth);
+    }
+
+    // Adjust the final color depending on the light level
+    if (RUN_LIGHT) {
+        object_color = light_color_at_point(world, intersect, object_color, nullptr, depth);
     }
 
     return object_color;
@@ -99,36 +99,28 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect,
     }
 
     Color diffuse_result = BLACK;
-
     if (RUN_REFLECTION_DIFFUSE && intersect.shape_hit->material.diffuse > 0.0) {
         // Shoot diffuse rays
 
+        Ray rand_reflected_ray = { intersect.point, intersect.point_hit_normal + rand_unit_vector() };
+        Intersect intersect_new = object_ray_intersect(world, rand_reflected_ray);
+
+        if (intersect_new.shape_hit) {
+            double red_energy_left = object_color_in.red / 255.0;
+            double green_energy_left = object_color_in.green / 255.0;
+            double blue_energy_left = object_color_in.blue / 255.0;
+
+            diffuse_result = color_at_point(world, intersect_new, depth + 1)*0.5 * 
+                             Color{red_energy_left, green_energy_left, blue_energy_left};
+        } else {
+            diffuse_result = object_color_in;
+        }
+    } else {
         diffuse_result = object_color_in;
-
-        // TODO: I can't seem to understand what to do here... Needs more research
-
-        //Ray normal = intersect.shape_hit->normal_ray_at_point(intersect.point);
-        //normal.direction += rand_unit_vector();
-        //normal.direction.make_unit_vector();
-
-        //Intersect intersect_new = object_ray_intersect(world, normal);
-
-        //constexpr double diffuse_matters_dist = 50.0;
-        //if (intersect_new.shape_hit != nullptr && intersect_new.ray_to_point_dist < diffuse_matters_dist) {
-        //    // Objects that are closer will have a greater impact on our color
-
-        //    Color color_new = color_at_point(world, intersect_new, depth + STACK_DEPTH_DIFFUSE_ADD);
-
-        //    double diffuse_intensity = (1.0 - (pow((intersect_new.ray_to_point_dist/diffuse_matters_dist)*2, 2)/4));
-        //    
-        //    diffuse_result = color_mix_weights(diffuse_result, 1.0, color_new, diffuse_intensity);
-        //}
-
-        diffuse_result *= intersect.shape_hit->material.diffuse;
     }
+    diffuse_result *= intersect.shape_hit->material.diffuse;
 
     Color specular_result = BLACK;
-
     if (RUN_REFLECTION_SPECULAR && intersect.shape_hit->material.specular > 0.0) {
         // Shoot specular rays
 
@@ -149,9 +141,8 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect,
         } else {
             specular_result = BLACK;
         }
-
-        specular_result *= intersect.shape_hit->material.specular;
     }
+    specular_result *= intersect.shape_hit->material.specular;
 
     return diffuse_result + specular_result;
 }
