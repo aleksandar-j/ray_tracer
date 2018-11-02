@@ -57,11 +57,9 @@ double PointLight::light_level_at_point(const ObjectList& world, const Intersect
 
     // Angle between light and object hit, only if we are actually checking object
     double object_light_angle;
-    Ray object_normal_ray;
     
     if (intersect.shape_hit != nullptr) {
-        object_normal_ray = intersect.shape_hit->normal_ray_at_point(intersect.point);
-        object_light_angle = vec_anglebetween_rad(object_normal_ray.direction, point_light_ray.direction);
+        object_light_angle = vec_anglebetween_rad(intersect.point_hit_normal, point_light_ray.direction);
     }
 
     for (auto& object : world.object_list) {

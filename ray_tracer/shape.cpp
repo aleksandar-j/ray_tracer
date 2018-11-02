@@ -36,8 +36,6 @@ Intersect Sphere::ray_intersect(const Ray& ray) const
         return result;
     }
 
-    *this;
-
     double dist_from_intersections = 2 * sqrt(this->radius*this->radius - dist_ray_from_center_sqrd);
 
     double dist_cam_to_intersec_1 = dist_cam_from_center_normal - dist_from_intersections / 2;
@@ -49,9 +47,11 @@ Intersect Sphere::ray_intersect(const Ray& ray) const
         if (dist_cam_to_intersec_1 > 0 && dist_cam_to_intersec_1 < dist_cam_to_intersec_2) {
             result.point = ray.origin + (ray.direction * dist_cam_to_intersec_1);
             result.ray_to_point_dist = dist_cam_to_intersec_1;
+            result.point_hit_normal = { result.point - this->center };
         } else {
             result.point = ray.origin + (ray.direction * dist_cam_to_intersec_2);
             result.ray_to_point_dist = dist_cam_to_intersec_2;
+            result.point_hit_normal = { result.point - this->center };
         }
 
         return result;

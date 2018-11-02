@@ -132,10 +132,9 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect,
     if (RUN_REFLECTION_SPECULAR && intersect.shape_hit->material.specular > 0.0) {
         // Shoot specular rays
 
-        Ray normal = intersect.shape_hit->normal_ray_at_point(intersect.point);
-        Vector reflected_vec = intersect.ray_shot.direction + normal.direction * 2;
+        Vector reflected_vec = intersect.ray_shot.direction + intersect.point_hit_normal * 2;
 
-        Ray reflection = { normal.origin, reflected_vec };
+        Ray reflection = { intersect.point, reflected_vec };
 
         // Specular Fuzz implementation
         if (intersect.shape_hit->material.specular_fuzz > 0.0) {
@@ -193,8 +192,7 @@ Color light_color_at_point(const ObjectList& world, const Intersect& intersect,
             double close_point_distance;
             if (intersect.shape_hit && i == 0) {
                 // We only try this once
-                Ray normal = intersect.shape_hit->normal_ray_at_point(intersect.point);
-                close_point = { normal.origin + normal.direction + rand_unit_vector() };
+                close_point = { intersect.point + intersect.point_hit_normal + rand_unit_vector() };
                 close_point_distance = vec_distance(intersect.point, close_point);
             } else {
                 close_point = { intersect.point + rand_unit_vector() };
