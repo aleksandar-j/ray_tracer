@@ -181,13 +181,13 @@ Color light_color_at_point(const ObjectList& world, const Intersect& intersect,
             
             Vector close_point;
             double close_point_distance;
-            if (intersect.shape_hit && i == 0) {
+            if (intersect.shape_hit && (rand() % 2)) {
                 // We only try this once
-                close_point = { intersect.point + intersect.point_hit_normal + rand_unit_vector() };
+                close_point = { intersect.point + (intersect.point_hit_normal + rand_unit_vector())*(i + 1) };
                 close_point_distance = vec_distance(intersect.point, close_point);
             } else {
-                close_point = { intersect.point + rand_unit_vector() };
-                close_point_distance = 1.0;
+                close_point = { (intersect.point + rand_unit_vector()) * (i + 1) };
+                close_point_distance = i + 1.0;
             }
 
             double close_point_light_intensity = 0.0;
@@ -200,7 +200,11 @@ Color light_color_at_point(const ObjectList& world, const Intersect& intersect,
                 continue;
             } else {
                 // We managed to get some light, there is no need to check as many times...
-                i += 2;
+                
+                if (MAX_ATMOSPHERE_ITERATIONS > 2) {
+                    // But we will still do it if iteration number is low...
+                    i += 2;
+                }
             }
 
             Atmosphere our_atmosphere = atmosphere_at_point(world, intersect.point);

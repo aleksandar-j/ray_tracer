@@ -27,7 +27,7 @@
 #define STACK_DEPTH_SPECULAR_ADD (MAX_STACK_DEPTH / STACK_DEPTH_SPECULAR)
 
 // How many times do we run the atmosphere light check in the worst case, best case is half that
-#define MAX_ATMOSPHERE_ITERATIONS 1
+#define MAX_ATMOSPHERE_ITERATIONS 2
 
 struct ObjectList {
 
