@@ -8,17 +8,10 @@
 #include "camera.hpp"
 #include "objects_list.hpp"
 
+#include "render_settings.hpp"
+
 Camera cam;
 ObjectList world;
-
-#define AA (5)
-
-#define AA_OPTIMIZE (false)
-#define AA_OPTIMIZE_AVGDIFFACCEPTED (2.0)
-#define AA_OPTIMIZE_MAXDIFFACCEPTED (0.5)
-
-#define NUM_SCREENS (16)
-#define NUM_THREADS (4)
 
 void draw_pixels(uint32_t* pixels, int w, int h,
                     size_t start_y, size_t end_y, 
@@ -130,6 +123,9 @@ void thread_manager(uint32_t* pixels, int w, int h)
 
 void trace(uint32_t* pixels, int w, int h)
 {
+    // Load settings from file
+    load_settings();
+
     cam = { {0, 0, 1}, {1, 1, 0}, 90.0, w * AA, h * AA };
 
     // Objects
@@ -154,10 +150,10 @@ void trace(uint32_t* pixels, int w, int h)
     world.atmospheres_list.push_back(new Atmosphere{ new Sphere{ {0,0,0}, 50.0 }, 100, 0.3 });
 
     // Worker treads
-    std::thread threads[NUM_THREADS];
+    std::vector<std::thread> threads;
 
     for (size_t i = 0; i < NUM_THREADS; i++) {
-        threads[i] = std::thread{ thread_manager, pixels, w, h };
+        threads.push_back(std::thread{ thread_manager, pixels, w, h });
     }
 
     for (auto& x : threads) {

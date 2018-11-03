@@ -2,6 +2,8 @@
 
 #include "objects_list.hpp"
 
+#include "render_settings.hpp"
+
 Color color_at_ray_intersect(const ObjectList& world, const Ray& ray, int depth)
 {
     if (depth > MAX_STACK_DEPTH) {

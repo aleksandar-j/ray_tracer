@@ -45,6 +45,9 @@
     <ClCompile Include="atmosphere.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="render_settings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main_trace.hpp">
@@ -78,6 +81,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="light.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="render_settings.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

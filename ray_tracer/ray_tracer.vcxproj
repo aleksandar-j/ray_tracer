@@ -147,6 +147,7 @@
     <ClCompile Include="main_trace.cpp" />
     <ClCompile Include="math_extension.cpp" />
     <ClCompile Include="objects_list.cpp" />
+    <ClCompile Include="render_settings.cpp" />
     <ClCompile Include="shape.cpp" />
     <ClCompile Include="texture.cpp" />
     <ClCompile Include="vector.cpp" />
@@ -160,6 +161,7 @@
     <ClInclude Include="material.hpp" />
     <ClInclude Include="math_extension.hpp" />
     <ClInclude Include="objects_list.hpp" />
+    <ClInclude Include="render_settings.hpp" />
     <ClInclude Include="shape.hpp" />
     <ClInclude Include="texture.hpp" />
     <ClInclude Include="vector.hpp" />
