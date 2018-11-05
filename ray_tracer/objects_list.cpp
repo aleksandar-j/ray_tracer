@@ -171,7 +171,7 @@ Color light_color_at_point(const ObjectList& world, const Intersect& intersect,
     }
 
     // Atmosphere refractions
-    if (RUN_LIGHT_ATMOSPHEREREF) {
+    if (RUN_LIGHT_ATMOSPHERE) {
         // Calculating atmosphere-light interaction
 
         for (size_t i = 0; i < MAX_ATMOSPHERE_ITERATIONS; i++) {

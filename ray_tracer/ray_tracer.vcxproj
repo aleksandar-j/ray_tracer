@@ -166,6 +166,9 @@
     <ClInclude Include="texture.hpp" />
     <ClInclude Include="vector.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="settings.ini" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -14,7 +14,7 @@ extern bool RUN_REFLECTION;
 extern bool RUN_REFLECTION_DIFFUSE;
 extern bool RUN_REFLECTION_SPECULAR;
 extern bool RUN_LIGHT;
-extern bool RUN_LIGHT_ATMOSPHEREREF;
+extern bool RUN_LIGHT_ATMOSPHERE;
 
 // What is the maximum times these could get called, given that they are only ones called
 extern int STACK_DEPTH_ATMOSPHERE;
