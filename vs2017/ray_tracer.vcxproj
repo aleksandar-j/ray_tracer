@@ -140,34 +140,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="atmosphere.cpp" />
-    <ClCompile Include="camera.cpp" />
-    <ClCompile Include="light.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="main_trace.cpp" />
-    <ClCompile Include="math_extension.cpp" />
-    <ClCompile Include="objects_list.cpp" />
-    <ClCompile Include="render_settings.cpp" />
-    <ClCompile Include="shape.cpp" />
-    <ClCompile Include="texture.cpp" />
-    <ClCompile Include="vector.cpp" />
+    <ClCompile Include="../ray_tracer/atmosphere.cpp" />
+    <ClCompile Include="../ray_tracer/camera.cpp" />
+    <ClCompile Include="../ray_tracer/light.cpp" />
+    <ClCompile Include="../ray_tracer/main.cpp" />
+    <ClCompile Include="../ray_tracer/main_trace.cpp" />
+    <ClCompile Include="../ray_tracer/math_extension.cpp" />
+    <ClCompile Include="../ray_tracer/objects_list.cpp" />
+    <ClCompile Include="../ray_tracer/render_settings.cpp" />
+    <ClCompile Include="../ray_tracer/shape.cpp" />
+    <ClCompile Include="../ray_tracer/texture.cpp" />
+    <ClCompile Include="../ray_tracer/vector.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="atmosphere.hpp" />
-    <ClInclude Include="camera.hpp" />
-    <ClInclude Include="intersect.hpp" />
-    <ClInclude Include="light.hpp" />
-    <ClInclude Include="main_trace.hpp" />
-    <ClInclude Include="material.hpp" />
-    <ClInclude Include="math_extension.hpp" />
-    <ClInclude Include="objects_list.hpp" />
-    <ClInclude Include="render_settings.hpp" />
-    <ClInclude Include="shape.hpp" />
-    <ClInclude Include="texture.hpp" />
-    <ClInclude Include="vector.hpp" />
+    <ClInclude Include="../ray_tracer/atmosphere.hpp" />
+    <ClInclude Include="../ray_tracer/camera.hpp" />
+    <ClInclude Include="../ray_tracer/intersect.hpp" />
+    <ClInclude Include="../ray_tracer/light.hpp" />
+    <ClInclude Include="../ray_tracer/main_trace.hpp" />
+    <ClInclude Include="../ray_tracer/material.hpp" />
+    <ClInclude Include="../ray_tracer/math_extension.hpp" />
+    <ClInclude Include="../ray_tracer/objects_list.hpp" />
+    <ClInclude Include="../ray_tracer/render_settings.hpp" />
+    <ClInclude Include="../ray_tracer/shape.hpp" />
+    <ClInclude Include="../ray_tracer/texture.hpp" />
+    <ClInclude Include="../ray_tracer/vector.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="settings.ini" />
+    <None Include="../ray_tracer/settings.ini" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
