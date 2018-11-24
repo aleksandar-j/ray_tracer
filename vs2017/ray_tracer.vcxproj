@@ -69,17 +69,13 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>X:\-- LIBRARIES --\SDL2-2.0.8\include;$(IncludePath)</IncludePath>
-    <LibraryPath>X:\-- LIBRARIES --\SDL2-2.0.8\lib\x64;$(LibraryPath)</LibraryPath>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>X:\-- LIBRARIES --\SDL2-2.0.8\include;$(IncludePath)</IncludePath>
-    <LibraryPath>X:\-- LIBRARIES --\SDL2-2.0.8\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\-- LIBRARIES --\SDL2-2.0.8\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\-- LIBRARIES --\SDL2-2.0.8\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>X:\-- LIBRARIES --\SDL2-2.0.8\include;$(IncludePath)</IncludePath>
-    <LibraryPath>X:\-- LIBRARIES --\SDL2-2.0.8\lib\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\-- LIBRARIES --\SDL2-2.0.8\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\-- LIBRARIES --\SDL2-2.0.8\lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
