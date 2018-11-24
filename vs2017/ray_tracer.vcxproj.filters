@@ -15,81 +15,79 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="../ray_tracer/atmosphere.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main_trace.cpp">
+    <ClCompile Include="../ray_tracer/camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="math_extension.cpp">
+    <ClCompile Include="../ray_tracer/light.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="vector.cpp">
+    <ClCompile Include="../ray_tracer/main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="camera.cpp">
+    <ClCompile Include="../ray_tracer/main_trace.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="objects_list.cpp">
+    <ClCompile Include="../ray_tracer/math_extension.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="shape.cpp">
+    <ClCompile Include="../ray_tracer/objects_list.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="texture.cpp">
+    <ClCompile Include="../ray_tracer/render_settings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="light.cpp">
+    <ClCompile Include="../ray_tracer/shape.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="atmosphere.cpp">
+    <ClCompile Include="../ray_tracer/texture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="render_settings.cpp">
+    <ClCompile Include="../ray_tracer/vector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="main_trace.hpp">
+    <ClInclude Include="../ray_tracer/atmosphere.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="math_extension.hpp">
+    <ClInclude Include="../ray_tracer/camera.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="vector.hpp">
+    <ClInclude Include="../ray_tracer/intersect.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="camera.hpp">
+    <ClInclude Include="../ray_tracer/light.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="intersect.hpp">
+    <ClInclude Include="../ray_tracer/main_trace.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="objects_list.hpp">
+    <ClInclude Include="../ray_tracer/material.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="texture.hpp">
+    <ClInclude Include="../ray_tracer/math_extension.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="shape.hpp">
+    <ClInclude Include="../ray_tracer/objects_list.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="material.hpp">
+    <ClInclude Include="../ray_tracer/render_settings.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="atmosphere.hpp">
+    <ClInclude Include="../ray_tracer/shape.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="light.hpp">
+    <ClInclude Include="../ray_tracer/texture.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="render_settings.hpp">
+    <ClInclude Include="../ray_tracer/vector.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="settings.ini">
-      <Filter>Resource Files</Filter>
-    </None>
+    <None Include="../ray_tracer/settings.ini" />
   </ItemGroup>
 </Project>
