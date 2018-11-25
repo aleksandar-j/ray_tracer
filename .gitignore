@@ -262,4 +262,5 @@ __pycache__/
 
 
 /vs2017/SDL2.dll
+SDL2-2.0.8
 *.diagsession
