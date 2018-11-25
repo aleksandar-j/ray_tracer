@@ -3,7 +3,7 @@
 
 # User-specific files
 *.suo
-*.user
+#*.user
 *.userosscache
 *.sln.docstates
 
@@ -261,6 +261,6 @@ __pycache__/
 *.pyc
 
 
-/vs2017/SDL2.dll
+SDL2.dll
 SDL2-2.0.8
 *.diagsession
