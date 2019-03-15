@@ -1,5 +1,6 @@
 
-#include <SDL.h>
+#define SDL_MAIN_HANDLED
+#include <SDL2/SDL.h>
 #include <thread>
 
 #include "main_trace.hpp"
@@ -7,8 +8,10 @@
 const int SCREEN_WIDTH = 1366;
 const int SCREEN_HEIGHT = 768;
 
-int WinMain(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
+    SDL_SetMainReady();
+
     SDL_Init(SDL_INIT_VIDEO);
 
     SDL_Window* window = SDL_CreateWindow("Ray Tracer",
