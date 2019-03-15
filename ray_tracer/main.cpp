@@ -20,7 +20,7 @@ int WinMain(int argc, char* argv[])
     SDL_Surface* our_surface = SDL_CreateRGBSurface(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0);
 
     // Main tracing function
-    std::thread trace(trace, (uint32_t*)our_surface->pixels, SCREEN_WIDTH, SCREEN_HEIGHT);
+    std::thread trace_thread(trace, (uint32_t*)our_surface->pixels, SCREEN_WIDTH, SCREEN_HEIGHT);
 
     SDL_Event eve;
     while (true) {
