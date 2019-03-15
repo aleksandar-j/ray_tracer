@@ -1,4 +1,3 @@
-#pragma once
 
 #include "objects_list.hpp"
 
@@ -112,7 +111,7 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect,
             double green_energy_left = object_color_in.green / 255.0;
             double blue_energy_left = object_color_in.blue / 255.0;
 
-            diffuse_result = color_at_point(world, intersect_new, depth + 1)*0.5 * 
+            diffuse_result = color_at_point(world, intersect_new, depth + 1)*0.5 *
                              Color{red_energy_left, green_energy_left, blue_energy_left};
         }
     }
@@ -145,8 +144,8 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect,
     return diffuse_result + specular_result;
 }
 
-Color light_color_at_point(const ObjectList& world, const Intersect& intersect, 
-                           const Color& object_color_in, double* light_intensity_at_point_out, 
+Color light_color_at_point(const ObjectList& world, const Intersect& intersect,
+                           const Color& object_color_in, double* light_intensity_at_point_out,
                            int depth)
 {
     if (depth > MAX_STACK_DEPTH) {
@@ -176,7 +175,7 @@ Color light_color_at_point(const ObjectList& world, const Intersect& intersect,
 
         for (size_t i = 0; i < MAX_ATMOSPHERE_ITERATIONS; i++) {
             // Pick random points around our main one and see their light levels...
-            
+
             Vector close_point;
             double close_point_distance;
             if (intersect.shape_hit && (rand() % 2)) {
@@ -190,7 +189,7 @@ Color light_color_at_point(const ObjectList& world, const Intersect& intersect,
 
             double close_point_light_intensity = 0.0;
             Color close_point_light_color = light_color_at_point(world, { close_point },
-                                                        BLACK, &close_point_light_intensity, 
+                                                        BLACK, &close_point_light_intensity,
                                                         depth + STACK_DEPTH_ATMOSPHERE_ADD);
 
             if (close_point_light_intensity == 0.0) {
@@ -198,7 +197,7 @@ Color light_color_at_point(const ObjectList& world, const Intersect& intersect,
                 continue;
             } else {
                 // We managed to get some light, there is no need to check as many times...
-                
+
                 if (MAX_ATMOSPHERE_ITERATIONS > 2) {
                     // But we will still do it if iteration number is low...
                     i += 2;
