@@ -1,3 +1,5 @@
+# Linux build process. Don't use if on Windows.
+
 objects = ray_tracer/main.o ray_tracer/main_trace.o \
 	ray_tracer/math_extension.o ray_tracer/vector.o \
 	ray_tracer/objects_list.o ray_tracer/shape.o ray_tracer/texture.o \

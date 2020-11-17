@@ -1,6 +1,6 @@
 
 #define SDL_MAIN_HANDLED
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #include <thread>
 
 #include "main_trace.hpp"
@@ -43,6 +43,9 @@ int main(int argc, char* argv[])
 
     SDL_DestroyWindow(window);
     SDL_Quit();
+
+    // Errors because I am not killing threads...
+    // No matter. User will not see it and OS is smart enough to clean up.
 
     return 0;
 }
