@@ -3,6 +3,8 @@
 
 #include "render_settings.hpp"
 
+#include <cmath>
+
 Color color_at_ray_intersect(const ObjectList& world, const Ray& ray, int depth)
 {
     if (depth > MAX_STACK_DEPTH) {
@@ -111,8 +113,7 @@ Color reflect_light(const ObjectList& world, const Intersect& intersect,
             double green_energy_left = object_color_in.green / 255.0;
             double blue_energy_left = object_color_in.blue / 255.0;
 
-            diffuse_result = color_at_point(world, intersect_new, depth + 1)*0.5 *
-                             Color{red_energy_left, green_energy_left, blue_energy_left};
+            diffuse_result = color_at_point(world, intersect_new, depth + STACK_DEPTH_DIFFUSE_ADD) * Color{red_energy_left, green_energy_left, blue_energy_left};
         }
     }
     diffuse_result *= intersect.shape_hit->material.diffuse;

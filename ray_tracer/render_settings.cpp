@@ -4,10 +4,6 @@
 /* Default values */
 int AA = 2;
 
-bool AA_OPTIMIZE = false;
-double AA_OPTIMIZE_AVGDIFFACCEPTED = 2.0;
-double AA_OPTIMIZE_MAXDIFFACCEPTED = 200.0;
-
 int NUM_SCREENS = 16;
 int NUM_THREADS = 4;
 
@@ -30,11 +26,10 @@ int STACK_DEPTH_SPECULAR_ADD = MAX_STACK_DEPTH / STACK_DEPTH_SPECULAR;
 int MAX_ATMOSPHERE_ITERATIONS = 2;
 
 
-//#include <Windows.h>
+#include <Windows.h>
 
 void load_settings()
 {
-    /*
     // load from file
     char* directory = new char[512];
     GetCurrentDirectory(512, directory);
@@ -46,8 +41,6 @@ void load_settings()
 
     // Loading...
     AA = GetPrivateProfileInt(section, "AA", AA, directory);
-
-    AA_OPTIMIZE = (GetPrivateProfileInt(section, "AA_OPTIMIZE", AA_OPTIMIZE, directory) == 1) ? true : false;
 
     NUM_SCREENS = GetPrivateProfileInt(section, "NUM_SCREENS", NUM_SCREENS, directory);
     NUM_THREADS = GetPrivateProfileInt(section, "NUM_THREADS", NUM_THREADS, directory);
@@ -63,5 +56,4 @@ void load_settings()
     STACK_DEPTH_DIFFUSE = GetPrivateProfileInt(section, "STACK_DEPTH_DIFFUSE", STACK_DEPTH_DIFFUSE, directory);
     STACK_DEPTH_SPECULAR = GetPrivateProfileInt(section, "STACK_DEPTH_SPECULAR", STACK_DEPTH_SPECULAR, directory);
     STACK_DEPTH_ATMOSPHERE = GetPrivateProfileInt(section, "STACK_DEPTH_ATMOSPHERE", STACK_DEPTH_ATMOSPHERE, directory);
-    */
 }

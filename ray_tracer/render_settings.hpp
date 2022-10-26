@@ -2,10 +2,6 @@
 
 extern int AA;
 
-extern bool AA_OPTIMIZE;
-extern double AA_OPTIMIZE_AVGDIFFACCEPTED;
-extern double AA_OPTIMIZE_MAXDIFFACCEPTED;
-
 extern int NUM_SCREENS;
 extern int NUM_THREADS;
 
